@@ -4,7 +4,7 @@ import { LatestUpdateBar } from "./LatestUpdateBar";
 import WordCloudSection from "./WordCloudSection";
 import IndiaMap from "./IndiaMap";
 import FarmerStories from "./FarmerStories";
-import Hero1 from "../assets/Hero.png";
+import Hero1 from "../assets/hero.png";
 
 export default function Hero() {
   return (
