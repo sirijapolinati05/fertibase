@@ -37,7 +37,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-semibold">Phone</h4>
-                <p>8185966666</p>
+                <p>8977729535</p>
               </div>
             </li>
             <li className="flex items-center gap-4">
@@ -46,7 +46,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-semibold">Email</h4>
-                <p>Info@fertibase.in</p>
+                <p>info@fertibase.in</p>
               </div>
             </li>
             <li className="flex items-center gap-4">
