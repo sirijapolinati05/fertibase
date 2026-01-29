@@ -1,0 +1,178 @@
+import { useEffect, useState } from "react";
+import { Loader2, PlayCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import supabase from "../lib/supabaseClient";
+
+export default function FarmerStories() {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedState, setSelectedState] = useState("All");
+  const [playingId, setPlayingId] = useState(null);
+
+  /* ---------------- HELPERS ---------------- */
+
+  const getYoutubeEmbed = (url) => {
+    if (!url) return null;
+    const match = url.match(
+      /(?:youtu.be\/|youtube.com\/(?:watch\?v=|embed\/))([^&]+)/,
+    );
+    return match
+      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1`
+      : null;
+  };
+
+  /* ---------------- FETCH FROM SUPABASE ---------------- */
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("testimonials")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        setTestimonials(data || []);
+      } catch (err) {
+        console.error("Failed to load testimonials:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  /* Stop video when filter changes */
+  useEffect(() => {
+    setPlayingId(null);
+  }, [selectedState]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-16">
+        <Loader2 className="w-10 h-10 animate-spin text-primary-600" />
+      </div>
+    );
+  }
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+
+        {/* HEADER */}
+        <div className="text-center mb-10">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+            Farmer Success Stories
+          </h2>
+          <p className="text-xl text-text-light max-w-3xl mx-auto">
+            Real experiences from farmers who trust FertiBase
+          </p>
+        </div>
+
+        {/* FILTER */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {[
+            "All",
+            "Maharashtra",
+            "Andhra Pradesh",
+            "Telangana",
+            "Karnataka",
+            "Gujarat",
+          ].map((state) => (
+            <button
+              key={state}
+              onClick={() => setSelectedState(state)}
+              className={`px-5 py-2 rounded-full text-sm font-medium border transition
+                ${
+                  selectedState === state
+                    ? "bg-[#f3ede6] border-[#741A1C]"
+                    : "bg-white border-gray-300 hover:bg-[#f3ede6]"
+                }`}
+            >
+              {state === "Andhra Pradesh" ? "A.P" : state}
+            </button>
+          ))}
+        </div>
+
+        {/* GRID */}
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials
+            .filter(
+              (t) =>
+                selectedState === "All" ||
+                t.area?.toLowerCase() === selectedState.toLowerCase()
+            )
+            .map((t) => {
+              const embedUrl = getYoutubeEmbed(t.video_url);
+
+              return (
+                <motion.div
+                  key={t.id}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white rounded-3xl shadow-lg border overflow-hidden"
+                >
+                  {/* IMAGE / VIDEO */}
+<div className="relative bg-[#F4EADF] flex justify-center items-center py-10">
+  <div className="relative w-[260px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl bg-black">
+
+    {playingId === t.id && embedUrl ? (
+      <iframe
+        src={embedUrl}
+        className="w-full h-full"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+      />
+    ) : (
+      <>
+        <img
+          src={t.image_url || t.image_src}
+          alt={t.name}
+          className="w-full h-full object-cover"
+        />
+
+        {t.video_url && (
+          <button
+            onClick={() => setPlayingId(t.id)}
+            className="absolute inset-0 flex items-center justify-center
+                       bg-black/30 backdrop-blur-[1px]
+                       hover:bg-black/40 transition"
+          >
+            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg scale-95 hover:scale-100 transition">
+              <PlayCircle className="w-10 h-10 text-[#741A1C]" />
+            </div>
+          </button>
+        )}
+      </>
+    )}
+  </div>
+</div>
+
+                  {/* CONTENT */}
+<div className="p-6 space-y-3">
+  {/* <span className="inline-block text-xs font-semibold text-[#741A1C] bg-[#F4EADF] px-3 py-1 rounded-full">
+    {t.area}
+  </span> */}
+
+  <h3 className="text-xl font-bold text-slate-900">
+    {t.title}
+  </h3>
+
+  <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
+    “{t.description}”
+  </p>
+
+  <div className="pt-3 border-t">
+    <p className="font-semibold text-slate-800">{t.name}</p>
+    <p className="text-xs text-slate-500">FertiBase Farmer</p>
+  </div>
+</div>
+                </motion.div>
+              );
+            })}
+        </div>
+      </div>
+    </section>
+  );
+}

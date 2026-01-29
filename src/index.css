@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Import Google Font - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Global Font Family */
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #F5F1ED; /* Off-white background */
+  color: #1A0F08; /* Red Soil brighter dark brown text */
+}
+
+/* Red Soil Theme Variables - Updated with Brighter Colors */
+:root {
+  --color-primary: #C85A3D;
+  --color-primary-dark: #A8422F;
+  --color-primary-darker: #8B3524;
+  --color-bg-light: #F5F1ED;
+  --color-bg-dark: #EDE5DC;
+  --color-text-base: #1A0F08;   /* Red Soil brighter deep dark brown */
+  --color-text-light: #3D2415;  /* Red Soil brighter medium brown */
+  --color-text-muted: #6B4226;  /* Red Soil brighter muted brown */
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-floating {
+  animation: floating 6s ease-in-out infinite;
+}
