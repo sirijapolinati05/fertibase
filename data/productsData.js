@@ -25,7 +25,7 @@ import HYDROMINLEVEL3 from '../src/assets/HYDROMINLEVEL3.png';
 import bloom from '../src/assets/bloom.png';
 import phospobase from '../src/assets/phospobase.png';
 import mycore from '../src/assets/mycore.png';
-import photobase from '../src/assets/photobase.png';
+import potaBase from '../src/assets/potaBase.png';
 import zincore from '../src/assets/zincore.png';
 import microlife from '../src/assets/microlife.png';
 import dfnc from '../src/assets/dfnc.png';
@@ -203,7 +203,7 @@ export const products = [
   {
     id: "9",
     name: "POTABASE",
-    image: photobase,
+    image: potaBase,
     desc: "Liquid biofertilizer (min. 1x10⁸ CFU/ml) with Potassium Mobilizing Bacteria.",
     category: "Potassium-Fixing / Solubilizing Biofertilizers",
     details: "Solubilizes complex potassium, making it available to plants for healthier growth and better yields.",

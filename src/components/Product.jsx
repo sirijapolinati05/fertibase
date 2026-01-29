@@ -1,8 +1,16 @@
-// Products.jsx – Supabase powered
+// Products.jsx – Supabase powered (UPDATED)
 import React, { useState, useEffect, useMemo } from "react";
 import { ArrowRight, Loader2, Search } from "lucide-react";
 import supabase from "../lib/supabaseClient";
 import ProductModal from "../components/ProductModal";
+
+const FIXED_CATEGORIES = [
+  "Biofertilizer",
+  "Organic Biofertilizer",
+  "Liquid Fertilizer",
+  "Straight Micronutrient",
+  "Beneficial Element Fertilizer",
+];
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -39,17 +47,23 @@ export default function Products() {
   /* ---------------- CATEGORIES WITH COUNT ---------------- */
 
   const categories = useMemo(() => {
-    const map = {};
+    const countMap = {};
+
+    FIXED_CATEGORIES.forEach((cat) => {
+      countMap[cat] = 0;
+    });
+
     products.forEach((p) => {
-      if (!p.category) return;
-      map[p.category] = (map[p.category] || 0) + 1;
+      if (countMap[p.category] !== undefined) {
+        countMap[p.category]++;
+      }
     });
 
     return [
       { name: "All", count: products.length },
-      ...Object.entries(map).map(([name, count]) => ({
-        name,
-        count,
+      ...FIXED_CATEGORIES.map((cat) => ({
+        name: cat,
+        count: countMap[cat],
       })),
     ];
   }, [products]);
@@ -59,12 +73,10 @@ export default function Products() {
   const filteredProducts = useMemo(() => {
     let list = [...products];
 
-    // Category filter
     if (activeCategory !== "All") {
       list = list.filter((p) => p.category === activeCategory);
     }
 
-    // Search
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       list = list.filter(
@@ -107,9 +119,7 @@ export default function Products() {
 
       {/* HEADER */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-black text-[#741A1C]">
-          Our Products
-        </h1>
+        <h1 className="text-4xl font-black text-[#741A1C]">Our Products</h1>
         <p className="text-slate-600 mt-2">
           High-quality solutions for modern agriculture
         </p>
@@ -146,7 +156,7 @@ export default function Products() {
         ))}
       </div>
 
-      {/* GRID */}
+      {/* GRID / EMPTY STATE */}
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredProducts.map((product) => (
@@ -159,44 +169,40 @@ export default function Products() {
                 className="relative rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 border border-[#E8D5C9]"
                 style={{ backgroundColor: "#F5E9E2" }}
               >
-                {/* Arrow */}
                 <div className="absolute top-5 right-5 bg-white rounded-full p-3 shadow-lg group-hover:bg-[#741A1C] transition">
                   <ArrowRight className="w-5 h-5 text-[#741A1C] group-hover:text-white" />
                 </div>
 
-                {/* Image */}
-                <div className="rounded-2xl h-64 flex items-center justify-center mb-6 overflow-hidden bg-white border border-[#E8D5C9]">
+                <div className="rounded-2xl h-64 flex items-center justify-center mb-6 bg-white border">
                   <img
                     src={product.image_url || "/placeholder.png"}
                     alt={product.name}
-                    className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-110"
+                    className="max-h-full max-w-full object-contain transition-transform group-hover:scale-110"
                   />
                 </div>
 
-                {/* Name */}
                 <h3 className="text-xl font-bold mb-3 text-[#4A2E1F]">
                   {product.name}
                 </h3>
 
-                {/* Category */}
-                <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-white border border-[#E8D5C9] text-[#8B4513] mb-4">
+                <div className="inline-flex px-4 py-2 rounded-full bg-white border text-sm font-semibold text-[#8B4513]">
                   {product.category}
                 </div>
 
-                {/* Footer */}
-                <div className="flex items-center justify-between text-sm text-[#8B4513]">
-                  <span className="font-semibold group-hover:underline">
-                    View Details
-                  </span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="flex justify-between text-sm mt-4 text-[#8B4513]">
+                  <span className="font-semibold">View Details</span>
+                  <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-center py-20 text-slate-500">
-          No products found
+        <div className="text-center py-20 text-slate-500 text-lg font-medium">
+          No products available in{" "}
+          <span >
+            {activeCategory}
+          </span>
         </div>
       )}
 

@@ -64,7 +64,7 @@ import microlife from "../assets/microlife.png";
 import mycore from "../assets/mycore.png";
 import nitrbase from "../assets/nitrbase.png";
 import phospobase from "../assets/phospobase.png";
-import photobase from "../assets/photobase.png";
+import potaBase from "../assets/potaBase.png";
 import t8 from "../assets/t8.png";
 import zincore from "../assets/zincore.png";
 
@@ -153,7 +153,7 @@ export const PRODUCTS = {
         mycore: mycore,
         nitrbase: nitrbase,
         phospobase: phospobase,
-        photobase: photobase,
+        potaBase: potaBase,
         t8: t8,
         zincore: zincore,
     },
