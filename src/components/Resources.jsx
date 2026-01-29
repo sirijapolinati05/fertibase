@@ -166,8 +166,8 @@ export default function Resources() {
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold border
                   ${
                     selectedMarketingType === m
-                      ? "bg-emerald-600 text-white"
-                      : "bg-white border-slate-200 text-slate-600 hover:border-emerald-600"
+                      ? "bg-[#741A1C] text-white border-[#741A1C]"
+                      : "bg-white text-[#741A1C] border-slate-200 hover:border-[#741A1C]"
                   }`}
               >
                 {m} ({marketingCounts[m] || 0})
@@ -187,86 +187,140 @@ export default function Resources() {
         </div>
 
         {/* GRID */}
-        {filteredResources.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredResources.map((item) => {
-              const isWebinar =
-                normalize(item.category) === "webinars";
+{/* GRID */}
+{filteredResources.length === 0 ? (
+  <div className="text-center py-20 text-slate-500">
+    No resources found
+  </div>
+) : selectedType === "Posters" ? (
 
-              return (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-2xl border shadow-sm hover:shadow-lg transition flex flex-col overflow-hidden"
-                >
-                  {/* IMAGE */}
-                  <div className="relative h-56">
-                    <img
-                      src={item.image_url || "/placeholder.png"}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                    />
+  /* 🖼️ POSTERS VIEW */
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    {filteredResources.map((img) => (
+      <div
+        key={img.id}
+        className="rounded-xl shadow-lg hover:shadow-2xl transition-all flex flex-col border-2 border-[#E8D5C9]"
+        style={{ backgroundColor: "#EFE3D8" }}
+      >
+        {/* IMAGE */}
+        <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white relative group">
+          <img
+            src={img.image_url || "/placeholder.png"}
+            alt={img.title}
+            className="max-h-40 max-w-40 w-full object-contain"
+          />
 
-                    {isWebinar && item.video_url && (
-                      <button
-                        onClick={() => setSelectedVideo(item.video_url)}
-                        className="absolute inset-0 flex items-center justify-center bg-black/40"
-                      >
-                        <div className="w-14 h-14 bg-[#741A1C] text-white rounded-full flex items-center justify-center">
-                          <FiPlay />
-                        </div>
-                      </button>
-                    )}
-                  </div>
+          {/* DOWNLOAD OVERLAY */}
+          {img.image_url && (
+            <a
+              href={img.image_url}
+              download
+              className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
+            >
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-semibold text-[#741A1C]">
+                <FiDownload /> Download
+              </div>
+            </a>
+          )}
+        </div>
 
-                  {/* CONTENT */}
-                  <div className="p-6 flex flex-col gap-3 flex-grow">
-                    <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
-                      {item.category}
-                      {item.material_type && ` • ${item.material_type}`}
-                    </span>
+        {/* FOOTER */}
+        <div className="px-6 pb-6 mt-auto flex items-center justify-between gap-4">
+          <div className="text-sm font-semibold truncate text-slate-900">
+            {img.title}
+          </div>
 
-                    <h3 className="text-lg font-bold">{item.title}</h3>
+          <a
+            href={img.image_url}
+            download
+            className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#741A1C] hover:bg-slate-100 transition flex items-center gap-2"
+          >
+            <FiDownload size={16} />
+            {/* Download */}
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
 
-                    <p className="text-slate-600 text-sm line-clamp-3">
-                      {item.description}
-                    </p>
+) : (
 
-                    <div className="pt-4 mt-auto border-t flex justify-between items-center">
-                      {isWebinar ? (
-                        <button
-                          onClick={() => setSelectedVideo(item.video_url)}
-                          className="text-[#741A1C] font-semibold flex items-center gap-2"
-                        >
-                          Watch Now <FiArrowRight />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => setReadMoreItem(item)}
-                          className="text-[#741A1C] font-semibold flex items-center gap-2"
-                        >
-                          Read More <FiArrowRight />
-                        </button>
-                      )}
+  /* 📄 DEFAULT RESOURCES VIEW */
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {filteredResources.map((item) => {
+      const isWebinar = normalize(item.category) === "webinars";
 
-                      <div className="flex gap-3 text-slate-400">
-                        <FiShare2 />
-                        {!isWebinar && item.file_url && (
-                          <a href={item.file_url} download>
-                            <FiDownload />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+      return (
+        <div
+          key={item.id}
+          className="bg-white rounded-2xl border shadow-sm hover:shadow-lg transition flex flex-col overflow-hidden"
+        >
+          {/* IMAGE */}
+          <div className="relative h-56">
+            <img
+              src={item.image_url || "/placeholder.png"}
+              alt={item.title}
+              className="w-full h-full object-cover"
+            />
+
+            {isWebinar && item.video_url && (
+              <button
+                onClick={() => setSelectedVideo(item.video_url)}
+                className="absolute inset-0 flex items-center justify-center bg-black/40"
+              >
+                <div className="w-14 h-14 bg-[#741A1C] text-white rounded-full flex items-center justify-center">
+                  <FiPlay />
                 </div>
-              );
-            })}
+              </button>
+            )}
           </div>
-        ) : (
-          <div className="text-center py-20 text-slate-500">
-            No resources found
+
+          {/* CONTENT */}
+          <div className="p-6 flex flex-col gap-3 flex-grow">
+            <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
+              {item.category}
+              {item.material_type && ` • ${item.material_type}`}
+            </span>
+
+            <h3 className="text-lg font-bold">{item.title}</h3>
+
+            <p className="text-slate-600 text-sm line-clamp-3">
+              {item.description}
+            </p>
+
+            <div className="pt-4 mt-auto border-t flex justify-between items-center">
+              {isWebinar ? (
+                <button
+                  onClick={() => setSelectedVideo(item.video_url)}
+                  className="text-[#741A1C] font-semibold flex items-center gap-2"
+                >
+                  Watch Now <FiArrowRight />
+                </button>
+              ) : (
+                <button
+                  onClick={() => setReadMoreItem(item)}
+                  className="text-[#741A1C] font-semibold flex items-center gap-2"
+                >
+                  Read More <FiArrowRight />
+                </button>
+              )}
+
+              <div className="flex gap-3 text-slate-400">
+                <FiShare2 />
+                {!isWebinar && item.file_url && (
+                  <a href={item.file_url} download>
+                    <FiDownload />
+                  </a>
+                )}
+              </div>
+            </div>
           </div>
-        )}
+        </div>
+      );
+    })}
+  </div>
+
+)}
       </main>
 
       {/* VIDEO MODAL */}
@@ -320,7 +374,7 @@ export default function Resources() {
                 download
                 className="inline-flex items-center gap-2 bg-[#741A1C] text-white px-5 py-2 rounded-xl font-semibold"
               >
-                <FiDownload /> Download
+                <FiDownload />Download
               </a>
             )}
           </div>
