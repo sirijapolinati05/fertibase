@@ -217,9 +217,9 @@ export default function Resources() {
               download
               className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
             >
-              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-semibold text-[#741A1C]">
+              {/* <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-semibold text-[#741A1C]">
                 <FiDownload /> Download
-              </div>
+              </div> */}
             </a>
           )}
         </div>

@@ -352,11 +352,14 @@ useEffect(() => {
     job.title?.toLowerCase().includes(search.toLowerCase())
   )
   .map(job => {
+    console.log(job);
 
-    const deadline =
-      job.days_left != null
-        ? `${job.days_left} days left`
-        : "—";
+    const hasDeadline =
+      job.daysLeft !== null &&
+      job.daysLeft !== undefined;
+
+    const hasSalary =
+      !!job.salary_range || !!job.salary;
 
     return (
       <motion.div
@@ -376,9 +379,11 @@ useEffect(() => {
             </p>
           </div>
 
-          <span className="px-4 py-1.5 text-sm rounded-full bg-primary-100 text-primary-700 font-semibold">
-            {job.type || "Full-time"}
-          </span>
+          {job.type && (
+            <span className="px-4 py-1.5 text-sm rounded-full bg-primary-100 text-primary-700 font-semibold">
+              {job.type}
+            </span>
+          )}
         </div>
 
         {/* Meta */}
@@ -414,18 +419,24 @@ useEffect(() => {
           </div>
         )}
 
-        {/* Footer Meta */}
-        <div className="flex flex-wrap items-center justify-between gap-4 text-sm">
-          <div className="text-primary-700 font-semibold">
-            {job.positions} positions • {deadline}
-          </div>
+        {/* Footer Meta — schema driven */}
+        {(hasDeadline || hasSalary || job.positions) && (
+          <div className="flex flex-wrap items-center justify-between gap-4 text-sm mt-4">
 
-          {job.salary_range && (
             <div className="text-primary-700 font-semibold">
-              💰 {job.salary_range}
+              {job.positions && `${job.positions} positions`}
+              {job.positions && hasDeadline && " • "}
+              {hasDeadline && `${job.daysLeft} days left`}
             </div>
-          )}
-        </div>
+
+            {hasSalary && (
+              <div className="text-primary-700 font-semibold">
+                💰 {job.salary_range || job.salary}
+              </div>
+            )}
+
+          </div>
+        )}
 
         {/* Actions */}
         <div className="flex justify-between items-center mt-6">
@@ -451,6 +462,7 @@ useEffect(() => {
       </motion.div>
     );
   })}
+
 
     </div>
 
