@@ -5,10 +5,12 @@ export async function fetchLatestUpdate() {
     .from("latest_updates")
     .select("*")
     .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
+    .order("created_at", { ascending: false }); // latest first
 
-  if (error) return null;
-  return data;
+  if (error) {
+    console.error("Latest updates fetch failed:", error);
+    return [];
+  }
+
+  return data || [];
 }

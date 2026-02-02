@@ -31,12 +31,8 @@ export default function About() {
           <img
   src={HERO_IMAGES.about}
   alt="About Fertibase"
-  className="w-full h-[80vh] object-cover"
+  className="w-full h-auto object-cover"
 />
-
-
-
-          
         </motion.div>
 
         {/* Right: Content */}

@@ -15,14 +15,32 @@ export default function FarmerStories() {
     val.toLowerCase().replace(/\./g, "").trim();
 
   const getYoutubeEmbed = (url) => {
-    if (!url) return null;
-    const match = url.match(
-      /(?:youtu.be\/|youtube.com\/(?:watch\?v=|embed\/))([^&]+)/
-    );
-    return match
-      ? `https://www.youtube.com/embed/${match[1]}?autoplay=1`
-      : null;
-  };
+  if (!url) return null;
+
+  try {
+    const u = new URL(url);
+
+    // youtu.be/<id>
+    if (u.hostname.includes("youtu.be")) {
+      return `https://www.youtube.com/embed/${u.pathname.slice(1)}?autoplay=1&mute=1`;
+    }
+
+    // youtube.com/watch?v=<id>
+    if (u.searchParams.get("v")) {
+      return `https://www.youtube.com/embed/${u.searchParams.get("v")}?autoplay=1&mute=1`;
+    }
+
+    // youtube.com/shorts/<id>
+    if (u.pathname.includes("/shorts/")) {
+      const id = u.pathname.split("/shorts/")[1];
+      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+};
 
   /* ---------------- FETCH ---------------- */
 
@@ -46,10 +64,9 @@ export default function FarmerStories() {
     fetchTestimonials();
   }, []);
 
-  /* Stop video on filter change */
   useEffect(() => {
-    setPlayingId(null);
-  }, [selectedState]);
+  setPlayingId(null);
+}, [selectedState]);
 
   /* ---------------- FILTERED DATA ---------------- */
 
@@ -144,39 +161,42 @@ export default function FarmerStories() {
                   className="bg-white rounded-3xl shadow-lg border overflow-hidden"
                 >
                   {/* IMAGE / VIDEO */}
-                  <div className="relative bg-[#F4EADF] flex justify-center items-center py-10">
-                    <div className="relative w-[260px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl bg-black">
-                      {playingId === t.id && embedUrl ? (
-                        <iframe
-                          src={embedUrl}
-                          className="w-full h-full"
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <>
-                          <img
-                            src={t.image_url || t.image_src}
-                            alt={t.name}
-                            className="w-full h-full object-cover"
-                          />
+<div
+  className="relative bg-[#F4EADF] flex justify-center items-center py-10 cursor-pointer"
+  onClick={() => {
+  if (!t.video_url) return;
+  setPlayingId((prev) => (prev === t.id ? null : t.id));
+}}
+>
+  <div className="relative w-[260px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl bg-black">
+    {playingId === t.id && embedUrl ? (
+      <iframe
+  key={t.id}
+  src={embedUrl}
+  className="w-full h-full"
+  allow="autoplay; encrypted-media"
+  allowFullScreen
+/>
+    ) : (
+      <>
+        <img
+          src={t.image_url || t.image_src}
+          alt={t.name}
+          className="w-full h-full object-cover"
+        />
 
-                          {t.video_url && (
-                            <button
-                              onClick={() => setPlayingId(t.id)}
-                              className="absolute inset-0 flex items-center justify-center
-                                         bg-black/30 hover:bg-black/40 transition"
-                            >
-                              <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-                                <PlayCircle className="w-10 h-10 text-[#741A1C]" />
-                              </div>
-                            </button>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-
+        {t.video_url && (
+          <div className="absolute inset-0 flex items-center justify-center
+                          bg-black/30 hover:bg-black/40 transition">
+            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+              <PlayCircle className="w-10 h-10 text-[#741A1C]" />
+            </div>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+</div>
                   {/* CONTENT */}
                   <div className="p-6 space-y-3">
                     <h3 className="text-xl font-bold text-slate-900">

@@ -22,13 +22,13 @@ export default function Contact() {
       </motion.div>
 
       {/* Contact Container */}
-      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-start">
+      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-stretch">
         {/* Left - Info */}
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="bg-white/80 backdrop-blur-xl border border-primary-200 rounded-3xl shadow-xl p-10"
+          className="bg-white/80 backdrop-blur-xl border border-primary-200 rounded-3xl shadow-xl p-10 h-full flex flex-col"
         >
           <ul className="space-y-6 text-text-base">
             <li className="flex items-center gap-4">
@@ -46,7 +46,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-semibold">Email</h4>
-                <p>info@fertibase.in</p>
+                <p>info@fertibase.in , sales@fertibase.in</p>
               </div>
             </li>
             <li className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export default function Contact() {
           initial={{ x: 50, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="bg-gradient-to-br from-white via-soil-light to-primary-50 border border-primary-200 rounded-3xl shadow-xl p-10"
+          className="bg-gradient-to-br from-white via-soil-light to-primary-50 border border-primary-200 rounded-3xl shadow-xl p-10 h-full flex flex-col"
         >
           <h2 className="text-2xl font-bold text-primary-700 mb-8">
             Send Us a Message

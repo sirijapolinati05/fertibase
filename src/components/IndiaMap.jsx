@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Globe, MapPin, Users } from "lucide-react";
-import indiaMapImage from "../assets/indiamap2.png";
+import indiaMapImage from "../assets/indiamap.png";
 
 export default function IndiaMap() {
   const mapImageSrc = indiaMapImage;

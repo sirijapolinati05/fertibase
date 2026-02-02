@@ -1,5 +1,5 @@
 // Products.jsx – Supabase powered (UPDATED)
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { ArrowRight, Loader2, Search } from "lucide-react";
 import supabase from "../lib/supabaseClient";
 import ProductModal from "../components/ProductModal";
@@ -22,6 +22,9 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const sentinelRef = useRef(null);
+const [isSticky, setIsSticky] = useState(false);
+
   /* ---------------- FETCH FROM SUPABASE ---------------- */
 
   useEffect(() => {
@@ -43,6 +46,25 @@ export default function Products() {
 
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      setIsSticky(!entry.isIntersecting);
+    },
+    {
+      rootMargin: "-72px 0px 0px 0px", // height of navbar
+      threshold: 0,
+    }
+  );
+
+  if (sentinelRef.current) {
+    observer.observe(sentinelRef.current);
+  }
+
+  return () => observer.disconnect();
+}, []);
+
 
   /* ---------------- CATEGORIES WITH COUNT ---------------- */
 
@@ -138,8 +160,19 @@ export default function Products() {
         </div>
       </div>
 
+      {/* STICKY SENTINEL */}
+<div ref={sentinelRef} className="h-px" />
+
       {/* CATEGORY TABS */}
-      <div className="flex flex-wrap gap-3 justify-center mb-12">
+      <div
+  className="
+    sticky top-[72px] z-40
+    bg-[#F5E9E2]
+    py-7 mb-12
+    flex flex-wrap gap-3 justify-center
+    shadow-sm
+  "
+>
         {categories.map((cat) => (
           <button
             key={cat.name}

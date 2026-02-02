@@ -2,56 +2,135 @@ import { useEffect, useState } from "react";
 import { fetchLatestUpdate } from "../lib/latestUpdates";
 
 export function LatestUpdateBar() {
-  const [update, setUpdate] = useState(null);
+  const [updates, setUpdates] = useState([]);
+
+  const marqueeItems =
+  updates.length > 1 ? [...updates, ...updates] : updates;
+
 
   useEffect(() => {
-    fetchLatestUpdate().then(setUpdate);
-  }, []);
+  fetchLatestUpdate().then((data) => {
+    if (!data) {
+      setUpdates([]);
+    } else if (Array.isArray(data)) {
+      setUpdates(data);
+    } else {
+      setUpdates([data]);
+    }
+  });
+}, []);
 
-  if (!update) return null;
+
+  if (!updates.length) return null;
 
   return (
-    <section className="relative overflow-hidden bg-white text-black">
-      
-      {/* Soft overlay */}
-      <div className="absolute inset-0 bg-black/10" />
+    <section className="relative overflow-hidden bg-white text-black border-b">
+      {/* Track */}
+      <div className="marquee">
+        <div
+  className={`marquee__content ${
+    updates.length > 1 ? "fast" : "slow"
+  }`}
+>
+          {marqueeItems.map((update, idx) => (
+            <div key={idx} className="marquee__item">
+              {update.title && (
+                <span className="title">{update.title}:</span>
+              )}
 
-      {/* Scrolling content */}
-      <div
-        className="relative flex items-center gap-6 px-6 py-3 whitespace-nowrap
-                   animate-marquee hover:[animation-play-state:paused]"
-      >
-        {/* Message */}
-        <span className="text-sm md:text-base font-medium tracking-wide text-black/95">
-          {update.message}
-        </span>
+              <span className="message">{update.message}</span>
 
-        {/* CTA */}
-        {update.action_text && update.action_link && (
-          <a
-            href={update.action_link}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center rounded-full
-                       bg-[#F4ECE6] text-[#7A3E2E]
-                       px-4 py-1.5 text-sm font-semibold
-                       shadow-md hover:bg-white hover:scale-105
-                       transition-all duration-300"
-          >
-            {update.action_text} →
-          </a>
-        )}
+              {update.action_text && update.action_link && (
+                <a
+                  href={update.action_link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="cta"
+                >
+                  {update.action_text} →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Animation */}
+      {/* Styles */}
       <style>{`
+        .marquee {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .marquee__content {
+  display: flex;
+  width: max-content;
+}
+
+.marquee__content.fast {
+  animation: marquee 12s linear infinite;
+}
+
+.marquee__content.slow {
+  animation: marquee 20s linear infinite;
+}
+
+
+        .marquee:hover .marquee__content {
+          animation-play-state: paused; /* 🛑 PAUSE ON HOVER */
+        }
+
+        .marquee__item {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding-right: 4rem; /* SPACE BETWEEN ITEMS */
+          white-space: nowrap;
+          font-size: 0.95rem;
+        }
+
+        .title {
+          font-weight: 700;
+          color: #741A1C;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        .message {
+          font-weight: 500;
+          color: rgba(0,0,0,0.85);
+        }
+
+        .cta {
+          background: #f4ece6;
+          color: #7a3e2e;
+          padding: 0.25rem 0.75rem;
+          border-radius: 999px;
+          font-weight: 600;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+          transition: transform 0.2s ease;
+        }
+
+        .cta:hover {
+          transform: scale(1.08);
+          background: white;
+        }
+
         @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-marquee {
-          animation: marquee 14s linear infinite;
-        }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+  .animate-marquee {
+  animation: marquee 12s linear infinite;
+}
+
+.animate-marquee-slow {
+  animation: marquee 20s linear infinite;
+}
       `}</style>
     </section>
   );
