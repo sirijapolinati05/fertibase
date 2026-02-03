@@ -83,7 +83,7 @@ export default function Aboutus() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-6">
               About <span className="text-primary-600">Fertibase</span>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-primary-500 mx-auto mb-8"></div>
@@ -143,7 +143,7 @@ export default function Aboutus() {
             className="text-center mb-16"
           >
             <Handshake className="w-16 h-16 mx-auto mb-6 text-primary-200" />
-            <h2 className="text-4xl md:text-5xl text-[#741A1C] font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl text-[#6B412E] font-bold mb-6">
               Growth Through Partnership
             </h2>
             <p className="text-xl text-primary-100 max-w-3xl mx-auto">
@@ -187,7 +187,7 @@ export default function Aboutus() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
               Our <span className="text-primary-600">Impact</span>
             </h2>
             <p className="text-xl text-text-light">
@@ -233,7 +233,7 @@ export default function Aboutus() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-6">
               Our Core <span className="text-primary-600">Values</span>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary-600 to-primary-500 mx-auto"></div>
@@ -344,7 +344,7 @@ export default function Aboutus() {
                 Leadership Team
               </span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-extrabold text-[#741A1C] mb-6">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-[#6B412E] mb-6">
               Meet Our Leaders
             </h2>
             <p className="text-xl text-text-light max-w-3xl mx-auto leading-relaxed">
@@ -376,7 +376,7 @@ export default function Aboutus() {
                 viewport={{ once: true }}
                 className="group relative"
               >
-                <div className="bg-[#741A1C] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-[#8b2a2c]">
+                <div className="bg-[#6B412E] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-[#8b2a2c]">
 
                   {/* Gradient accent bar */}
                   <div className="h-2 bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700"></div>

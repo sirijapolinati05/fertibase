@@ -66,7 +66,7 @@ const handleSubmit = async (e) => {
         transition={{ duration: 0.8 }}
         className="text-center mb-16"
       >
-        <h1 className="text-5xl md:text-6xl font-extrabold text-[#741A1C]">
+        <h1 className="text-5xl md:text-6xl font-extrabold text-[#6B412E]">
           Contact <span className="text-primary-600">FertiBase</span>
         </h1>
         <p className="text-lg text-text-base mt-4 max-w-2xl mx-auto font-medium">
@@ -82,11 +82,38 @@ const handleSubmit = async (e) => {
           initial={{ x: -50, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="bg-white/80 backdrop-blur-xl border border-primary-200 rounded-3xl shadow-xl p-10 h-full flex flex-col"
+          className="
+  group relative
+  bg-white/70 backdrop-blur-2xl
+  border border-primary-200/60
+  rounded-3xl p-10 h-full flex flex-col
+  shadow-xl
+  transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]
+  hover:-translate-y-2
+  hover:shadow-[0_30px_60px_-20px_rgba(116,26,28,0.35)]
+  overflow-hidden
+"
         >
+          <div className="
+  absolute inset-0 opacity-0 group-hover:opacity-100
+  transition-opacity duration-700
+  bg-[radial-gradient(circle_at_20%_10%,rgba(116,26,28,0.08),transparent_60%)]
+  pointer-events-none
+" />
           <ul className="space-y-6 text-text-base">
-            <li className="flex items-center gap-4">
-              <div className="p-3 bg-primary-100 rounded-full text-primary-700">
+            <li className="
+  group flex items-center gap-4
+  transition-all duration-500
+  hover:-translate-y-1
+">
+              <div className="
+  p-3 rounded-full
+  bg-primary-100 text-primary-700
+  transition-all duration-500
+  group-hover:bg-primary-200
+  group-hover:rotate-6
+  group-hover:scale-110
+">
                 <Phone size={22} />
               </div>
               <div>
@@ -94,8 +121,19 @@ const handleSubmit = async (e) => {
                 <p>8977729535</p>
               </div>
             </li>
-            <li className="flex items-center gap-4">
-              <div className="p-3 bg-primary-100 rounded-full text-primary-700">
+            <li className="
+  group flex items-center gap-4
+  transition-all duration-500
+  hover:-translate-y-1
+">
+              <div className="
+  p-3 rounded-full
+  bg-primary-100 text-primary-700
+  transition-all duration-500
+  group-hover:bg-primary-200
+  group-hover:rotate-6
+  group-hover:scale-110
+">
                 <Mail size={22} />
               </div>
               <div>
@@ -103,8 +141,19 @@ const handleSubmit = async (e) => {
                 <p>info@fertibase.in , sales@fertibase.in</p>
               </div>
             </li>
-            <li className="flex items-center gap-4">
-              <div className="p-3 bg-primary-100 rounded-full text-primary-700">
+            <li className="
+  group flex items-center gap-4
+  transition-all duration-500
+  hover:-translate-y-1
+">
+              <div className="
+  p-3 rounded-full
+  bg-primary-100 text-primary-700
+  transition-all duration-500
+  group-hover:bg-primary-200
+  group-hover:rotate-6
+  group-hover:scale-110
+">
                 <MapPin size={22} />
               </div>
               <div>
@@ -112,8 +161,19 @@ const handleSubmit = async (e) => {
                 <p>Sy No. 81, Sultanpur, Hyderabad, India</p>
               </div>
             </li>
-            <li className="flex items-center gap-4">
-              <div className="p-3 bg-primary-100 rounded-full text-primary-700">
+            <li className="
+  group flex items-center gap-4
+  transition-all duration-500
+  hover:-translate-y-1
+">
+              <div className="
+  p-3 rounded-full
+  bg-primary-100 text-primary-700
+  transition-all duration-500
+  group-hover:bg-primary-200
+  group-hover:rotate-6
+  group-hover:scale-110
+">
                 <Clock size={22} />
               </div>
               <div>
@@ -126,7 +186,12 @@ const handleSubmit = async (e) => {
           <div className="mt-10">
             <iframe
               title="FertiBase Location"
-              className="w-full h-64 rounded-2xl shadow-lg"
+              className="
+    w-full h-64 rounded-2xl
+    shadow-lg
+    transition-all duration-700
+    hover:shadow-[0_30px_60px_-20px_rgba(116,26,28,0.35)]
+  "
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.496332107397!2d78.4747!3d17.3850!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9751b2c9b6f5%3A0x3a4b36ea122223b!2sHyderabad!5e0!3m2!1sen!2sin!4v1683712233441"
               allowFullScreen
               loading="lazy"
@@ -140,8 +205,23 @@ const handleSubmit = async (e) => {
           initial={{ x: 50, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="bg-gradient-to-br from-white via-soil-light to-primary-50 border border-primary-200 rounded-3xl shadow-xl p-10 h-full flex flex-col"
+          className="
+  group relative
+  bg-white/70 backdrop-blur-2xl
+  border border-primary-200/60
+  rounded-3xl shadow-xl p-10 h-full flex flex-col
+  transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)]
+  hover:-translate-y-2
+  hover:shadow-[0_35px_70px_-25px_rgba(116,26,28,0.4)]
+  overflow-hidden
+"
         >
+          <div className="
+  absolute inset-0 opacity-0 group-hover:opacity-100
+  transition-opacity duration-700
+  bg-[radial-gradient(circle_at_80%_20%,rgba(116,26,28,0.06),transparent_60%)]
+  pointer-events-none
+" />
           <h2 className="text-2xl font-bold text-primary-700 mb-8">
             Send Us a Message
           </h2>
@@ -160,9 +240,16 @@ const handleSubmit = async (e) => {
     onChange={(e) =>
       setFormData({ ...formData, full_name: e.target.value })
     }
-    className="w-full px-4 py-3 border border-primary-300 rounded-xl
-               focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-               outline-none bg-white text-text-base"
+    className="
+  w-full px-4 py-3 rounded-xl
+  bg-white/90 backdrop-blur
+  border border-primary-300
+  transition-all duration-300
+  focus:ring-2 focus:ring-primary-500/40
+  focus:border-primary-500
+  hover:border-primary-400
+  outline-none text-text-base
+"
   />
 </div>
 
@@ -179,9 +266,16 @@ const handleSubmit = async (e) => {
     onChange={(e) =>
       setFormData({ ...formData, email: e.target.value })
     }
-    className="w-full px-4 py-3 border border-primary-300 rounded-xl
-               focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-               outline-none bg-white text-text-base"
+    className="
+  w-full px-4 py-3 rounded-xl
+  bg-white/90 backdrop-blur
+  border border-primary-300
+  transition-all duration-300
+  focus:ring-2 focus:ring-primary-500/40
+  focus:border-primary-500
+  hover:border-primary-400
+  outline-none text-text-base
+"
   />
 </div>
 
@@ -201,9 +295,16 @@ const handleSubmit = async (e) => {
     onChange={(e) =>
       setFormData({ ...formData, phone: e.target.value })
     }
-    className="w-full px-4 py-3 border border-primary-300 rounded-xl
-               focus:ring-2 focus:ring-primary-500 focus:border-primary-500
-               outline-none bg-white text-text-base"
+    className="
+  w-full px-4 py-3 rounded-xl
+  bg-white/90 backdrop-blur
+  border border-primary-300
+  transition-all duration-300
+  focus:ring-2 focus:ring-primary-500/40
+  focus:border-primary-500
+  hover:border-primary-400
+  outline-none text-text-base
+"
   />
 </div>
 
@@ -230,7 +331,17 @@ const handleSubmit = async (e) => {
   <motion.button
   type="submit"
   disabled={submitting}
-  className="w-full py-3 mt-4 bg-[#741A1C] text-white rounded-xl"
+  className="
+  w-full py-3 mt-4
+  bg-[#6B412E] text-white rounded-xl
+  font-semibold
+  shadow-lg
+  transition-all duration-300
+  hover:bg-[#5e1416]
+  hover:shadow-[0_20px_40px_-15px_rgba(116,26,28,0.5)]
+  hover:-translate-y-[1px]
+  active:scale-[0.98]
+"
 >
   {submitting ? "Sending..." : "Send Message"}
 </motion.button>
@@ -245,14 +356,18 @@ const handleSubmit = async (e) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       className="
-        bg-[#FFF7F4]
-        border border-[#E8D5C9]
-        rounded-3xl
-        p-10
-        shadow-xl
-      "
+  group relative
+  bg-white/70 backdrop-blur-2xl
+  border border-[#E8D5C9]/60
+  rounded-3xl p-10
+  shadow-xl
+  transition-all duration-700
+  hover:-translate-y-2
+  hover:shadow-[0_40px_80px_-30px_rgba(116,26,28,0.4)]
+  overflow-hidden
+"
     >
-      <h2 className="text-3xl md:text-4xl font-extrabold text-[#741A1C] mb-4">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-[#6B412E] mb-4">
         Schedule a Meeting
       </h2>
 
@@ -264,7 +379,7 @@ const handleSubmit = async (e) => {
         <button
           onClick={() => setShowScheduling(true)}
           className="
-            bg-[#741A1C]
+            bg-[#6B412E]
             hover:bg-[#5e1416]
             text-white
             px-10 py-4
@@ -290,7 +405,7 @@ const handleSubmit = async (e) => {
       <button
         onClick={() => setShowScheduling(false)}
         className="absolute top-4 right-4 z-10
-        bg-[#741A1C] hover:bg-[#5e1416]
+        bg-[#6B412E] hover:bg-[#5e1416]
         text-white rounded-full w-9 h-9
         flex items-center justify-center
         shadow-md transition"

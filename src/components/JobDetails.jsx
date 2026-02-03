@@ -32,7 +32,7 @@ export default function JobDetails() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 animate-spin text-[#741A1C]" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#6B412E]" />
       </div>
     );
   }
@@ -42,7 +42,7 @@ export default function JobDetails() {
       <div className="min-h-screen flex items-center justify-center">
         <button
           onClick={() => navigate(-1)}
-          className="px-6 py-3 bg-[#741A1C] text-white rounded-lg"
+          className="px-6 py-3 bg-[#6B412E] text-white rounded-lg"
         >
           Go Back
         </button>
@@ -62,7 +62,7 @@ export default function JobDetails() {
         {/* Back */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 mb-6 text-[#741A1C] font-medium"
+          className="flex items-center gap-2 mb-6 text-[#6B412E] font-medium"
         >
           <ArrowLeft size={18} /> Back
         </button>
@@ -71,7 +71,7 @@ export default function JobDetails() {
         <motion.div className="bg-white rounded-3xl p-8 shadow-xl border border-[#E8D5C9]">
 
           {/* HEADER */}
-          <h1 className="text-4xl font-bold text-[#741A1C]">
+          <h1 className="text-4xl font-bold text-[#6B412E]">
             {job.title}
           </h1>
           <p className="mt-2 text-[#6B4A3A]">
@@ -146,7 +146,7 @@ export default function JobDetails() {
             className="
               w-full md:w-auto
               px-8 py-3
-              bg-[#741A1C]
+              bg-[#6B412E]
               hover:bg-[#5e1416]
               text-white
               rounded-xl
@@ -174,7 +174,7 @@ export default function JobDetails() {
 /* ================= COMPONENTS ================= */
 
 const Badge = ({ children }) => (
-  <span className="px-4 py-1 bg-[#F5E9E2] text-[#741A1C] rounded-full font-medium border border-[#E8D5C9]">
+  <span className="px-4 py-1 bg-[#F5E9E2] text-[#6B412E] rounded-full font-medium border border-[#E8D5C9]">
     {children}
   </span>
 );
@@ -194,7 +194,7 @@ const Info = ({ label, value }) => (
 
 const Section = ({ title, children }) => (
   <div className="mt-8">
-    <h3 className="text-xl font-semibold text-[#741A1C] mb-2">
+    <h3 className="text-xl font-semibold text-[#6B412E] mb-2">
       {title}
     </h3>
     <div className="text-[#3B2418]">{children}</div>
@@ -214,7 +214,7 @@ const TagList = ({ items }) => (
     {items.map((i, idx) => (
       <span
         key={idx}
-        className="px-3 py-1 border border-[#E8D5C9] rounded-full text-sm text-[#741A1C] bg-[#F5E9E2]"
+        className="px-3 py-1 border border-[#E8D5C9] rounded-full text-sm text-[#6B412E] bg-[#F5E9E2]"
       >
         {i}
       </span>

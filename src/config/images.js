@@ -6,9 +6,9 @@
  */
 
 // ==================== BRANDING & LOGOS ====================
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 import logoPng from "../assets/logo.png";
-import logoSplash from "../assets/b.png";
+import logoSplash from "../assets/logo splash.png";
 
 // ==================== HERO & ABOUT SECTIONS ====================
 import aboutImage from "../assets/FertiBaseAbout.png";
@@ -16,9 +16,9 @@ import cloudImage from "../assets/wordcloud.jpeg";
 import cloudddImage from "../assets/clouddd.jpeg";
 import cloudwordImage from "../assets/wordcloud.jpeg";
 import fertiBgImage from "../assets/fertibg.png";
-import scrollImage from "../assets/scroll.png";
-import baseImage from "../assets/base.jpg";
-import imageeImage from "../assets/imagee.jpg";
+import scrollImage from "../assets/logo.png";
+import baseImage from "../assets/logo.png";
+import imageeImage from "../assets/logo.png";
 
 // ==================== PRODUCT IMAGES ====================
 

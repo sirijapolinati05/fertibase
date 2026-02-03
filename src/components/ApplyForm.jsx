@@ -88,11 +88,11 @@ export default function ApplyForm({ close, jobId }) {
       <div className="bg-white max-w-lg mx-auto rounded-3xl p-6 relative mt-6">
 
         {/* Close */}
-        <button onClick={close} className="absolute top-4 right-4 text-[#741A1C]">
+        <button onClick={close} className="absolute top-4 right-4 text-[#6B412E]">
           <X />
         </button>
 
-        <h2 className="text-2xl font-bold text-[#741A1C] mb-6">
+        <h2 className="text-2xl font-bold text-[#6B412E] mb-6">
           Apply for this Job
         </h2>
 
@@ -165,7 +165,7 @@ export default function ApplyForm({ close, jobId }) {
             disabled={loading}
             className="
               w-full py-3 rounded-xl
-              bg-[#741A1C] hover:bg-[#5e1416]
+              bg-[#6B412E] hover:bg-[#5e1416]
               text-white font-semibold
               shadow-md transition
               flex justify-center items-center gap-2
@@ -194,7 +194,7 @@ function Input({ label, ...props }) {
           w-full px-4 py-2
           border border-[#E8D5C9]
           rounded-xl
-          focus:ring-2 focus:ring-[#741A1C]/30
+          focus:ring-2 focus:ring-[#6B412E]/30
           outline-none
         "
       />

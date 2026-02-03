@@ -90,7 +90,7 @@ export default function Contact() {
 
            <button
   type="submit"
-  className="w-full !bg-[#741A1C] !text-white py-4 rounded-xl font-semibold
+  className="w-full !bg-[#6B412E] !text-white py-4 rounded-xl font-semibold
              shadow-lg hover:!bg-[#5e1416]
              transform hover:-translate-y-1 transition-all
              flex items-center justify-center space-x-2"

@@ -67,7 +67,7 @@ const FertibaseSplash = ({ onComplete, className = "" }) => {
           <div className="h-0.5" />
           <Typewriter
             text="BASE"
-            color="text-black"
+            color="text-[#6B412E]"
             delayOffset={"FERTI".length * LETTER_DELAY}
           />
 
