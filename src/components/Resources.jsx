@@ -18,12 +18,57 @@ export default function Resources() {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [expandedItemId, setExpandedItemId] = useState(null);
+
   const [selectedType, setSelectedType] = useState("All");
   const [selectedMarketingType, setSelectedMarketingType] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [readMoreItem, setReadMoreItem] = useState(null);
+
+  const [mobileTabsExpanded, setMobileTabsExpanded] = useState(false);
+const [mobileMarketingExpanded, setMobileMarketingExpanded] = useState(false);
+
+const [playingVideoId, setPlayingVideoId] = useState(null);
+
+  const MAX_MOBILE_TABS = 4; // 2 rows × 2 columns
+
+  const getEmbedUrl = (url) => {
+  if (!url) return null;
+
+  // YouTube
+  if (url.includes("youtube.com/watch")) {
+    const id = new URL(url).searchParams.get("v");
+    return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  }
+
+  if (url.includes("youtu.be")) {
+    const id = url.split("/").pop();
+    return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  }
+
+  return url; // fallback
+};
+
+const handleShare = async (item) => {
+  const url =
+    item.file_url ||
+    item.video_url ||
+    window.location.href;
+
+  if (navigator.share) {
+    await navigator.share({
+      title: item.title,
+      text: item.description,
+      url,
+    });
+  } else {
+    await navigator.clipboard.writeText(url);
+    alert("Link copied to clipboard");
+  }
+};
+
 
   /* ----------------------------- FETCH ----------------------------- */
 
@@ -126,55 +171,127 @@ export default function Resources() {
 
         {/* HEADER */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-black text-[#741A1C]">Resources</h1>
+          <h1 className="text-4xl font-black text-[#6B412E]">Resources</h1>
           <p className="text-slate-600 mt-2">
             Webinars, guides, marketing materials & knowledge assets
           </p>
         </div>
 
-        {/* TOP TABS */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6">
-          {topTabs.map((t) => (
-            <button
-              key={t}
-              onClick={() => {
-                setSelectedType(t);
-                setSelectedMarketingType("All");
-              }}
-              className={`px-5 py-2 rounded-full text-sm font-semibold border flex items-center gap-2
-                ${
-                  selectedType === t
-                    ? "bg-[#741A1C] text-white border-[#741A1C]"
-                    : "bg-white text-[#741A1C] border-slate-200 hover:border-[#741A1C]"
-                }`}
-            >
-              {t}
-              <span className="text-xs bg-white/20 px-2 rounded-full">
-                {categoryCounts[t] || 0}
-              </span>
-            </button>
-          ))}
-        </div>
+        {/* ---------------- MOBILE TOP FILTERS (STICKY) ---------------- */}
+<div className="md:hidden sticky top-[72px] z-50 bg-[#F7EDE5] rounded-2xl p-4 mb-6 shadow-sm">
+  <div className="grid grid-cols-2 gap-3">
+    {(mobileTabsExpanded ? topTabs : topTabs.slice(0, MAX_MOBILE_TABS)).map((t) => (
+      <button
+        key={t}
+        onClick={() => {
+          setSelectedType(t);
+          setSelectedMarketingType("All");
+        }}
+        className={`px-4 py-2 rounded-full text-sm font-semibold border transition
+          ${
+            selectedType === t
+              ? "bg-[#6B412E] text-white border-[#6B412E]"
+              : "bg-white text-[#6B412E] border-[#E5CFC2]"
+          }`}
+      >
+        {t} ({categoryCounts[t] || 0})
+      </button>
+    ))}
+  </div>
 
-        {/* MARKETING SUB FILTER */}
+  {topTabs.length > MAX_MOBILE_TABS && (
+    <div className="mt-4 text-center">
+      <button
+        onClick={() => setMobileTabsExpanded(!mobileTabsExpanded)}
+        className="text-sm font-semibold text-[#6B412E]"
+      >
+        {mobileTabsExpanded ? "− View Less" : "+ View More"}
+      </button>
+    </div>
+  )}
+</div>
+
+{/* ---------------- DESKTOP TOP TABS (UNCHANGED) ---------------- */}
+<div className="hidden md:flex flex-wrap justify-center gap-3 mb-6">
+  {topTabs.map((t) => (
+    <button
+      key={t}
+      onClick={() => {
+        setSelectedType(t);
+        setSelectedMarketingType("All");
+      }}
+      className={`px-5 py-2 rounded-full text-sm font-semibold border flex items-center gap-2
+        ${
+          selectedType === t
+            ? "bg-[#6B412E] text-white border-[#6B412E]"
+            : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
+        }`}
+    >
+      {t}
+      <span className="text-xs bg-white/20 px-2 rounded-full">
+        {categoryCounts[t] || 0}
+      </span>
+    </button>
+  ))}
+</div>
+
         {selectedType === "Marketing Materials" && (
-          <div className="flex justify-center gap-3 mb-8 flex-wrap">
-            {marketingTabs.map((m) => (
-              <button
-                key={m}
-                onClick={() => setSelectedMarketingType(m)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold border
-                  ${
-                    selectedMarketingType === m
-                      ? "bg-[#741A1C] text-white border-[#741A1C]"
-                      : "bg-white text-[#741A1C] border-slate-200 hover:border-[#741A1C]"
-                  }`}
-              >
-                {m} ({marketingCounts[m] || 0})
-              </button>
-            ))}
-          </div>
-        )}
+  <>
+    {/* MOBILE MARKETING FILTERS */}
+    <div className="md:hidden bg-[#F7EDE5] rounded-2xl p-4 mb-8 shadow-sm">
+      <div className="grid grid-cols-2 gap-3">
+        {(mobileMarketingExpanded
+          ? marketingTabs
+          : marketingTabs.slice(0, MAX_MOBILE_TABS)
+        ).map((m) => (
+          <button
+            key={m}
+            onClick={() => setSelectedMarketingType(m)}
+            className={`px-4 py-2 rounded-full text-xs font-semibold border transition
+              ${
+                selectedMarketingType === m
+                  ? "bg-[#6B412E] text-white border-[#6B412E]"
+                  : "bg-white text-[#6B412E] border-[#E5CFC2]"
+              }`}
+          >
+            {m} ({marketingCounts[m] || 0})
+          </button>
+        ))}
+      </div>
+
+      {marketingTabs.length > MAX_MOBILE_TABS && (
+        <div className="mt-4 text-center">
+          <button
+            onClick={() =>
+              setMobileMarketingExpanded(!mobileMarketingExpanded)
+            }
+            className="text-sm font-semibold text-[#6B412E]"
+          >
+            {mobileMarketingExpanded ? "− View Less" : "+ View More"}
+          </button>
+        </div>
+      )}
+    </div>
+
+    {/* DESKTOP MARKETING FILTERS */}
+    <div className="hidden md:flex justify-center gap-3 mb-8 flex-wrap">
+      {marketingTabs.map((m) => (
+        <button
+          key={m}
+          onClick={() => setSelectedMarketingType(m)}
+          className={`px-4 py-1.5 rounded-full text-xs font-semibold border
+            ${
+              selectedMarketingType === m
+                ? "bg-[#6B412E] text-white border-[#6B412E]"
+                : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
+            }`}
+        >
+          {m} ({marketingCounts[m] || 0})
+        </button>
+      ))}
+    </div>
+  </>
+)}
 
         {/* SEARCH */}
         <div className="flex justify-center mb-10">
@@ -182,7 +299,7 @@ export default function Resources() {
             placeholder="Search resources..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full max-w-xl px-5 py-3 rounded-xl border focus:ring-2 focus:ring-[#741A1C]/30 outline-none"
+            className="w-full max-w-xl px-5 py-3 rounded-xl border focus:ring-2 focus:ring-[#6B412E]/30 outline-none"
           />
         </div>
 
@@ -198,10 +315,18 @@ export default function Resources() {
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
     {filteredResources.map((img) => (
       <div
-        key={img.id}
-        className="rounded-xl shadow-lg hover:shadow-2xl transition-all flex flex-col border-2 border-[#E8D5C9]"
-        style={{ backgroundColor: "#EFE3D8" }}
-      >
+  key={img.id}
+  className="
+    group relative rounded-2xl flex flex-col
+    border-2 border-[#E8D5C9]
+    bg-[#EFE3D8]
+    shadow-lg
+    transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
+    hover:-translate-y-2
+    hover:shadow-[0_30px_60px_-20px_rgba(116,26,28,0.35)]
+    overflow-hidden
+  "
+>
         {/* IMAGE */}
         <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white relative group">
           <img
@@ -217,7 +342,7 @@ export default function Resources() {
               download
               className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
             >
-              {/* <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-semibold text-[#741A1C]">
+              {/* <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-semibold text-[#6B412E]">
                 <FiDownload /> Download
               </div> */}
             </a>
@@ -233,7 +358,7 @@ export default function Resources() {
           <a
             href={img.image_url}
             download
-            className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#741A1C] hover:bg-slate-100 transition flex items-center gap-2"
+            className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#6B412E] hover:bg-slate-100 transition flex items-center gap-2"
           >
             <FiDownload size={16} />
             {/* Download */}
@@ -247,79 +372,130 @@ export default function Resources() {
 
   /* 📄 DEFAULT RESOURCES VIEW */
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {filteredResources.map((item) => {
-      const isWebinar = normalize(item.category) === "webinars";
+  {filteredResources.map((item) => {
+    const isWebinar = normalize(item.category) === "webinars";
+    const isMarketing = normalize(item.category) === "marketingmaterials";
+    const isTechnical = normalize(item.category) === "technicalguides";
+    const isPoster = normalize(item.category) === "posters";
+    const isPPT = normalize(item.category) === "ppts";
 
-      return (
-        <div
-          key={item.id}
-          className="bg-white rounded-2xl border shadow-sm hover:shadow-lg transition flex flex-col overflow-hidden"
-        >
-          {/* IMAGE */}
-          <div className="relative h-56">
-            <img
-              src={item.image_url || "/placeholder.png"}
-              alt={item.title}
-              className="w-full h-full object-cover"
-            />
+    const isExpanded = expandedItemId === item.id;
+    const isPlaying = playingVideoId === item.id;
 
-            {isWebinar && item.video_url && (
-              <button
-                onClick={() => setSelectedVideo(item.video_url)}
-                className="absolute inset-0 flex items-center justify-center bg-black/40"
-              >
-                <div className="w-14 h-14 bg-[#741A1C] text-white rounded-full flex items-center justify-center">
-                  <FiPlay />
-                </div>
-              </button>
+    return (
+      <div
+  key={item.id}
+  className="
+    group relative bg-white rounded-2xl border
+    shadow-sm
+    transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
+    hover:-translate-y-2
+    hover:shadow-[0_25px_45px_-15px_rgba(116,26,28,0.35)]
+    overflow-hidden
+  "
+>
+        {/* IMAGE / VIDEO */}
+        {!isPPT && (
+          <div className="relative h-56 bg-black">
+            {isWebinar && isPlaying ? (
+              <iframe
+                src={getEmbedUrl(item.video_url)}
+                className="w-full h-full"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
+            ) : (
+              <>
+                <img
+                  src={item.image_url || "/placeholder.png"}
+                  alt={item.title}
+                  className="
+  w-full h-full object-cover
+  transition-all duration-700 ease-out
+  group-hover:brightness-105
+  group-hover:contrast-105
+  group-hover:-translate-y-1
+"
+                />
+
+                {isWebinar && (
+                  <button
+                    onClick={() => setPlayingVideoId(item.id)}
+                    className="absolute inset-0 flex items-center justify-center bg-black/40"
+                  >
+                    <div className="w-14 h-14 bg-[#6B412E] text-white rounded-full flex items-center justify-center">
+                      <FiPlay />
+                    </div>
+                  </button>
+                )}
+              </>
             )}
           </div>
+        )}
 
-          {/* CONTENT */}
-          <div className="p-6 flex flex-col gap-3 flex-grow">
-            <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
-              {item.category}
-              {item.material_type && ` • ${item.material_type}`}
-            </span>
+        {/* CONTENT */}
+        <div className="p-6 flex flex-col gap-3 flex-grow">
+          <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
+            {item.category}
+            {item.material_type && ` • ${item.material_type}`}
+          </span>
 
-            <h3 className="text-lg font-bold">{item.title}</h3>
+          <h3 className="text-lg font-bold">{item.title}</h3>
 
-            <p className="text-slate-600 text-sm line-clamp-3">
-              {item.description}
+          <p className="text-slate-600 text-sm">
+            {item.description}
+          </p>
+
+          {/* EXPAND DETAILS */}
+          {(isMarketing || isTechnical) && isExpanded && (
+            <p className="text-slate-700 text-sm leading-relaxed">
+              {item.detailed_description}
             </p>
+          )}
 
-            <div className="pt-4 mt-auto border-t flex justify-between items-center">
-              {isWebinar ? (
-                <button
-                  onClick={() => setSelectedVideo(item.video_url)}
-                  className="text-[#741A1C] font-semibold flex items-center gap-2"
-                >
-                  Watch Now <FiArrowRight />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setReadMoreItem(item)}
-                  className="text-[#741A1C] font-semibold flex items-center gap-2"
-                >
-                  Read More <FiArrowRight />
-                </button>
-              )}
+          <div className="pt-4 mt-auto border-t flex justify-between items-center">
+            {/* LEFT ACTION */}
+            {isWebinar ? (
+              <button
+                onClick={() => setPlayingVideoId(item.id)}
+                className="text-[#6B412E] font-semibold flex items-center gap-2"
+              >
+                Watch Now <FiArrowRight />
+              </button>
+            ) : !isPPT ? (
+              <button
+                onClick={() =>
+                  setExpandedItemId(isExpanded ? null : item.id)
+                }
+                className="text-[#6B412E] font-semibold flex items-center gap-2"
+              >
+                {isExpanded ? "Hide Details" : "Read More"}
+                <FiArrowRight />
+              </button>
+            ) : (
+              <span className="text-sm text-slate-500 font-semibold">
+                PPT File
+              </span>
+            )}
 
-              <div className="flex gap-3 text-slate-400">
+            {/* RIGHT ACTIONS */}
+            <div className="flex gap-4 text-slate-400">
+              <button onClick={() => handleShare(item)}>
                 <FiShare2 />
-                {!isWebinar && item.file_url && (
-                  <a href={item.file_url} download>
-                    <FiDownload />
-                  </a>
-                )}
-              </div>
+              </button>
+
+              {item.file_url && (
+                <a href={item.file_url} download>
+                  <FiDownload />
+                </a>
+              )}
             </div>
           </div>
         </div>
-      );
-    })}
-  </div>
-
+      </div>
+    );
+  })}
+</div>
 )}
       </main>
 
@@ -372,7 +548,7 @@ export default function Resources() {
               <a
                 href={readMoreItem.file_url}
                 download
-                className="inline-flex items-center gap-2 bg-[#741A1C] text-white px-5 py-2 rounded-xl font-semibold"
+                className="inline-flex items-center gap-2 bg-[#6B412E] text-white px-5 py-2 rounded-xl font-semibold"
               >
                 <FiDownload />Download
               </a>

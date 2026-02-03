@@ -204,7 +204,7 @@ useEffect(() => {
             className="text-center mb-12"
           >
             <p className="text-primary-600 font-semibold text-lg mb-2">WHY CHOOSE US</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
               Why Join FertiBase?
             </h2>
             <p className="text-xl text-text-light max-w-3xl mx-auto">
@@ -325,7 +325,7 @@ useEffect(() => {
     {/* Heading */}
     <div className="text-center mb-12">
       <p className="text-primary-600 font-semibold text-lg mb-2">CAREERS</p>
-      <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+      <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
         Current Job Openings
       </h2>
       <p className="text-xl text-text-light max-w-3xl mx-auto">
@@ -486,7 +486,7 @@ useEffect(() => {
       viewport={{ once: true }}
       className="text-center mb-12"
     >
-      <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+      <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
         Our Application Process
       </h2>
       <p className="text-xl text-text-light max-w-3xl mx-auto">
@@ -542,7 +542,7 @@ useEffect(() => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
               Ready to Grow with FertiBase?
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
@@ -555,7 +555,7 @@ useEffect(() => {
 >
   <Link
     to="/contactus"
-    className="inline-flex items-center justify-center bg-white text-[#741A1C] px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-2xl transition-all"
+    className="inline-flex items-center justify-center bg-white text-[#6B412E] px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-2xl transition-all"
   >
     <MessageCircle className="mr-2 h-5 w-5" />
     Get in Touch

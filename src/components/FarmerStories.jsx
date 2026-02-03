@@ -15,32 +15,22 @@ export default function FarmerStories() {
     val.toLowerCase().replace(/\./g, "").trim();
 
   const getYoutubeEmbed = (url) => {
-  if (!url) return null;
-
-  try {
-    const u = new URL(url);
-
-    // youtu.be/<id>
-    if (u.hostname.includes("youtu.be")) {
-      return `https://www.youtube.com/embed/${u.pathname.slice(1)}?autoplay=1&mute=1`;
+    if (!url) return null;
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes("youtu.be"))
+        return `https://www.youtube.com/embed/${u.pathname.slice(1)}?autoplay=1&mute=1`;
+      if (u.searchParams.get("v"))
+        return `https://www.youtube.com/embed/${u.searchParams.get("v")}?autoplay=1&mute=1`;
+      if (u.pathname.includes("/shorts/")) {
+        const id = u.pathname.split("/shorts/")[1];
+        return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+      }
+      return null;
+    } catch {
+      return null;
     }
-
-    // youtube.com/watch?v=<id>
-    if (u.searchParams.get("v")) {
-      return `https://www.youtube.com/embed/${u.searchParams.get("v")}?autoplay=1&mute=1`;
-    }
-
-    // youtube.com/shorts/<id>
-    if (u.pathname.includes("/shorts/")) {
-      const id = u.pathname.split("/shorts/")[1];
-      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
-    }
-
-    return null;
-  } catch {
-    return null;
-  }
-};
+  };
 
   /* ---------------- FETCH ---------------- */
 
@@ -65,8 +55,8 @@ export default function FarmerStories() {
   }, []);
 
   useEffect(() => {
-  setPlayingId(null);
-}, [selectedState]);
+    setPlayingId(null);
+  }, [selectedState]);
 
   /* ---------------- FILTERED DATA ---------------- */
 
@@ -75,15 +65,9 @@ export default function FarmerStories() {
 
     return testimonials.filter((t) => {
       if (!t.state) return false;
-
       const dbState = normalize(t.state);
       const selected = normalize(selectedState);
-
-      // Handle A.P / Andhra Pradesh
-      if (selected === "ap") {
-        return dbState.includes("Andhra");
-      }
-
+      if (selected === "ap") return dbState.includes("andhra");
       return dbState === selected;
     });
   }, [testimonials, selectedState]);
@@ -93,7 +77,7 @@ export default function FarmerStories() {
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <Loader2 className="w-10 h-10 animate-spin text-[#741A1C]" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#6B412E]" />
       </div>
     );
   }
@@ -104,7 +88,7 @@ export default function FarmerStories() {
 
         {/* HEADER */}
         <div className="text-center mb-10">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#741A1C] mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
             Farmer Success Stories
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
@@ -112,7 +96,7 @@ export default function FarmerStories() {
           </p>
         </div>
 
-        {/* FILTER */}
+        {/* FILTER TABS – PREMIUM */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {[
             "All",
@@ -121,20 +105,32 @@ export default function FarmerStories() {
             "Maharashtra",
             "Karnataka",
             "Gujarat",
-          ].map((state) => (
-            <button
-              key={state}
-              onClick={() => setSelectedState(state)}
-              className={`px-5 py-2 rounded-full text-sm font-medium border transition
-                ${
-                  selectedState === state
-                    ? "bg-[#f3ede6] border-[#741A1C]"
-                    : "bg-white border-gray-300 hover:bg-[#f3ede6]"
-                }`}
-            >
-              {state === "Andhra Pradesh" ? "A.P" : state}
-            </button>
-          ))}
+          ].map((state) => {
+            const active = selectedState === state;
+            return (
+              <motion.button
+                key={state}
+                whileHover={{ y: -3, scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setSelectedState(state)}
+                className={`relative px-5 py-2 rounded-full text-sm font-semibold border
+                  transition-all duration-300 overflow-hidden
+                  ${
+                    active
+                      ? "bg-[#6B412E] text-white border-[#6B412E] shadow-lg"
+                      : "bg-white border-gray-300 hover:bg-[#f3ede6]"
+                  }`}
+              >
+                {/* Active glow */}
+                {active && (
+                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.35),transparent_60%)]" />
+                )}
+                <span className="relative z-10">
+                  {state === "Andhra Pradesh" ? "A.P" : state}
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
 
         {/* EMPTY STATE */}
@@ -156,47 +152,64 @@ export default function FarmerStories() {
               return (
                 <motion.div
                   key={t.id}
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-3xl shadow-lg border overflow-hidden"
+                  whileHover={{
+                    y: -10,
+                    rotateX: 4,
+                    rotateY: -4,
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="
+                    group bg-white rounded-3xl shadow-lg border
+                    overflow-hidden transition-all duration-500
+                    hover:shadow-2xl
+                  "
                 >
                   {/* IMAGE / VIDEO */}
-<div
-  className="relative bg-[#F4EADF] flex justify-center items-center py-10 cursor-pointer"
-  onClick={() => {
-  if (!t.video_url) return;
-  setPlayingId((prev) => (prev === t.id ? null : t.id));
-}}
->
-  <div className="relative w-[260px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl bg-black">
-    {playingId === t.id && embedUrl ? (
-      <iframe
-  key={t.id}
-  src={embedUrl}
-  className="w-full h-full"
-  allow="autoplay; encrypted-media"
-  allowFullScreen
-/>
-    ) : (
-      <>
-        <img
-          src={t.image_url || t.image_src}
-          alt={t.name}
-          className="w-full h-full object-cover"
-        />
+                  <div
+                    className="relative bg-[#F4EADF] flex justify-center items-center py-10 cursor-pointer"
+                    onClick={() => {
+                      if (!t.video_url) return;
+                      setPlayingId((prev) => (prev === t.id ? null : t.id));
+                    }}
+                  >
+                    <div className="relative w-[260px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl bg-black">
+                      {playingId === t.id && embedUrl ? (
+                        <iframe
+                          src={embedUrl}
+                          className="w-full h-full"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <>
+                          <img
+                            src={t.image_url || t.image_src}
+                            alt={t.name}
+                            className="
+                              w-full h-full object-cover
+                              transition-transform duration-700
+                              group-hover:scale-110
+                            "
+                          />
 
-        {t.video_url && (
-          <div className="absolute inset-0 flex items-center justify-center
-                          bg-black/30 hover:bg-black/40 transition">
-            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-              <PlayCircle className="w-10 h-10 text-[#741A1C]" />
-            </div>
-          </div>
-        )}
-      </>
-    )}
-  </div>
-</div>
+                          {t.video_url && (
+                            <div className="absolute inset-0 flex items-center justify-center
+                                            bg-black/30 group-hover:bg-black/40 transition">
+                              <motion.div
+                                whileHover={{ scale: 1.15 }}
+                                className="w-16 h-16 rounded-full bg-white/90
+                                           flex items-center justify-center
+                                           shadow-xl"
+                              >
+                                <PlayCircle className="w-10 h-10 text-[#6B412E]" />
+                              </motion.div>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+
                   {/* CONTENT */}
                   <div className="p-6 space-y-3">
                     <h3 className="text-xl font-bold text-slate-900">
