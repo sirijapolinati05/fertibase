@@ -102,7 +102,6 @@ export default function WordCloudSection() {
               ))}
             </defs>
 
-            {/* -------- CONNECTORS -------- */}
             {/* CONNECTORS (ALL EXCEPT BIOFERTILIZER) */}
 {categories
   .filter((cat) => cat.key !== "biofertilizer")
@@ -164,34 +163,7 @@ export default function WordCloudSection() {
               <Sprout size={36} color="#E8F5E9" />
             </foreignObject>
 
-            {/* BIOFERTILIZER CONNECTOR (DRAWN ON TOP OF HUB) */}
-{(() => {
-  const start = polarToCartesian(
-    center,
-    center,
-    HUB_RADIUS + 2,   // just outside hub
-    -90
-  );
-
-  const end = polarToCartesian(
-    center,
-    center,
-    RADIAL_DISTANCE - NODE_RADIUS,
-    -90
-  );
-
-  return (
-    <line
-      x1={start.x}
-      y1={start.y}
-      x2={end.x}
-      y2={end.y}
-      stroke="url(#grad-biofertilizer)"
-      strokeWidth="3"
-      strokeLinecap="round"
-    />
-  );
-})()}
+            
 
             {/* -------- NODES -------- */}
             {categories.map((cat) => {
@@ -228,7 +200,7 @@ export default function WordCloudSection() {
                     >
                       <button
                         onClick={() =>
-                          navigate(`/products?category=${cat.key}`)
+                          navigate(`/product`)
                         }
                         className="
                           w-full h-10 rounded-full text-sm font-semibold text-white
@@ -251,7 +223,7 @@ export default function WordCloudSection() {
                     >
                       <button
                         onClick={() =>
-                          navigate(`/products?category=${cat.key}`)
+                          navigate(`/product`)
                         }
                         className="
                           w-full h-10 rounded-full text-sm font-semibold text-white
@@ -269,6 +241,35 @@ export default function WordCloudSection() {
                 </g>
               );
             })}
+            {/* BIOFERTILIZER CONNECTOR – STOP BEFORE ICON */}
+{(() => {
+  const start = polarToCartesian(
+    center,
+    center,
+    HUB_RADIUS + 4,
+    -90
+  );
+
+  // 🔴 IMPORTANT: stop BEFORE the icon radius
+  const end = polarToCartesian(
+    center,
+    center,
+    RADIAL_DISTANCE - NODE_RADIUS - 6,
+    -90
+  );
+
+  return (
+    <line
+      x1={start.x}
+      y1={start.y}
+      x2={end.x}
+      y2={end.y}
+      stroke="#2E7D32"   // solid color so you SEE it
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+  );
+})()}
           </svg>
         </div>
 
@@ -286,7 +287,7 @@ export default function WordCloudSection() {
   whileHover={{ scale: 1.07 }}
   whileTap={{ scale: 0.96 }}
   onClick={() => navigate("/product")}
-  className="block w-fit mx-auto mt-10 px-8 py-4 align-left
+  className="block w-fit mx-auto mt-10 px-8 py-4 
              bg-[#6B412E] text-white font-semibold rounded-full
              shadow-lg hover:shadow-[0_20px_40px_-10px_rgba(107,65,46,0.6)]
              transition-all duration-300"
