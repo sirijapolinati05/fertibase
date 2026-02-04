@@ -19,7 +19,7 @@ const handleSubmit = async (e) => {
   setSubmitting(true);
 
   try {
-    // 1. Save message
+    // 1. Save message in database
     const { error } = await supabase.from("contact_messages").insert([
       {
         full_name: formData.full_name,
@@ -32,30 +32,39 @@ const handleSubmit = async (e) => {
     if (error) throw error;
 
     // 2. Trigger auto-reply email
-    await fetch(
-  "https://ekseutpxbtlbcbjxalna.supabase.co/functions/v1/send-contact-reply",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-    },
-    body: JSON.stringify({
-      full_name: formData.full_name,
-      email: formData.email,
-    }),
-  }
-);
+    // await fetch(
+    //   "https://ekseutpxbtlbcbjxalna.supabase.co/functions/v1/send-contact-reply",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+    //     },
+    //     body: JSON.stringify({
+    //       full_name: formData.full_name,
+    //       email: formData.email,
+    //     }),
+    //   }
+    // );
 
-    alert("Message sent successfully 🌱");
-    setFormData({ full_name: "", email: "", phone: "", message: "" });
+    // 3. Reset form
+    setFormData({
+      full_name: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
+
+    // 4. Open Schedule Meeting (Calendly)
+    setShowScheduling(true);
   } catch (err) {
     console.error(err);
-    alert("Failed to send message");
+    alert("Failed to send message. Please try again.");
   } finally {
     setSubmitting(false);
   }
 };
+
 
   return (
     <div className="bg-soil-light min-h-screen flex flex-col items-center justify-center py-20 px-6 text-text-base">
