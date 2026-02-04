@@ -20,7 +20,7 @@ export default function Aboutus() {
   return (
     <div className="bg-soil-light text-text-base">
       {/* HERO SECTION - Redesigned with video background */}
-     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
 
         {/* Background Slideshow */}
         <AnimatePresence>
@@ -317,7 +317,7 @@ export default function Aboutus() {
                 <Lightbulb className="w-16 h-16 text-primary-600 mb-6" />
                 <h2 className="text-3xl font-bold text-text-base mb-4">Our Mission</h2>
                 <p className="text-lg text-text-light leading-relaxed">
-                                  To advance farmer productivity and profitability through continuous agricultural research, precision-based formulations, and field-validated technologies that improve crop physiology, optimize nutrient efficiency, and promote sustainable, climate-resilient farming systems.
+                  To advance farmer productivity and profitability through continuous agricultural research, precision-based formulations, and field-validated technologies that improve crop physiology, optimize nutrient efficiency, and promote sustainable, climate-resilient farming systems.
                 </p>
               </div>
             </motion.div>
@@ -325,9 +325,7 @@ export default function Aboutus() {
         </div>
       </section>
 
-      {/* LEADERSHIP - Redesigned Modern UI */}
-      <section className="py-20 bg-soil-light relative overflow-hidden">
-        {/* Background decoration */}
+      {/* <section className="py-20 bg-soil-light relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full blur-3xl opacity-30 -z-10"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary-100 to-primary-200 rounded-full blur-3xl opacity-30 -z-10"></div>
 
@@ -378,27 +376,23 @@ export default function Aboutus() {
               >
                 <div className="bg-[#6B412E] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-[#8b2a2c]">
 
-                  {/* Gradient accent bar */}
                   <div className="h-2 bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700"></div>
 
                   <div className="p-8">
                     <div className="flex items-center gap-6 mb-6">
-                      {/* Profile Image */}
                       <div className="relative flex-shrink-0">
                         <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-500 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity"></div>
                         <div className="relative w-28 h-28 rounded-2xl overflow-hidden border-4 border-white shadow-lg group-hover:scale-105 transition-transform duration-300">
                           <div className="w-full h-full bg-gradient-to-br from-primary-600 to-primary-500
                 flex items-center justify-center
                 text-white text-4xl font-extrabold tracking-wide">
-  {person.name.charAt(0)}
-</div>
+                            {person.name.charAt(0)}
+                          </div>
 
 
 
                         </div>
                       </div>
-
-                      {/* Name and Title */}
                       <div className="flex-1">
                         <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary-200 transition-colors">
 
@@ -411,10 +405,6 @@ export default function Aboutus() {
                         <div className="w-16 h-1 bg-gradient-to-r from-primary-600 to-primary-500 rounded-full"></div>
                       </div>
                     </div>
-
-                 
-
-                    {/* Decorative element */}
                     <div className="mt-6 flex items-center gap-2">
                       <div className="flex-1 h-px bg-gradient-to-r from-primary-200 to-transparent"></div>
                       <div className="w-2 h-2 rounded-full bg-primary-500"></div>
@@ -427,7 +417,7 @@ export default function Aboutus() {
             ))}
           </div>
         </div>
-      </section>     
+      </section> */}
     </div>
   );
 }

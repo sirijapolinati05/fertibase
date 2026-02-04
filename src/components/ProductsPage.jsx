@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Loader2 } from "lucide-react";
 import productService from "../api/productService";
-import { products as fallbackProducts } from "../../data/productsData";
+// import { products as fallbackProducts } from "../../data/productsData";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);

@@ -177,8 +177,18 @@ const handleShare = async (item) => {
           </p>
         </div>
 
+        {/* SEARCH */}
+        <div className="flex justify-center mb-10">
+          <input
+            placeholder="Search resources..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full max-w-xl px-5 py-3 rounded-xl border focus:ring-2 focus:ring-[#6B412E]/30 outline-none"
+          />
+        </div>
+
         {/* ---------------- MOBILE TOP FILTERS (STICKY) ---------------- */}
-<div className="md:hidden sticky top-[72px] z-50 bg-[#F7EDE5] rounded-2xl p-4 mb-6 shadow-sm">
+<div className="md:hidden sticky top-[72px] z-50 bg-[#F7EDE5] rounded-2xl pt-4 mb-6 shadow-sm">
   <div className="grid grid-cols-2 gap-3">
     {(mobileTabsExpanded ? topTabs : topTabs.slice(0, MAX_MOBILE_TABS)).map((t) => (
       <button
@@ -212,33 +222,35 @@ const handleShare = async (item) => {
 </div>
 
 {/* ---------------- DESKTOP TOP TABS (UNCHANGED) ---------------- */}
-<div className="hidden md:flex flex-wrap justify-center gap-3 mb-6">
-  {topTabs.map((t) => (
-    <button
-      key={t}
-      onClick={() => {
-        setSelectedType(t);
-        setSelectedMarketingType("All");
-      }}
-      className={`px-5 py-2 rounded-full text-sm font-semibold border flex items-center gap-2
-        ${
-          selectedType === t
-            ? "bg-[#6B412E] text-white border-[#6B412E]"
-            : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
-        }`}
-    >
-      {t}
-      <span className="text-xs bg-white/20 px-2 rounded-full">
-        {categoryCounts[t] || 0}
-      </span>
-    </button>
-  ))}
+<div className="hidden md:block sticky top-[72px] pt-6 z-40 bg-[#FDFDFD] pb-4">
+  <div className="flex flex-wrap justify-center gap-3">
+    {topTabs.map((t) => (
+      <button
+        key={t}
+        onClick={() => {
+          setSelectedType(t);
+          setSelectedMarketingType("All");
+        }}
+        className={`px-5 py-2 rounded-full text-sm font-semibold border flex items-center gap-2
+          ${
+            selectedType === t
+              ? "bg-[#6B412E] text-white border-[#6B412E]"
+              : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
+          }`}
+      >
+        {t}
+        <span className="text-xs bg-white/20 px-2 rounded-full">
+          {categoryCounts[t] || 0}
+        </span>
+      </button>
+    ))}
+  </div>
 </div>
 
+        {/* ---------------- MOBILE MARKETING FILTERS (STICKY) ---------------- */}
         {selectedType === "Marketing Materials" && (
   <>
-    {/* MOBILE MARKETING FILTERS */}
-    <div className="md:hidden bg-[#F7EDE5] rounded-2xl p-4 mb-8 shadow-sm">
+    <div className="md:hidden sticky top-[240px] z-40 bg-[#F7EDE5] rounded-2xl pt-2 mb-8 shadow-sm">
       <div className="grid grid-cols-2 gap-3">
         {(mobileMarketingExpanded
           ? marketingTabs
@@ -262,9 +274,7 @@ const handleShare = async (item) => {
       {marketingTabs.length > MAX_MOBILE_TABS && (
         <div className="mt-4 text-center">
           <button
-            onClick={() =>
-              setMobileMarketingExpanded(!mobileMarketingExpanded)
-            }
+            onClick={() => setMobileMarketingExpanded(!mobileMarketingExpanded)}
             className="text-sm font-semibold text-[#6B412E]"
           >
             {mobileMarketingExpanded ? "− View Less" : "+ View More"}
@@ -274,36 +284,28 @@ const handleShare = async (item) => {
     </div>
 
     {/* DESKTOP MARKETING FILTERS */}
-    <div className="hidden md:flex justify-center gap-3 mb-8 flex-wrap">
-      {marketingTabs.map((m) => (
-        <button
-          key={m}
-          onClick={() => setSelectedMarketingType(m)}
-          className={`px-4 py-1.5 rounded-full text-xs font-semibold border
-            ${
-              selectedMarketingType === m
-                ? "bg-[#6B412E] text-white border-[#6B412E]"
-                : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
-            }`}
-        >
-          {m} ({marketingCounts[m] || 0})
-        </button>
-      ))}
+        <div className="hidden md:block sticky top-[140px] z-30 pt-6 pb-2 bg-[#FDFDFD]">
+      <div className="flex justify-center gap-3 mb-2 flex-wrap">
+        {marketingTabs.map((m) => (
+          <button
+            key={m}
+            onClick={() => setSelectedMarketingType(m)}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold border
+              ${
+                selectedMarketingType === m
+                  ? "bg-[#6B412E] text-white border-[#6B412E]"
+                  : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
+              }`}
+          >
+            {m} ({marketingCounts[m] || 0})
+          </button>
+        ))}
+      </div>
     </div>
   </>
 )}
 
-        {/* SEARCH */}
-        <div className="flex justify-center mb-10">
-          <input
-            placeholder="Search resources..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full max-w-xl px-5 py-3 rounded-xl border focus:ring-2 focus:ring-[#6B412E]/30 outline-none"
-          />
-        </div>
 
-        {/* GRID */}
 {/* GRID */}
 {filteredResources.length === 0 ? (
   <div className="text-center py-20 text-slate-500">
