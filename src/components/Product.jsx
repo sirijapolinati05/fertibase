@@ -32,6 +32,7 @@ export default function Products() {
 
   const scrollRef = useRef(null);
 const isPausedRef = useRef(false);
+const sectionRef = useRef(null);
 
   /* ---------------- FETCH PRODUCTS ---------------- */
 
@@ -85,17 +86,20 @@ const filteredProducts = useMemo(() => {
   return list;
 }, [products, activeCategory, searchQuery]);
 
-/* ---------------- AUTO SCROLL (MOBILE ONLY) ---------------- */
+/* ---------------- AUTO SCROLL WHEN SECTION IS VISIBLE ---------------- */
 
 useEffect(() => {
   const container = scrollRef.current;
-  if (!container) return;
+  const section = sectionRef.current;
+
+  if (!container || !section) return;
 
   let animationId;
+  let isVisible = false;
   const speed = 0.4;
 
   const autoScroll = () => {
-    if (!isPausedRef.current) {
+    if (isVisible && !isPausedRef.current) {
       container.scrollLeft += speed;
 
       if (
@@ -108,11 +112,20 @@ useEffect(() => {
     animationId = requestAnimationFrame(autoScroll);
   };
 
-  if (window.innerWidth < 640) {
-    animationId = requestAnimationFrame(autoScroll);
-  }
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      isVisible = entry.isIntersecting;
+    },
+    { threshold: 0.3 } // starts when 30% visible
+  );
 
-  return () => cancelAnimationFrame(animationId);
+  observer.observe(section);
+  animationId = requestAnimationFrame(autoScroll);
+
+  return () => {
+    observer.disconnect();
+    cancelAnimationFrame(animationId);
+  };
 }, [filteredProducts]);
 
 /* ---------------- PAUSE WHEN MODAL OPEN ---------------- */
@@ -161,7 +174,10 @@ if (loading) {
 // }, [filteredProducts]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div
+  ref={sectionRef}
+  className="max-w-7xl mx-auto px-4 py-12"
+>
 
       {/* HEADER */}
       <div className="text-center mb-10">
