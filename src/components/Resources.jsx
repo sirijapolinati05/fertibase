@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import {
   FiDownload,
   FiArrowRight,
@@ -33,6 +33,9 @@ const [mobileMarketingExpanded, setMobileMarketingExpanded] = useState(false);
 const [playingVideoId, setPlayingVideoId] = useState(null);
 
   const MAX_MOBILE_TABS = 4; // 2 rows × 2 columns
+
+  const scrollRef = useRef(null);
+const isPausedRef = useRef(false);
 
   const getEmbedUrl = (url) => {
   if (!url) return null;
@@ -144,6 +147,34 @@ const handleShare = async (item) => {
     return list;
   }, [resources, selectedType, selectedMarketingType, searchQuery]);
 
+      /* ---------------- MOBILE AUTO SCROLL ---------------- */
+
+useEffect(() => {
+  const container = scrollRef.current;
+  if (!container) return;
+
+  let rafId;
+  const speed = 0.35;
+
+  const autoScroll = () => {
+    if (!isPausedRef.current && window.innerWidth < 640) {
+      container.scrollLeft += speed;
+
+      if (
+        container.scrollLeft + container.clientWidth >=
+        container.scrollWidth - 1
+      ) {
+        container.scrollLeft = 0;
+      }
+    }
+    rafId = requestAnimationFrame(autoScroll);
+  };
+
+  rafId = requestAnimationFrame(autoScroll);
+
+  return () => cancelAnimationFrame(rafId);
+}, [filteredResources]);
+
   if (loading) {
     return (
       <div className="flex justify-center py-20 text-slate-500">
@@ -161,7 +192,7 @@ const handleShare = async (item) => {
     "PPTs",
   ];
 
-  const marketingTabs = ["All", "Banner", "Brochure", "Flyer", "Standee"];
+  const marketingTabs = ["All", "Banners", "Brochures", "Flyers", "Standees"];
 
   /* ----------------------------- UI ----------------------------- */
 
@@ -373,7 +404,23 @@ const handleShare = async (item) => {
 ) : (
 
   /* 📄 DEFAULT RESOURCES VIEW */
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div
+  ref={scrollRef}
+  onMouseEnter={() => (isPausedRef.current = true)}
+  onMouseLeave={() => (isPausedRef.current = false)}
+  onTouchStart={() => (isPausedRef.current = true)}
+  onTouchEnd={() => (isPausedRef.current = false)}
+  className="
+    flex gap-6 pb-6
+    overflow-x-auto
+    snap-x snap-mandatory
+    scrollbar-hide
+
+    md:grid md:grid-cols-2
+    lg:grid-cols-3
+    md:overflow-visible
+  "
+>
   {filteredResources.map((item) => {
     const isWebinar = normalize(item.category) === "webinars";
     const isMarketing = normalize(item.category) === "marketingmaterials";
@@ -389,6 +436,8 @@ const handleShare = async (item) => {
   key={item.id}
   className="
     group relative bg-white rounded-2xl border
+    min-w-[280px] md:min-w-0
+    snap-start
     shadow-sm
     transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
     hover:-translate-y-2
