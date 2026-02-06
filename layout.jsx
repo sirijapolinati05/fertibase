@@ -5,11 +5,18 @@ import Footer from "./src/components/Footer";
 export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Fixed Navbar */}
+      {/* Navbar */}
       <Navbar />
 
-      {/* Page Content (space equals navbar height) */}
-      <main className="flex-grow pt-[80px]">
+      {/* Page Content */}
+      <main
+        className="
+          flex-grow
+          pt-0
+          sm:pt-[64px]
+          lg:pt-[80px]
+        "
+      >
         <Outlet />
       </main>
 

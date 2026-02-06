@@ -424,7 +424,7 @@ const handleSubmit = async (e) => {
 
       {/* Calendly Widget */}
       <InlineWidget
-        url="https://calendly.com/krishnakishore-k777/new-meeting"
+        url="https://calendly.com/shriyafertibase/new-meeting"
         styles={{ height: "100%", width: "100%" }}
         pageSettings={{
           backgroundColor: "ffffff",

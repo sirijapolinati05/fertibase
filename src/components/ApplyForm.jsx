@@ -1,8 +1,12 @@
 import { useState } from "react";
 import supabase from "../lib/supabaseClient";
 import { X, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
+import { useNavigate } from "react-router-dom";
 
 export default function ApplyForm({ close, jobId }) {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     full_name: "",
     email: "",
@@ -65,8 +69,22 @@ export default function ApplyForm({ close, jobId }) {
 
       if (insertError) throw insertError;
 
+      /* 3️⃣ Send Auto-Reply Email (EmailJS) */
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          full_name: form.full_name,
+          email: form.email,
+          job_id: jobId,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      /* 4️⃣ Success + Redirect */
+      alert("Application submitted successfully");
       close();
-      alert("Application submitted successfully!");
+      navigate("/careerPage");
 
     } catch (err) {
       console.error(err);
@@ -77,14 +95,7 @@ export default function ApplyForm({ close, jobId }) {
   };
 
   return (
-    <div
-  className="
-    fixed inset-0 bg-black/40 z-50
-    overflow-y-auto
-    px-4
-    pt-[96px] pb-8
-  "
->
+    <div className="fixed inset-0 bg-black/40 z-50 overflow-y-auto px-4 pt-[96px] pb-8">
       <div className="bg-white max-w-lg mx-auto rounded-3xl p-6 relative mt-6">
 
         {/* Close */}
@@ -98,37 +109,10 @@ export default function ApplyForm({ close, jobId }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          <Input
-            label="Full Name"
-            name="full_name"
-            value={form.full_name}
-            onChange={handleChange}
-            required
-          />
-
-          <Input
-            label="Email Address"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-
-          <Input
-            label="Phone Number"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            required
-          />
-
-          <Input
-            label="Expected Salary"
-            name="expected_salary"
-            value={form.expected_salary}
-            onChange={handleChange}
-          />
+          <Input label="Full Name" name="full_name" value={form.full_name} onChange={handleChange} required />
+          <Input label="Email Address" name="email" type="email" value={form.email} onChange={handleChange} required />
+          <Input label="Phone Number" name="phone" value={form.phone} onChange={handleChange} required />
+          <Input label="Expected Salary" name="expected_salary" value={form.expected_salary} onChange={handleChange} />
 
           <div>
             <label className="block text-sm font-medium mb-1 text-[#3B2418]">
@@ -157,23 +141,16 @@ export default function ApplyForm({ close, jobId }) {
             />
           </div>
 
-          {error && (
-            <p className="text-red-600 text-sm">{error}</p>
-          )}
+          {error && <p className="text-red-600 text-sm">{error}</p>}
 
           <button
             disabled={loading}
-            className="
-              w-full py-3 rounded-xl
-              bg-[#6B412E] hover:bg-[#5e1416]
-              text-white font-semibold
-              shadow-md transition
-              flex justify-center items-center gap-2
-            "
+            className="w-full py-3 rounded-xl bg-[#6B412E] hover:bg-[#5e1416] text-white font-semibold shadow-md transition flex justify-center items-center gap-2"
           >
             {loading && <Loader2 className="w-5 h-5 animate-spin" />}
             Submit Application
           </button>
+
         </form>
       </div>
     </div>
@@ -190,13 +167,7 @@ function Input({ label, ...props }) {
       </label>
       <input
         {...props}
-        className="
-          w-full px-4 py-2
-          border border-[#E8D5C9]
-          rounded-xl
-          focus:ring-2 focus:ring-[#6B412E]/30
-          outline-none
-        "
+        className="w-full px-4 py-2 border border-[#E8D5C9] rounded-xl focus:ring-2 focus:ring-[#6B412E]/30 outline-none"
       />
     </div>
   );

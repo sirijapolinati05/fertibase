@@ -72,13 +72,63 @@ export default function WordCloudSection() {
 
   return (
     <SectionWrapper id="products" className="py-10 md:py-14">
-      <div className="flex flex-col md:flex-row items-start gap-10">
+      <div className="
+        flex flex-col
+        md:flex-row
+        items-center
+        gap-12
+      ">
 
-        {/* -------- LEFT : RADIAL DIAGRAM -------- */}
-        <div className="w-full md:w-1/2 flex justify-center">
+        {/* -------- RIGHT : TEXT (FIRST ON MOBILE) -------- */}
+        {/* -------- RIGHT : TEXT + BUTTON (DESKTOP GROUP) -------- */}
+<div
+  className="
+    w-full md:w-1/2
+    order-1 md:order-2
+    text-center md:text-left
+    flex flex-col
+    md:items-start
+  "
+>
+  <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight text-[#6B412E]">
+    Our <span>Premium Product</span> Range
+  </h1>
+
+  <p className="text-base sm:text-lg md:text-xl text-primary-700 font-medium max-w-xl mx-auto md:mx-0">
+    Trusted microbiological & nutrient solutions designed for modern
+    agriculture.
+  </p>
+
+  {/* BUTTON — DESKTOP POSITION */}
+  <motion.button
+    whileHover={{ scale: 1.07 }}
+    whileTap={{ scale: 0.96 }}
+    onClick={() => navigate("/product")}
+    className="
+      hidden md:inline-flex
+      mt-8
+      px-8 py-4
+      bg-[#6B412E] text-white font-semibold rounded-full
+      shadow-lg
+      hover:shadow-[0_20px_40px_-10px_rgba(107,65,46,0.6)]
+      transition-all duration-300
+    "
+  >
+    Explore Our Products
+  </motion.button>
+</div>
+
+        {/* -------- LEFT : SVG (AFTER TEXT ON MOBILE) -------- */}
+        <div
+          className="
+            w-full md:w-1/2
+            flex justify-center
+            order-2 md:order-1
+          "
+        >
           <svg
             viewBox={`0 0 ${size} ${size}`}
-            className="w-full max-w-[420px] h-auto"
+            className="w-full max-w-[360px] sm:max-w-[420px] h-auto"
           >
             {/* DEFINITIONS */}
             <defs>
@@ -272,30 +322,26 @@ export default function WordCloudSection() {
 })()}
           </svg>
         </div>
+        {/* -------- BUTTON (MOBILE ONLY) -------- */}
+<div className="w-full order-3 flex justify-center md:hidden">
+  <motion.button
+    whileHover={{ scale: 1.07 }}
+    whileTap={{ scale: 0.96 }}
+    onClick={() => navigate("/product")}
+    className="
+      mt-6
+      px-8 py-4
+      bg-[#6B412E] text-white font-semibold rounded-full
+      shadow-lg
+      hover:shadow-[0_20px_40px_-10px_rgba(107,65,46,0.6)]
+      transition-all duration-300
+    "
+  >
+    Explore Our Products
+  </motion.button>
+</div>
 
-        {/* -------- RIGHT : TEXT -------- */}
-        <div className="w-full md:w-1/2 text-center md:text-left pt-6 md:pt-16">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-[#6B412E]">
-            Our <span>Premium Product</span> Range
-          </h1>
-
-          <p className="text-lg md:text-xl text-primary-700 font-medium">
-            Trusted microbiological & nutrient solutions designed for modern
-            agriculture.
-          </p>
-          <motion.button
-  whileHover={{ scale: 1.07 }}
-  whileTap={{ scale: 0.96 }}
-  onClick={() => navigate("/product")}
-  className="block w-fit mx-auto mt-10 px-8 py-4 
-             bg-[#6B412E] text-white font-semibold rounded-full
-             shadow-lg hover:shadow-[0_20px_40px_-10px_rgba(107,65,46,0.6)]
-             transition-all duration-300"
->
-  Explore Our Products
-</motion.button>
         </div>
-      </div>
     </SectionWrapper>
   );
 }
