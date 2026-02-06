@@ -219,7 +219,16 @@ useEffect(() => {
         </div>
 
         {/* ---------------- MOBILE TOP FILTERS (STICKY) ---------------- */}
-<div className="md:hidden sticky top-[72px] z-50 bg-[#F7EDE5] rounded-2xl pt-4 mb-6 shadow-sm">
+<div className="
+  md:hidden
+  sticky top-[56px]
+  z-50
+  bg-[#F7EDE5]
+  rounded-b-2xl
+  pb-4
+  mb-4
+  shadow-sm
+">
   <div className="grid grid-cols-2 gap-3">
     {(mobileTabsExpanded ? topTabs : topTabs.slice(0, MAX_MOBILE_TABS)).map((t) => (
       <button
