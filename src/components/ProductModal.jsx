@@ -67,6 +67,12 @@ export default function ProductModal({ isOpen, onClose, productData }) {
     </div>
   );
 
+  const EmptyState = ({ text }) => (
+  <Card>
+    <p className="text-gray-500 italic text-center">{text}</p>
+  </Card>
+);
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "overview":
@@ -116,85 +122,108 @@ export default function ProductModal({ isOpen, onClose, productData }) {
         );
 
       case "benefits":
-        return (
-          <div className="space-y-6">
-            {crop_benefits.length > 0 && (
-              <Card>
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Sprout className="text-[#6B412E]" /> Crop Benefits
-                </h3>
-                <ul className="space-y-3">
-                  {crop_benefits.map((b, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="w-2 h-2 bg-[#6B412E] rounded-full mt-2" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            )}
+  if (
+    crop_benefits.length === 0 &&
+    product_advantages.length === 0
+  ) {
+    return <EmptyState text="No benefits available for this product." />;
+  }
 
-            {product_advantages.length > 0 && (
-              <div className="grid md:grid-cols-2 gap-4">
-                {product_advantages.map((a, i) => (
-                  <Card key={i}>
-                    <Check className="text-[#6B412E] mb-2" />
-                    <p>{a}</p>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-        );
+  return (
+    <div className="space-y-6">
+      {crop_benefits.length > 0 && (
+        <Card>
+          <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <Sprout className="text-[#6B412E]" /> Crop Benefits
+          </h3>
+          <ul className="space-y-3">
+            {crop_benefits.map((b, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="w-2 h-2 bg-[#6B412E] rounded-full mt-2" />
+                {b}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
 
-      case "usage":
-        return (
-          <div className="space-y-6">
-            <Card>
-              <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <Droplet className="text-[#6B412E]" /> Recommended Dosage
-              </h3>
-              <p>{recommended_dosage || "As per recommendation"}</p>
+      {product_advantages.length > 0 && (
+        <div className="grid md:grid-cols-2 gap-4">
+          {product_advantages.map((a, i) => (
+            <Card key={i}>
+              <Check className="text-[#6B412E] mb-2" />
+              <p>{a}</p>
             </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
-            <Card>
-              <h3 className="text-xl font-bold mb-3">Application Details</h3>
-              <div className="flex gap-3">
-                <ArrowRight className="text-[#6B412E]" />
-                <span>{application_details || "Standard application procedure"}</span>
-              </div>
-            </Card>
+  case "usage":
+  if (!recommended_dosage && !application_details) {
+    return <EmptyState text="Usage information is not available yet." />;
+  }
+
+  return (
+    <div className="space-y-6">
+      {recommended_dosage && (
+        <Card>
+          <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+            <Droplet className="text-[#6B412E]" /> Recommended Dosage
+          </h3>
+          <p>{recommended_dosage}</p>
+        </Card>
+      )}
+
+      {application_details && (
+        <Card>
+          <h3 className="text-xl font-bold mb-3">
+            Application Details
+          </h3>
+          <div className="flex gap-3">
+            <ArrowRight className="text-[#6B412E]" />
+            <span>{application_details}</span>
           </div>
-        );
+        </Card>
+      )}
+    </div>
+  );
 
-      case "crops":
-        return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {recommended_crops.length > 0
-                ? recommended_crops.map((crop, i) => (
-                    <Card key={i}>
-                      🌾 <span className="ml-1">{crop}</span>
-                    </Card>
-                  ))
-                : "Suitable for all crops"}
+  case "crops":
+  if (recommended_crops.length === 0 && !application_timing) {
+    return <EmptyState text="No crop recommendations available." />;
+  }
+
+  return (
+    <div className="space-y-6">
+      {recommended_crops.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {recommended_crops.map((crop, i) => (
+            <Card key={i}>
+              🌾 <span className="ml-1">{crop}</span>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {application_timing && (
+        <Card>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-[#6B412E] text-white rounded-full flex items-center justify-center">
+              <Calendar size={20} />
             </div>
-
-            <Card>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#6B412E] text-white rounded-full flex items-center justify-center">
-                  <Calendar size={20} />
-                </div>
-                <div>
-                  <p className="font-semibold">Best Application Stage</p>
-                  <p className="text-[#6B412E] font-bold">
-                    {application_timing || "Initial Stage"}
-                  </p>
-                </div>
-              </div>
-            </Card>
+            <div>
+              <p className="font-semibold">Best Application Stage</p>
+              <p className="text-[#6B412E] font-bold">
+                {application_timing}
+              </p>
+            </div>
           </div>
-        );
+        </Card>
+      )}
+    </div>
+  );
 
       default:
         return null;
@@ -350,7 +379,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
                       </button>
                     ))}
                   </div>
-
+                  
                   {renderTabContent()}
                 </div>
               </div>

@@ -37,6 +37,23 @@ const [playingVideoId, setPlayingVideoId] = useState(null);
   const scrollRef = useRef(null);
 const isPausedRef = useRef(false);
 
+const LANGUAGES = ["Telugu", "Marathi", "Kannada", "Gujarati"];
+const [selectedLanguage, setSelectedLanguage] = useState("Telugu");
+
+const getLanguageImage = (item) => {
+  switch (selectedLanguage) {
+    case "Marathi":
+      return item.image_url_marathi;
+    case "Kannada":
+      return item.image_url_kannada;
+    case "Gujarati":
+      return item.image_url_gujarati;
+    case "Telugu":
+    default:
+      return item.image_url_telugu;
+  }
+};
+
   const getEmbedUrl = (url) => {
   if (!url) return null;
 
@@ -55,7 +72,10 @@ const isPausedRef = useRef(false);
 };
 
 const handleShare = async (item) => {
+  const langImage = getLanguageImage(item);
+
   const url =
+    langImage ||
     item.file_url ||
     item.video_url ||
     window.location.href;
@@ -63,7 +83,7 @@ const handleShare = async (item) => {
   if (navigator.share) {
     await navigator.share({
       title: item.title,
-      text: item.description,
+      text: item.description || item.title,
       url,
     });
   } else {
@@ -72,6 +92,7 @@ const handleShare = async (item) => {
   }
 };
 
+// const langImage = getLanguageImage(img);
 
   /* ----------------------------- FETCH ----------------------------- */
 
@@ -194,6 +215,29 @@ useEffect(() => {
 
   const marketingTabs = ["All", "Banners", "Brochures", "Flyers", "Standees"];
 
+  const downloadResource = async (resource, langImage) => {
+  try {
+    const res = await fetch(langImage);
+    const blob = await res.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+
+    a.download = `${resource.title
+      .replace(/\s+/g, "_")
+      .toLowerCase()}_${selectedLanguage.toLowerCase()}.jpg`;
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Download failed", err);
+    alert("Failed to download resource");
+  }
+};
+
   /* ----------------------------- UI ----------------------------- */
 
   return (
@@ -201,12 +245,47 @@ useEffect(() => {
       <main className="max-w-7xl mx-auto px-4 py-12">
 
         {/* HEADER */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-black text-[#6B412E]">Resources</h1>
-          <p className="text-slate-600 mt-2">
-            Webinars, guides, marketing materials & knowledge assets
-          </p>
-        </div>
+<div className="mb-10">
+  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+    
+    {/* Title + Subtitle */}
+    <div className="flex-1 text-center">
+      <h1 className="text-4xl font-black text-[#6B412E]">
+        Resources
+      </h1>
+      <p className="text-slate-600 mt-2">
+        Webinars, guides, marketing materials & knowledge assets
+      </p>
+    </div>
+
+    {/* Language Selector */}
+    <div className="flex justify-end md:justify-end">
+      <div className="flex flex-col items-end gap-1">
+        <span className="text-xs font-semibold text-slate-500">
+          Select Language
+        </span>
+        <select
+          value={selectedLanguage}
+          onChange={(e) => setSelectedLanguage(e.target.value)}
+          className="
+            px-4 py-2 rounded-xl border
+            text-sm font-semibold
+            bg-white text-[#6B412E]
+            shadow-sm
+            cursor-pointer
+          "
+        >
+          {LANGUAGES.map((lang) => (
+            <option key={lang} value={lang}>
+              {lang}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+  </div>
+</div>
 
         {/* SEARCH */}
         <div className="flex justify-center mb-10">
@@ -355,59 +434,40 @@ useEffect(() => {
 
   /* 🖼️ POSTERS VIEW */
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-    {filteredResources.map((img) => (
-      <div
-  key={img.id}
-  className="
-    group relative rounded-2xl flex flex-col
-    border-2 border-[#E8D5C9]
-    bg-[#EFE3D8]
-    shadow-lg
-    transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
-    hover:-translate-y-2
-    hover:shadow-[0_30px_60px_-20px_rgba(116,26,28,0.35)]
-    overflow-hidden
-  "
->
-        {/* IMAGE */}
-        <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white relative group">
-          <img
-            src={img.image_url || "/placeholder.png"}
-            alt={img.title}
-            className="max-h-40 max-w-40 w-full object-contain"
-          />
+    {filteredResources.map((img) => {
+  const langImage = getLanguageImage(img);
 
-          {/* DOWNLOAD OVERLAY */}
-          {img.image_url && (
-            <a
-              href={img.image_url}
-              download
-              className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center"
-            >
-              {/* <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-semibold text-[#6B412E]">
-                <FiDownload /> Download
-              </div> */}
-            </a>
-          )}
-        </div>
-
-        {/* FOOTER */}
-        <div className="px-6 pb-6 mt-auto flex items-center justify-between gap-4">
-          <div className="text-sm font-semibold truncate text-slate-900">
-            {img.title}
-          </div>
-
-          <a
-            href={img.image_url}
-            download
-            className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#6B412E] hover:bg-slate-100 transition flex items-center gap-2"
-          >
-            <FiDownload size={16} />
-            {/* Download */}
-          </a>
-        </div>
+  return (
+    <div
+      key={img.id}
+      className="group relative rounded-2xl flex flex-col
+      border-2 border-[#E8D5C9] bg-[#EFE3D8] shadow-lg overflow-hidden"
+    >
+      {/* IMAGE */}
+      <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white">
+        <img
+          src={langImage || "/placeholder.png"}
+          alt={img.title}
+          className="max-h-40 max-w-40 w-full object-contain"
+        />
       </div>
-    ))}
+
+      {/* FOOTER */}
+      <div className="px-6 pb-6 mt-auto flex items-center justify-between">
+        <div className="text-sm font-semibold truncate">{img.title}</div>
+
+        {langImage && (
+  <button
+    onClick={() => downloadResource(img, langImage)}
+    className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#6B412E] hover:bg-slate-100 transition"
+  >
+    <FiDownload size={16} />
+  </button>
+)}
+      </div>
+    </div>
+  );
+})}
   </div>
 
 ) : (
@@ -440,6 +500,9 @@ useEffect(() => {
     const isExpanded = expandedItemId === item.id;
     const isPlaying = playingVideoId === item.id;
 
+    // const langImage = getLanguageImage(img);
+    const langImage = getLanguageImage(item);
+
     return (
       <div
   key={item.id}
@@ -467,8 +530,8 @@ useEffect(() => {
             ) : (
               <>
                 <img
-                  src={item.image_url || "/placeholder.png"}
-                  alt={item.title}
+  src={langImage || "/placeholder.png"}
+  alt={item.title}
                   className="
   w-full h-full object-cover
   transition-all duration-700 ease-out
@@ -544,11 +607,11 @@ useEffect(() => {
                 <FiShare2 />
               </button>
 
-              {item.file_url && (
-                <a href={item.file_url} download>
-                  <FiDownload />
-                </a>
-              )}
+              {langImage && (
+  <button onClick={() => downloadResource(item, langImage)}>
+    <FiDownload />
+  </button>
+)}
             </div>
           </div>
         </div>
