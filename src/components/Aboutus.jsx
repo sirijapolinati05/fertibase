@@ -6,6 +6,8 @@ import Img2 from "../assets/fertibase-2.png";
 import Img3 from "../assets/fertibase-3.png";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
+
 export default function Aboutus() {
   const images = [About, Img1, Img2, Img3];
   const [current, setCurrent] = useState(0);
@@ -16,6 +18,17 @@ export default function Aboutus() {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  const location = useLocation();
+
+useEffect(() => {
+  if (location.hash) {
+    const el = document.querySelector(location.hash);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+}, [location]);
 
   return (
     <div className="bg-soil-light text-text-base">
@@ -280,7 +293,7 @@ export default function Aboutus() {
       </section>
 
       {/* VISION & MISSION */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" id="mission-vision">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-stretch">
 

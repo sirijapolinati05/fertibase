@@ -115,6 +115,11 @@ export default function Footer() {
                   Careers
                 </Link>
               </li>
+              {/* <li>
+                <Link to="/contactus" className="hover:text-primary-600 transition">
+                  Contact Us
+                </Link>
+              </li> */}
             </ul>
           </div>
 
@@ -130,15 +135,21 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#mission" className="hover:text-primary-600 transition">
-                  Our Mission
-                </a>
-              </li>
-              <li>
-                <a href="#vision" className="hover:text-primary-600 transition">
-                  Our Vision
-                </a>
-              </li>
+  <Link
+    to={{ pathname: "/aboutus", hash: "#mission-vision" }}
+    className="hover:text-primary-600 transition"
+  >
+    Our Mission
+  </Link>
+</li>
+<li>
+  <Link
+    to={{ pathname: "/aboutus", hash: "#mission-vision" }}
+    className="hover:text-primary-600 transition"
+  >
+    Our Vision
+  </Link>
+</li>
             </ul>
           </div>
 
