@@ -127,7 +127,7 @@ export default function WordCloudSection() {
           "
         >
           <svg
-            viewBox={`0 0 ${size} ${size}`}
+            viewBox={`0 -70 ${size} ${size + 70}`}
             className="w-full max-w-[360px] sm:max-w-[420px] h-auto"
           >
             {/* DEFINITIONS */}
@@ -243,8 +243,8 @@ export default function WordCloudSection() {
                   {/* ✅ Biofertilizer button on RIGHT, others BELOW */}
                   {cat.key === "biofertilizer" ? (
                     <foreignObject
-                      x={x + NODE_RADIUS + 14}
-                      y={y - 20}
+                      x={x - 80}                 // center horizontally
+    y={y - NODE_RADIUS - 52}   // move ABOVE the icon
                       width={160}
                       height={40}
                     >
