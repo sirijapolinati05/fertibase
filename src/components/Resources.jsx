@@ -28,71 +28,71 @@ export default function Resources() {
   const [readMoreItem, setReadMoreItem] = useState(null);
 
   const [mobileTabsExpanded, setMobileTabsExpanded] = useState(false);
-const [mobileMarketingExpanded, setMobileMarketingExpanded] = useState(false);
+  const [mobileMarketingExpanded, setMobileMarketingExpanded] = useState(false);
 
-const [playingVideoId, setPlayingVideoId] = useState(null);
+  const [playingVideoId, setPlayingVideoId] = useState(null);
 
   const MAX_MOBILE_TABS = 4; // 2 rows × 2 columns
 
   const scrollRef = useRef(null);
-const isPausedRef = useRef(false);
+  const isPausedRef = useRef(false);
 
-const LANGUAGES = ["Telugu", "Marathi", "Kannada", "Gujarati"];
-const [selectedLanguage, setSelectedLanguage] = useState("Telugu");
+  const LANGUAGES = ["Telugu", "Marathi", "Kannada", "Gujarati"];
+  const [selectedLanguage, setSelectedLanguage] = useState("Marathi");
 
-const getLanguageImage = (item) => {
-  switch (selectedLanguage) {
-    case "Marathi":
-      return item.image_url_marathi;
-    case "Kannada":
-      return item.image_url_kannada;
-    case "Gujarati":
-      return item.image_url_gujarati;
-    case "Telugu":
-    default:
-      return item.image_url_telugu;
-  }
-};
+  const getLanguageImage = (item) => {
+    switch (selectedLanguage) {
+      case "Marathi":
+        return item.image_url_marathi;
+      case "Kannada":
+        return item.image_url_kannada;
+      case "Gujarati":
+        return item.image_url_gujarati;
+      case "Telugu":
+      default:
+        return item.image_url_telugu;
+    }
+  };
 
   const getEmbedUrl = (url) => {
-  if (!url) return null;
+    if (!url) return null;
 
-  // YouTube
-  if (url.includes("youtube.com/watch")) {
-    const id = new URL(url).searchParams.get("v");
-    return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-  }
+    // YouTube
+    if (url.includes("youtube.com/watch")) {
+      const id = new URL(url).searchParams.get("v");
+      return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+    }
 
-  if (url.includes("youtu.be")) {
-    const id = url.split("/").pop();
-    return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-  }
+    if (url.includes("youtu.be")) {
+      const id = url.split("/").pop();
+      return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+    }
 
-  return url; // fallback
-};
+    return url; // fallback
+  };
 
-const handleShare = async (item) => {
-  const langImage = getLanguageImage(item);
+  const handleShare = async (item) => {
+    const langImage = getLanguageImage(item);
 
-  const url =
-    langImage ||
-    item.file_url ||
-    item.video_url ||
-    window.location.href;
+    const url =
+      langImage ||
+      item.file_url ||
+      item.video_url ||
+      window.location.href;
 
-  if (navigator.share) {
-    await navigator.share({
-      title: item.title,
-      text: item.description || item.title,
-      url,
-    });
-  } else {
-    await navigator.clipboard.writeText(url);
-    alert("Link copied to clipboard");
-  }
-};
+    if (navigator.share) {
+      await navigator.share({
+        title: item.title,
+        text: item.description || item.title,
+        url,
+      });
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link copied to clipboard");
+    }
+  };
 
-// const langImage = getLanguageImage(img);
+  // const langImage = getLanguageImage(img);
 
   /* ----------------------------- FETCH ----------------------------- */
 
@@ -168,33 +168,33 @@ const handleShare = async (item) => {
     return list;
   }, [resources, selectedType, selectedMarketingType, searchQuery]);
 
-      /* ---------------- MOBILE AUTO SCROLL ---------------- */
+  /* ---------------- MOBILE AUTO SCROLL ---------------- */
 
-useEffect(() => {
-  const container = scrollRef.current;
-  if (!container) return;
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
 
-  let rafId;
-  const speed = 0.35;
+    let rafId;
+    const speed = 0.35;
 
-  const autoScroll = () => {
-    if (!isPausedRef.current && window.innerWidth < 640) {
-      container.scrollLeft += speed;
+    const autoScroll = () => {
+      if (!isPausedRef.current && window.innerWidth < 640) {
+        container.scrollLeft += speed;
 
-      if (
-        container.scrollLeft + container.clientWidth >=
-        container.scrollWidth - 1
-      ) {
-        container.scrollLeft = 0;
+        if (
+          container.scrollLeft + container.clientWidth >=
+          container.scrollWidth - 1
+        ) {
+          container.scrollLeft = 0;
+        }
       }
-    }
+      rafId = requestAnimationFrame(autoScroll);
+    };
+
     rafId = requestAnimationFrame(autoScroll);
-  };
 
-  rafId = requestAnimationFrame(autoScroll);
-
-  return () => cancelAnimationFrame(rafId);
-}, [filteredResources]);
+    return () => cancelAnimationFrame(rafId);
+  }, [filteredResources]);
 
   if (loading) {
     return (
@@ -216,27 +216,27 @@ useEffect(() => {
   const marketingTabs = ["All", "Banners", "Brochures", "Flyers", "Standees"];
 
   const downloadResource = async (resource, langImage) => {
-  try {
-    const res = await fetch(langImage);
-    const blob = await res.blob();
+    try {
+      const res = await fetch(langImage);
+      const blob = await res.blob();
 
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
 
-    a.download = `${resource.title
-      .replace(/\s+/g, "_")
-      .toLowerCase()}_${selectedLanguage.toLowerCase()}.jpg`;
+      a.download = `${resource.title
+        .replace(/\s+/g, "_")
+        .toLowerCase()}_${selectedLanguage.toLowerCase()}.jpg`;
 
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error("Download failed", err);
-    alert("Failed to download resource");
-  }
-};
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed", err);
+      alert("Failed to download resource");
+    }
+  };
 
   /* ----------------------------- UI ----------------------------- */
 
@@ -245,47 +245,47 @@ useEffect(() => {
       <main className="max-w-7xl mx-auto px-4 py-12">
 
         {/* HEADER */}
-<div className="mb-10">
-  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-    
-    {/* Title + Subtitle */}
-    <div className="flex-1 text-center">
-      <h1 className="text-4xl font-black text-[#6B412E]">
-        Resources
-      </h1>
-      <p className="text-slate-600 mt-2">
-        Webinars, guides, marketing materials & knowledge assets
-      </p>
-    </div>
+        <div className="mb-10">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
 
-    {/* Language Selector */}
-    <div className="flex justify-end md:justify-end">
-      <div className="flex flex-col items-end gap-1">
-        <span className="text-xs font-semibold text-slate-500">
-          Select Language
-        </span>
-        <select
-          value={selectedLanguage}
-          onChange={(e) => setSelectedLanguage(e.target.value)}
-          className="
+            {/* Title + Subtitle */}
+            <div className="flex-1 text-center">
+              <h1 className="text-4xl font-black text-[#6B412E]">
+                Resources
+              </h1>
+              <p className="text-slate-600 mt-2">
+                Webinars, guides, marketing materials & knowledge assets
+              </p>
+            </div>
+
+            {/* Language Selector */}
+            <div className="flex justify-end md:justify-end">
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-xs font-semibold text-slate-500">
+                  Select Language
+                </span>
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="
             px-4 py-2 rounded-xl border
             text-sm font-semibold
             bg-white text-[#6B412E]
             shadow-sm
             cursor-pointer
           "
-        >
-          {LANGUAGES.map((lang) => (
-            <option key={lang} value={lang}>
-              {lang}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+                >
+                  {LANGUAGES.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
-  </div>
-</div>
+          </div>
+        </div>
 
         {/* SEARCH */}
         <div className="flex justify-center mb-10">
@@ -298,7 +298,7 @@ useEffect(() => {
         </div>
 
         {/* ---------------- MOBILE TOP FILTERS (STICKY) ---------------- */}
-<div className="
+        <div className="
   md:hidden
   sticky top-[56px]
   z-50
@@ -308,178 +308,174 @@ useEffect(() => {
   mb-4
   shadow-sm
 ">
-  <div className="grid grid-cols-2 gap-3">
-    {(mobileTabsExpanded ? topTabs : topTabs.slice(0, MAX_MOBILE_TABS)).map((t) => (
-      <button
-        key={t}
-        onClick={() => {
-          setSelectedType(t);
-          setSelectedMarketingType("All");
-        }}
-        className={`px-4 py-2 rounded-full text-sm font-semibold border transition
-          ${
-            selectedType === t
-              ? "bg-[#6B412E] text-white border-[#6B412E]"
-              : "bg-white text-[#6B412E] border-[#E5CFC2]"
-          }`}
-      >
-        {t} ({categoryCounts[t] || 0})
-      </button>
-    ))}
-  </div>
+          <div className="grid grid-cols-2 gap-3">
+            {(mobileTabsExpanded ? topTabs : topTabs.slice(0, MAX_MOBILE_TABS)).map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setSelectedType(t);
+                  setSelectedMarketingType("All");
+                }}
+                className={`px-4 py-2 rounded-full text-sm font-semibold border transition
+          ${selectedType === t
+                    ? "bg-[#6B412E] text-white border-[#6B412E]"
+                    : "bg-white text-[#6B412E] border-[#E5CFC2]"
+                  }`}
+              >
+                {t} ({categoryCounts[t] || 0})
+              </button>
+            ))}
+          </div>
 
-  {topTabs.length > MAX_MOBILE_TABS && (
-    <div className="mt-4 text-center">
-      <button
-        onClick={() => setMobileTabsExpanded(!mobileTabsExpanded)}
-        className="text-sm font-semibold text-[#6B412E]"
-      >
-        {mobileTabsExpanded ? "− View Less" : "+ View More"}
-      </button>
-    </div>
-  )}
-</div>
+          {topTabs.length > MAX_MOBILE_TABS && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setMobileTabsExpanded(!mobileTabsExpanded)}
+                className="text-sm font-semibold text-[#6B412E]"
+              >
+                {mobileTabsExpanded ? "− View Less" : "+ View More"}
+              </button>
+            </div>
+          )}
+        </div>
 
-{/* ---------------- DESKTOP TOP TABS (UNCHANGED) ---------------- */}
-<div className="hidden md:block sticky top-[72px] pt-6 z-40 bg-[#FDFDFD] pb-4">
-  <div className="flex flex-wrap justify-center gap-3">
-    {topTabs.map((t) => (
-      <button
-        key={t}
-        onClick={() => {
-          setSelectedType(t);
-          setSelectedMarketingType("All");
-        }}
-        className={`px-5 py-2 rounded-full text-sm font-semibold border flex items-center gap-2
-          ${
-            selectedType === t
-              ? "bg-[#6B412E] text-white border-[#6B412E]"
-              : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
-          }`}
-      >
-        {t}
-        <span className="text-xs bg-white/20 px-2 rounded-full">
-          {categoryCounts[t] || 0}
-        </span>
-      </button>
-    ))}
-  </div>
-</div>
+        {/* ---------------- DESKTOP TOP TABS (UNCHANGED) ---------------- */}
+        <div className="hidden md:block sticky top-[72px] pt-6 z-40 bg-[#FDFDFD] pb-4">
+          <div className="flex flex-wrap justify-center gap-3">
+            {topTabs.map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setSelectedType(t);
+                  setSelectedMarketingType("All");
+                }}
+                className={`px-5 py-2 rounded-full text-sm font-semibold border flex items-center gap-2
+          ${selectedType === t
+                    ? "bg-[#6B412E] text-white border-[#6B412E]"
+                    : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
+                  }`}
+              >
+                {t}
+                <span className="text-xs bg-white/20 px-2 rounded-full">
+                  {categoryCounts[t] || 0}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* ---------------- MOBILE MARKETING FILTERS (STICKY) ---------------- */}
         {selectedType === "Marketing Materials" && (
-  <>
-    <div className="md:hidden sticky top-[240px] z-40 bg-[#F7EDE5] rounded-2xl pt-2 mb-8 shadow-sm">
-      <div className="grid grid-cols-2 gap-3">
-        {(mobileMarketingExpanded
-          ? marketingTabs
-          : marketingTabs.slice(0, MAX_MOBILE_TABS)
-        ).map((m) => (
-          <button
-            key={m}
-            onClick={() => setSelectedMarketingType(m)}
-            className={`px-4 py-2 rounded-full text-xs font-semibold border transition
-              ${
-                selectedMarketingType === m
-                  ? "bg-[#6B412E] text-white border-[#6B412E]"
-                  : "bg-white text-[#6B412E] border-[#E5CFC2]"
-              }`}
-          >
-            {m} ({marketingCounts[m] || 0})
-          </button>
-        ))}
-      </div>
+          <>
+            <div className="md:hidden sticky top-[240px] z-40 bg-[#F7EDE5] rounded-2xl pt-2 mb-8 shadow-sm">
+              <div className="grid grid-cols-2 gap-3">
+                {(mobileMarketingExpanded
+                  ? marketingTabs
+                  : marketingTabs.slice(0, MAX_MOBILE_TABS)
+                ).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setSelectedMarketingType(m)}
+                    className={`px-4 py-2 rounded-full text-xs font-semibold border transition
+              ${selectedMarketingType === m
+                        ? "bg-[#6B412E] text-white border-[#6B412E]"
+                        : "bg-white text-[#6B412E] border-[#E5CFC2]"
+                      }`}
+                  >
+                    {m} ({marketingCounts[m] || 0})
+                  </button>
+                ))}
+              </div>
 
-      {marketingTabs.length > MAX_MOBILE_TABS && (
-        <div className="mt-4 text-center">
-          <button
-            onClick={() => setMobileMarketingExpanded(!mobileMarketingExpanded)}
-            className="text-sm font-semibold text-[#6B412E]"
-          >
-            {mobileMarketingExpanded ? "− View Less" : "+ View More"}
-          </button>
-        </div>
-      )}
-    </div>
+              {marketingTabs.length > MAX_MOBILE_TABS && (
+                <div className="mt-4 text-center">
+                  <button
+                    onClick={() => setMobileMarketingExpanded(!mobileMarketingExpanded)}
+                    className="text-sm font-semibold text-[#6B412E]"
+                  >
+                    {mobileMarketingExpanded ? "− View Less" : "+ View More"}
+                  </button>
+                </div>
+              )}
+            </div>
 
-    {/* DESKTOP MARKETING FILTERS */}
-        <div className="hidden md:block sticky top-[140px] z-30 pt-6 pb-2 bg-[#FDFDFD]">
-      <div className="flex justify-center gap-3 mb-2 flex-wrap">
-        {marketingTabs.map((m) => (
-          <button
-            key={m}
-            onClick={() => setSelectedMarketingType(m)}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold border
-              ${
-                selectedMarketingType === m
-                  ? "bg-[#6B412E] text-white border-[#6B412E]"
-                  : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
-              }`}
-          >
-            {m} ({marketingCounts[m] || 0})
-          </button>
-        ))}
-      </div>
-    </div>
-  </>
-)}
+            {/* DESKTOP MARKETING FILTERS */}
+            <div className="hidden md:block sticky top-[140px] z-30 pt-6 pb-2 bg-[#FDFDFD]">
+              <div className="flex justify-center gap-3 mb-2 flex-wrap">
+                {marketingTabs.map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setSelectedMarketingType(m)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-semibold border
+              ${selectedMarketingType === m
+                        ? "bg-[#6B412E] text-white border-[#6B412E]"
+                        : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
+                      }`}
+                  >
+                    {m} ({marketingCounts[m] || 0})
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
 
-{/* GRID */}
-{filteredResources.length === 0 ? (
-  <div className="text-center py-20 text-slate-500">
-    No resources found
-  </div>
-) : selectedType === "Posters" ? (
+        {/* GRID */}
+        {filteredResources.length === 0 ? (
+          <div className="text-center py-20 text-slate-500">
+            No resources found
+          </div>
+        ) : selectedType === "Posters" ? (
 
-  /* 🖼️ POSTERS VIEW */
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-    {filteredResources.map((img) => {
-  const langImage = getLanguageImage(img);
+          /* 🖼️ POSTERS VIEW */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredResources.map((img) => {
+              const langImage = getLanguageImage(img);
 
-  return (
-    <div
-      key={img.id}
-      className="group relative rounded-2xl flex flex-col
+              return (
+                <div
+                  key={img.id}
+                  className="group relative rounded-2xl flex flex-col
       border-2 border-[#E8D5C9] bg-[#EFE3D8] shadow-lg overflow-hidden"
-    >
-      {/* IMAGE */}
-      <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white">
-        <img
-          src={langImage || "/placeholder.png"}
-          alt={img.title}
-          className="max-h-40 max-w-40 w-full object-contain"
-        />
-      </div>
+                >
+                  {/* IMAGE */}
+                  <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white">
+                    <img
+                      src={langImage || "/placeholder.png"}
+                      alt={img.title}
+                      className="max-h-40 max-w-40 w-full object-contain"
+                    />
+                  </div>
 
-      {/* FOOTER */}
-      <div className="px-6 pb-6 mt-auto flex items-center justify-between">
-        <div className="text-sm font-semibold truncate">{img.title}</div>
+                  {/* FOOTER */}
+                  <div className="px-6 pb-6 mt-auto flex items-center justify-between">
+                    <div className="text-sm font-semibold truncate">{img.title}</div>
 
-        {langImage && (
-  <button
-    onClick={() => downloadResource(img, langImage)}
-    className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#6B412E] hover:bg-slate-100 transition"
-  >
-    <FiDownload size={16} />
-  </button>
-)}
-      </div>
-    </div>
-  );
-})}
-  </div>
+                    {langImage && (
+                      <button
+                        onClick={() => downloadResource(img, langImage)}
+                        className="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-[#6B412E] hover:bg-slate-100 transition"
+                      >
+                        <FiDownload size={16} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-) : (
+        ) : (
 
-  /* 📄 DEFAULT RESOURCES VIEW */
-  <div
-  ref={scrollRef}
-  onMouseEnter={() => (isPausedRef.current = true)}
-  onMouseLeave={() => (isPausedRef.current = false)}
-  onTouchStart={() => (isPausedRef.current = true)}
-  onTouchEnd={() => (isPausedRef.current = false)}
-  className="
+          /* 📄 DEFAULT RESOURCES VIEW */
+          <div
+            ref={scrollRef}
+            onMouseEnter={() => (isPausedRef.current = true)}
+            onMouseLeave={() => (isPausedRef.current = false)}
+            onTouchStart={() => (isPausedRef.current = true)}
+            onTouchEnd={() => (isPausedRef.current = false)}
+            className="
     flex gap-6 pb-6
     overflow-x-auto
     snap-x snap-mandatory
@@ -489,24 +485,24 @@ useEffect(() => {
     lg:grid-cols-3
     md:overflow-visible
   "
->
-  {filteredResources.map((item) => {
-    const isWebinar = normalize(item.category) === "webinars";
-    const isMarketing = normalize(item.category) === "marketingmaterials";
-    const isTechnical = normalize(item.category) === "technicalguides";
-    const isPoster = normalize(item.category) === "posters";
-    const isPPT = normalize(item.category) === "ppts";
+          >
+            {filteredResources.map((item) => {
+              const isWebinar = normalize(item.category) === "webinars";
+              const isMarketing = normalize(item.category) === "marketingmaterials";
+              const isTechnical = normalize(item.category) === "technicalguides";
+              const isPoster = normalize(item.category) === "posters";
+              const isPPT = normalize(item.category) === "ppts";
 
-    const isExpanded = expandedItemId === item.id;
-    const isPlaying = playingVideoId === item.id;
+              const isExpanded = expandedItemId === item.id;
+              const isPlaying = playingVideoId === item.id;
 
-    // const langImage = getLanguageImage(img);
-    const langImage = getLanguageImage(item);
+              // const langImage = getLanguageImage(img);
+              const langImage = getLanguageImage(item);
 
-    return (
-      <div
-  key={item.id}
-  className="
+              return (
+                <div
+                  key={item.id}
+                  className="
     group relative bg-white rounded-2xl border
     min-w-[280px] md:min-w-0
     snap-start
@@ -516,110 +512,110 @@ useEffect(() => {
     hover:shadow-[0_25px_45px_-15px_rgba(116,26,28,0.35)]
     overflow-hidden
   "
->
-        {/* IMAGE / VIDEO */}
-        {!isPPT && (
-          <div className="relative h-56 bg-black">
-            {isWebinar && isPlaying ? (
-              <iframe
-                src={getEmbedUrl(item.video_url)}
-                className="w-full h-full"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-              />
-            ) : (
-              <>
-                <img
-  src={langImage || "/placeholder.png"}
-  alt={item.title}
-                  className="
+                >
+                  {/* IMAGE / VIDEO */}
+                  {!isPPT && (
+                    <div className="relative h-56 bg-black">
+                      {isWebinar && isPlaying ? (
+                        <iframe
+                          src={getEmbedUrl(item.video_url)}
+                          className="w-full h-full"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <>
+                          <img
+                            src={langImage || "/placeholder.png"}
+                            alt={item.title}
+                            className="
   w-full h-full object-cover
   transition-all duration-700 ease-out
   group-hover:brightness-105
   group-hover:contrast-105
   group-hover:-translate-y-1
 "
-                />
+                          />
 
-                {isWebinar && (
-                  <button
-                    onClick={() => setPlayingVideoId(item.id)}
-                    className="absolute inset-0 flex items-center justify-center bg-black/40"
-                  >
-                    <div className="w-14 h-14 bg-[#6B412E] text-white rounded-full flex items-center justify-center">
-                      <FiPlay />
+                          {isWebinar && (
+                            <button
+                              onClick={() => setPlayingVideoId(item.id)}
+                              className="absolute inset-0 flex items-center justify-center bg-black/40"
+                            >
+                              <div className="w-14 h-14 bg-[#6B412E] text-white rounded-full flex items-center justify-center">
+                                <FiPlay />
+                              </div>
+                            </button>
+                          )}
+                        </>
+                      )}
                     </div>
-                  </button>
-                )}
-              </>
-            )}
+                  )}
+
+                  {/* CONTENT */}
+                  <div className="p-6 flex flex-col gap-3 flex-grow">
+                    <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
+                      {item.category}
+                      {item.material_type && ` • ${item.material_type}`}
+                    </span>
+
+                    <h3 className="text-lg font-bold">{item.title}</h3>
+
+                    <p className="text-slate-600 text-sm">
+                      {item.description}
+                    </p>
+
+                    {/* EXPAND DETAILS */}
+                    {(isMarketing || isTechnical) && isExpanded && (
+                      <p className="text-slate-700 text-sm leading-relaxed">
+                        {item.detailed_description}
+                      </p>
+                    )}
+
+                    <div className="pt-4 mt-auto border-t flex justify-between items-center">
+                      {/* LEFT ACTION */}
+                      {isWebinar ? (
+                        <button
+                          onClick={() => setPlayingVideoId(item.id)}
+                          className="text-[#6B412E] font-semibold flex items-center gap-2"
+                        >
+                          Watch Now <FiArrowRight />
+                        </button>
+                      ) : !isPPT ? (
+                        <button
+                          onClick={() =>
+                            setExpandedItemId(isExpanded ? null : item.id)
+                          }
+                          className="text-[#6B412E] font-semibold flex items-center gap-2"
+                        >
+                          {isExpanded ? "Hide Details" : "Read More"}
+                          <FiArrowRight />
+                        </button>
+                      ) : (
+                        <span className="text-sm text-slate-500 font-semibold">
+                          PPT File
+                        </span>
+                      )}
+
+                      {/* RIGHT ACTIONS */}
+                      <div className="flex gap-4 text-slate-400">
+                        <button onClick={() => handleShare(item)}>
+                          <FiShare2 />
+                        </button>
+
+                        {langImage && (
+                          <button onClick={() => downloadResource(item, langImage)}>
+                            <FiDownload />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
-
-        {/* CONTENT */}
-        <div className="p-6 flex flex-col gap-3 flex-grow">
-          <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
-            {item.category}
-            {item.material_type && ` • ${item.material_type}`}
-          </span>
-
-          <h3 className="text-lg font-bold">{item.title}</h3>
-
-          <p className="text-slate-600 text-sm">
-            {item.description}
-          </p>
-
-          {/* EXPAND DETAILS */}
-          {(isMarketing || isTechnical) && isExpanded && (
-            <p className="text-slate-700 text-sm leading-relaxed">
-              {item.detailed_description}
-            </p>
-          )}
-
-          <div className="pt-4 mt-auto border-t flex justify-between items-center">
-            {/* LEFT ACTION */}
-            {isWebinar ? (
-              <button
-                onClick={() => setPlayingVideoId(item.id)}
-                className="text-[#6B412E] font-semibold flex items-center gap-2"
-              >
-                Watch Now <FiArrowRight />
-              </button>
-            ) : !isPPT ? (
-              <button
-                onClick={() =>
-                  setExpandedItemId(isExpanded ? null : item.id)
-                }
-                className="text-[#6B412E] font-semibold flex items-center gap-2"
-              >
-                {isExpanded ? "Hide Details" : "Read More"}
-                <FiArrowRight />
-              </button>
-            ) : (
-              <span className="text-sm text-slate-500 font-semibold">
-                PPT File
-              </span>
-            )}
-
-            {/* RIGHT ACTIONS */}
-            <div className="flex gap-4 text-slate-400">
-              <button onClick={() => handleShare(item)}>
-                <FiShare2 />
-              </button>
-
-              {langImage && (
-  <button onClick={() => downloadResource(item, langImage)}>
-    <FiDownload />
-  </button>
-)}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  })}
-</div>
-)}
       </main>
 
       {/* VIDEO MODAL */}
