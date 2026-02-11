@@ -102,29 +102,46 @@ export default function JobDetails() {
             </Section>
           )}
 
-          {Array.isArray(job.responsibilities) && (
-            <Section title="Responsibilities">
-              <List items={job.responsibilities} />
-            </Section>
-          )}
+          <Section title="Responsibilities">
+  {Array.isArray(job.responsibilities) && job.responsibilities.length > 0 ? (
+    <List items={job.responsibilities} />
+  ) : (
+    <p className="text-[#6B4A3A] italic">
+      No responsibilities required.
+    </p>
+  )}
+</Section>
 
-          {Array.isArray(job.requirements) && (
-            <Section title="Requirements">
-              <List items={job.requirements} />
-            </Section>
-          )}
+          <Section title="Requirements">
+  {Array.isArray(job.requirements) && job.requirements.length > 0 ? (
+    <List items={job.requirements} />
+  ) : (
+    <p className="text-[#6B4A3A] italic">
+      No requirements needed.
+    </p>
+  )}
+</Section>
 
-          {Array.isArray(job.skills) && (
-            <Section title="Skills">
-              <TagList items={job.skills} />
-            </Section>
-          )}
 
-          {Array.isArray(job.tools) && (
-            <Section title="Tools">
-              <TagList items={job.tools} />
-            </Section>
-          )}
+          <Section title="Skills">
+  {Array.isArray(job.skills) && job.skills.length > 0 ? (
+    <TagList items={job.skills} />
+  ) : (
+    <p className="text-[#6B4A3A] italic">
+      No skills required.
+    </p>
+  )}
+</Section>
+
+          <Section title="Tools">
+  {Array.isArray(job.tools) && job.tools.length > 0 ? (
+    <TagList items={job.tools} />
+  ) : (
+    <p className="text-[#6B4A3A] italic">
+      No tools required.
+    </p>
+  )}
+</Section>
 
           {Array.isArray(job.nice_to_have) && (
             <Section title="Nice to Have">

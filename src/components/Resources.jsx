@@ -424,7 +424,7 @@ export default function Resources() {
         {/* GRID */}
         {filteredResources.length === 0 ? (
           <div className="text-center py-20 text-slate-500">
-            No resources found
+            No resources found in {selectedType}
           </div>
         ) : selectedType === "Posters" ? (
 

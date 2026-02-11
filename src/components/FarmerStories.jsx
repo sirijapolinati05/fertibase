@@ -115,10 +115,9 @@ export default function FarmerStories() {
                 onClick={() => setSelectedState(state)}
                 className={`relative px-5 py-2 rounded-full text-sm font-semibold border
                   transition-all duration-300 overflow-hidden
-                  ${
-                    active
-                      ? "bg-[#6B412E] text-white border-[#6B412E] shadow-lg"
-                      : "bg-white border-gray-300 hover:bg-[#f3ede6]"
+                  ${active
+                    ? "bg-[#6B412E] text-white border-[#6B412E] shadow-lg"
+                    : "bg-white border-gray-300 hover:bg-[#f3ede6]"
                   }`}
               >
                 {/* Active glow */}
@@ -225,7 +224,7 @@ export default function FarmerStories() {
                         {t.name}
                       </p>
                       <p className="text-xs text-slate-500">
-                        FertiBase Farmer
+                        {t.state}
                       </p>
                     </div>
                   </div>

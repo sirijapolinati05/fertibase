@@ -17,10 +17,6 @@ import Img2 from "../assets/fertibase-2.png";
 import Img4 from "../assets/About.png";
 const HERO_BACKGROUNDS = [Img2, Img3, Img1, Img4];
 
-
-
-
-
 export default function CareerPage() {
   const [openIndex, setOpenIndex] = useState(null);
   const [search, setSearch] = useState("");
@@ -352,7 +348,7 @@ useEffect(() => {
     job.title?.toLowerCase().includes(search.toLowerCase())
   )
   .map(job => {
-    console.log(job);
+    // console.log(job);
 
     const hasDeadline =
       job.daysLeft !== null &&
