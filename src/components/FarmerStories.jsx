@@ -119,17 +119,17 @@ export default function FarmerStories() {
 
   return (
     <section className="bg-white py-16 md:py-20">
-      <div className="mx-auto max-w-7xl px-5 md:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-6">
         <div className="mb-10 max-w-2xl">
-          <h2 className="text-[40px] font-bold leading-[1.05] text-[#7b4a33] md:text-[56px]">
+          <h2 className="text-[32px] font-bold leading-[1.08] text-[#7b4a33] sm:text-[40px] md:text-[56px]">
             Farmer Success Stories
           </h2>
-          <p className="mt-3 text-[18px] text-[#2e2621] md:text-[24px]">
+          <p className="mt-3 text-[16px] text-[#2e2621] sm:text-[18px] md:text-[24px]">
             Real experiences from farmers who trust FertiBase
           </p>
         </div>
 
-        <div className="mb-12 flex flex-wrap gap-4">
+        <div className="mb-10 flex gap-3 overflow-x-auto pb-2 md:mb-12 md:flex-wrap md:gap-4 md:overflow-visible md:pb-0">
           {filterOptions.map((option) => {
             const isActive = selectedState === option.value;
 
@@ -139,7 +139,7 @@ export default function FarmerStories() {
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedState(option.value)}
-                className={`rounded-[10px] border px-6 py-2 text-[15px] font-medium transition-all duration-300 ${
+                className={`shrink-0 rounded-[10px] border px-5 py-2 text-[14px] font-medium transition-all duration-300 md:px-6 md:text-[15px] ${
                   isActive
                     ? "border-[#7b4a33] bg-[#7b4a33] text-white shadow-[0_10px_24px_rgba(123,74,51,0.18)]"
                     : "border-[#bc9985] bg-white text-[#7b4a33] hover:bg-[#faf3ed]"
@@ -161,7 +161,7 @@ export default function FarmerStories() {
         )}
 
         {displayedTestimonials.length > 0 && (
-          <div className="grid gap-10 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 md:gap-10">
             {displayedTestimonials.map((testimonial) => {
               const embedUrl = getYoutubeEmbed(testimonial.video_url);
               const title = testimonial.title || "copious NPK";
@@ -177,7 +177,7 @@ export default function FarmerStories() {
                   className="group"
                 >
                   <div
-                    className="relative aspect-[1.48/1] cursor-pointer overflow-hidden bg-[#d8d0c8]"
+                    className="relative aspect-[1.1/1] cursor-pointer overflow-hidden rounded-[1.5rem] bg-[#d8d0c8] sm:aspect-[1.25/1] md:aspect-[1.48/1]"
                     onClick={() => {
                       if (!testimonial.video_url) return;
                       setPlayingId((current) =>
@@ -211,11 +211,11 @@ export default function FarmerStories() {
                           </div>
                         )}
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/38 to-transparent px-6 pb-5 pt-20 text-white">
-                          <h3 className="text-[22px] font-bold leading-none md:text-[24px]">
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/38 to-transparent px-4 pb-4 pt-16 text-white sm:px-6 sm:pb-5 sm:pt-20">
+                          <h3 className="text-[20px] font-bold leading-none md:text-[24px]">
                             {title}
                           </h3>
-                          <p className="mt-2 text-[14px] leading-tight text-white/90 md:text-[15px]">
+                          <p className="mt-2 text-[13px] leading-snug text-white/90 md:text-[15px]">
                             {description}
                           </p>
                         </div>

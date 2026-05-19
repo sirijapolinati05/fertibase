@@ -59,7 +59,7 @@ const tagStyles = {
 
 export default function PremiumProductSection() {
   return (
-    <section className="bg-[#fff3eb] px-5 pb-10 pt-0 md:px-8">
+    <section className="bg-[#fff3eb] px-4 pb-10 pt-2 sm:px-5 md:px-8">
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
 
         {/* LEFT CONTENT */}
@@ -68,21 +68,21 @@ export default function PremiumProductSection() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="max-w-[520px]"
+          className="max-w-[520px] text-center lg:text-left"
         >
-          <h2 className="text-[48px] font-bold leading-[1.05] text-[#7b4a33]">
+          <h2 className="text-[34px] font-bold leading-[1.05] text-[#7b4a33] sm:text-[42px] md:text-[48px]">
             Our Premium Product
             <br />
             Range
           </h2>
 
-          <p className="mt-6 text-[24px] leading-[1.08] text-[#1f1f1f]">
+          <p className="mt-4 text-[17px] leading-[1.45] text-[#1f1f1f] sm:mt-5 sm:text-[20px] sm:leading-[1.25] md:mt-6 md:text-[24px] md:leading-[1.08]">
             Trusted microbiological & nutrient solutions designed for modern agriculture.
           </p>
 
           <Link
             to="/product?category=All"
-            className="mt-8 inline-flex h-[50px] min-w-[256px] items-center justify-center rounded-full bg-[#7b4a33] px-10 text-[20px] font-medium text-white shadow-[0_8px_18px_rgba(123,74,51,0.28)]"
+            className="mt-7 inline-flex min-h-[50px] w-full max-w-[280px] items-center justify-center rounded-full bg-[#7b4a33] px-6 text-[16px] font-medium text-white shadow-[0_8px_18px_rgba(123,74,51,0.28)] sm:max-w-fit sm:min-w-[256px] sm:px-10 sm:text-[20px]"
           >
             Explore Our Products
           </Link>
@@ -136,22 +136,24 @@ export default function PremiumProductSection() {
         </motion.div>
 
         {/* MOBILE VERSION */}
-        <div className="mx-auto flex w-full max-w-[360px] flex-col items-center gap-5 md:hidden">
+        <div className="mx-auto flex w-full max-w-[360px] flex-col items-center gap-6 md:hidden">
 
           <img
             src={PremiumProductImage}
             alt="Premium product range"
-            className="h-[240px] w-[240px] rounded-full object-cover"
+            className="h-[220px] w-[220px] rounded-full border-4 border-white/70 object-cover shadow-[0_18px_36px_rgba(74,46,32,0.12)] sm:h-[240px] sm:w-[240px]"
           />
 
-          <div className="grid w-full grid-cols-2 gap-4">
-            {productCategories.map((item) => (
+          <div className="grid w-full grid-cols-2 justify-items-center gap-4 sm:gap-5">
+            {productCategories.map((item, index) => (
               <Link
                 key={item.label.join("-")}
                 to={`/product?category=${encodeURIComponent(item.routeCategory)}`}
-                className="flex min-h-[110px] items-center justify-center rounded-full bg-[#c7eec5] px-3 text-center text-[15px] leading-[1.12] text-black transition-transform duration-300 hover:scale-[1.03]"
+                className={`flex h-[148px] w-[148px] items-center justify-center rounded-full border border-white/60 bg-[linear-gradient(135deg,#d4f3c8_0%,#c0ecbc_100%)] px-4 text-center text-[15px] font-medium leading-[1.2] text-[#1d241d] shadow-[0_14px_30px_rgba(115,165,99,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(115,165,99,0.22)] ${
+                  index === productCategories.length - 1 ? "col-span-2" : ""
+                }`}
               >
-                <div className="flex flex-col items-center justify-center">
+                <div className="flex max-w-[9ch] flex-col items-center justify-center">
                   {item.label.map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -166,7 +168,7 @@ export default function PremiumProductSection() {
       </div>
 
       {/* PRODUCT CARDS */}
-      <div className="mx-auto mt-14 grid max-w-7xl gap-8 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mx-auto mt-12 grid max-w-7xl gap-6 md:mt-14 md:grid-cols-2 md:gap-8 xl:grid-cols-3">
 
         {premiumCards.map((card, index) => (
           <motion.article
@@ -180,13 +182,13 @@ export default function PremiumProductSection() {
             viewport={{ once: true }}
             className="group"
           >
-            <div className="relative overflow-hidden rounded-[30px] bg-[#fff3eb] p-5 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)]">
+            <div className="relative overflow-hidden rounded-[24px] bg-[#fff3eb] p-4 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)] sm:rounded-[30px] sm:p-5">
 
               <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)]" />
 
               <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
 
-                <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-5 py-1 text-sm font-medium text-white">
+                <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
                   New
                 </span>
 
@@ -201,11 +203,11 @@ export default function PremiumProductSection() {
 
               <div className="relative mt-5">
 
-                <h3 className="text-[18px] font-semibold leading-snug text-[#7b4a33]">
+                <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
                   {card.title}
                 </h3>
 
-                <p className="mt-1 text-[15px] text-[#3f312a]">
+                <p className="mt-1 text-[14px] text-[#3f312a] sm:text-[15px]">
                   {card.subtitle}
                 </p>
 
@@ -260,7 +262,7 @@ export default function PremiumProductSection() {
 
                 <Link
                   to="/product?category=All"
-                  className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[18px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e]"
+                  className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
                 >
                   <span>View Details</span>
 

@@ -29,24 +29,24 @@ export default function About() {
 
   return (
     // BOTTOM SPACE REDUCED
-    <section id="about" className="bg-[#fff3eb] px-5 pt-8 pb-2">
+    <section id="about" className="bg-[#fff3eb] px-4 pt-8 pb-2 sm:px-5">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
-        className="mx-auto max-w-7xl rounded-[2.25rem] border border-[#b98f7b] bg-white px-8 py-10 shadow-sm md:px-10 lg:px-12"
+        className="mx-auto max-w-7xl rounded-[2rem] border border-[#b98f7b] bg-white px-5 py-8 shadow-sm sm:px-6 md:rounded-[2.25rem] md:px-10 md:py-10 lg:px-12"
       >
-        <div className="grid items-start gap-10 lg:grid-cols-[0.95fr_1.2fr_1fr]">
-          <div className="flex h-full flex-col justify-between">
+        <div className="grid items-start gap-8 lg:grid-cols-[0.95fr_1.2fr_1fr] lg:gap-10">
+          <div className="flex h-full flex-col justify-between text-center lg:text-left">
             <div>
-              <h2 className="text-4xl font-bold leading-tight text-[#7b4a33] md:text-5xl">
+              <h2 className="text-[32px] font-bold leading-tight text-[#7b4a33] sm:text-4xl md:text-5xl">
                 Why Choose
                 <br />
                 Fertibase?
               </h2>
 
-              <p className="mt-6 max-w-[290px] text-[17px] leading-[1.25] text-black">
+              <p className="mx-auto mt-5 max-w-[32rem] text-[15px] leading-[1.5] text-black sm:text-[16px] md:mt-6 md:text-[17px] md:leading-[1.35] lg:mx-0 lg:max-w-[290px] lg:leading-[1.25]">
                 Fertibase provides biofertilizers that boost soil health and strengthen crop growth. Our innovative
                 solutions are designed to bring life back to the soil, one microbe at a time.
               </p>
@@ -55,10 +55,11 @@ export default function About() {
             <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.98 }}
+              className="flex justify-center lg:justify-start"
             >
               <Link
                 to="/aboutus"
-                className="mt-8 inline-flex h-[52px] w-fit items-center justify-center rounded-full bg-[#7b4a33] px-10 text-xl font-medium text-white shadow-md"
+                className="mt-7 inline-flex min-h-[52px] w-full max-w-[280px] items-center justify-center rounded-full bg-[#7b4a33] px-6 text-base font-medium text-white shadow-md sm:max-w-fit sm:px-10 sm:text-xl"
               >
                 Learn More About Us
               </Link>
@@ -69,11 +70,11 @@ export default function About() {
             <img
               src={About1}
               alt="Seedling growing in soil"
-              className="h-[360px] w-full max-w-[340px] rounded-[2rem] object-cover md:h-[420px] md:max-w-[380px]"
+              className="h-[280px] w-full max-w-[340px] rounded-[1.75rem] object-cover sm:h-[340px] md:h-[420px] md:max-w-[380px] md:rounded-[2rem]"
             />
           </div>
 
-          <div className="space-y-8 pt-6">
+          <div className="space-y-6 pt-2 sm:pt-4 md:space-y-8 md:pt-6">
             {aboutSections.map((item, index) => (
               <motion.div
                 key={item.title}
@@ -81,16 +82,16 @@ export default function About() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
                 viewport={{ once: true }}
-                className="flex items-start gap-3"
+                className="flex items-start gap-3 rounded-[1.25rem] bg-[#fff8f3] p-4 sm:bg-transparent sm:p-0"
               >
                 <Check className="mt-1 h-6 w-6 text-[#7b4a33]" strokeWidth={2.3} />
 
                 <div>
-                  <h3 className="text-[18px] font-semibold leading-tight text-black">
+                  <h3 className="text-[17px] font-semibold leading-tight text-black sm:text-[18px]">
                     {item.title}
                   </h3>
 
-                  <p className="mt-2 max-w-[320px] text-[14px] leading-[1.12] text-[#2f2f2f]">
+                  <p className="mt-2 max-w-[320px] text-[14px] leading-[1.4] text-[#2f2f2f] sm:leading-[1.2]">
                     {item.desc}
                   </p>
                 </div>

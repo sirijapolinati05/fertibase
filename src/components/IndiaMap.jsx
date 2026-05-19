@@ -51,8 +51,8 @@ function StatCircle({ stat, index }) {
 
 export default function IndiaMap() {
   return (
-    <section className="overflow-hidden bg-[#fff3eb] py-4 sm:py-6">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+    <section className="overflow-hidden bg-[#fff3eb] py-8 sm:py-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           {/* LEFT */}
           <motion.div
@@ -60,21 +60,21 @@ export default function IndiaMap() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
-            className="max-w-[580px]"
+            className="max-w-[580px] text-center lg:text-left"
           >
-            <h2 className="max-w-[820px] whitespace-nowrap text-[44px] font-bold leading-[0.98] text-[#764734] sm:text-[56px] lg:text-[64px]">
+            <h2 className="max-w-[820px] text-[32px] font-bold leading-[1.02] text-[#764734] sm:text-[48px] lg:text-[64px]">
               Making a Difference in
               <br />
               Agriculture
             </h2>
 
-            <p className="mt-6 max-w-[520px] text-[20px] leading-[1.2] text-[#2f241f]">
+            <p className="mx-auto mt-4 max-w-[520px] text-[16px] leading-[1.5] text-[#2f241f] sm:mt-6 sm:text-[20px] sm:leading-[1.2] lg:mx-0">
               Years of innovation and dedication have resulted in significant
               achievements across the agricultural sector.
             </p>
 
             {/* MOBILE STATS */}
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:hidden">
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
               {stats.map((stat, index) => (
                 <div key={stat.label} className="flex justify-center">
                   <StatCircle
@@ -108,7 +108,28 @@ export default function IndiaMap() {
           >
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
               {/* MAP */}
-              <div className="flex-1 lg:pt-[100px]">
+              <div className="flex-1 -mt-3 lg:mt-0 lg:pt-[100px]">
+                <div className="mx-auto mb-4 flex w-full max-w-[320px] flex-col gap-4 lg:hidden">
+                  <div className="w-full text-center">
+                    <h3 className="text-[24px] font-black uppercase leading-[0.95] text-[#764734]">
+                      <span className="block">
+                        OUR PRESENCE
+                      </span>
+
+                      <span className="block">
+                        ACROSS INDIA
+                      </span>
+                    </h3>
+
+                    <div className="mx-auto mt-4 h-[2px] w-[70px] bg-[#8e715c]" />
+
+                    <p className="mt-4 text-[12px] leading-[1.55] text-[#5d5047]">
+                      Delivering trusted agricultural solutions across the country.
+                      Strong roots, wider reach, better tomorrow.
+                    </p>
+                  </div>
+                </div>
+
                 <img
                   src={indiaMapImage}
                   alt="India active states map"
@@ -118,14 +139,39 @@ export default function IndiaMap() {
                     w-full
                     max-w-[760px]
                     object-contain
+                    rounded-[1.5rem]
+                    -mt-12
+                    -mb-12
+                    sm:-mt-8
+                    sm:-mb-8
                     lg:h-[920px]
                     lg:w-[860px]
+                    lg:mt-0
+                    lg:mb-0
                     lg:-ml-[55px]
                   "
                 />
 
+                <div className="mx-auto mt-4 w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:hidden">
+                  <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
+                    India - Active States
+                  </p>
+
+                  <div className="mt-4 space-y-3 text-sm text-[#3b312b]">
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-[4px] bg-[#764734]" />
+                      <span>Active States</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-[4px] border border-[#764734] bg-[#f3e5dc]" />
+                      <span>Other States</span>
+                    </div>
+                  </div>
+                </div>
+
                 {/* LEGEND */}
-                <div className="relative z-10 mx-auto mt-[-320px] lg:ml-[360px] w-fit rounded-[18px] bg-white/80 px-6 py-4 shadow-lg">
+                <div className="relative z-10 mx-auto mt-4 hidden w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:ml-[360px] lg:mt-[-320px] lg:block lg:w-fit lg:max-w-none lg:px-6">
 
                   <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
                     India - Active States
@@ -149,21 +195,21 @@ export default function IndiaMap() {
               </div>
 
               {/* TEXT */}
-              <div className="w-full max-w-[260px] lg:-ml-[360px] lg:pt-[220px]">
+              <div className="hidden w-full max-w-[320px] text-center lg:-ml-[360px] lg:block lg:max-w-[260px] lg:pt-[220px] lg:text-left">
 
-                <h3 className="text-[28px] font-black uppercase leading-[0.9] text-[#764734] lg:text-[32px]">
-                  <span className="block whitespace-nowrap">
+                <h3 className="text-[24px] font-black uppercase leading-[0.95] text-[#764734] sm:text-[28px] lg:text-[32px]">
+                  <span className="block">
                     OUR PRESENCE
                   </span>
 
-                  <span className="block whitespace-nowrap">
+                  <span className="block">
                     ACROSS INDIA
                   </span>
                 </h3>
 
-                <div className="mt-4 h-[2px] w-[70px] bg-[#8e715c]" />
+                <div className="mx-auto mt-4 h-[2px] w-[70px] bg-[#8e715c] lg:mx-0" />
 
-                <p className="mt-4 text-[11px] leading-[1.45] text-[#5d5047]">
+                <p className="mt-4 text-[12px] leading-[1.55] text-[#5d5047]">
                   Delivering trusted agricultural solutions across the country.
                   Strong roots, wider reach, better tomorrow.
                 </p>
