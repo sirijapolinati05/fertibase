@@ -14,6 +14,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #F5F1ED; /* Off-white background */
   color: #1A0F08; /* Red Soil brighter dark brown text */
+  cursor: default;
+  caret-color: transparent;
+}
+
+a,
+button,
+[role="button"],
+summary,
+label[for] {
+  cursor: pointer;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  cursor: text;
+  caret-color: auto;
 }
 
 /* Red Soil Theme Variables - Updated with Brighter Colors */

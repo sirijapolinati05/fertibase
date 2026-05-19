@@ -26,6 +26,7 @@ export default function Resources() {
 
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [readMoreItem, setReadMoreItem] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [mobileTabsExpanded, setMobileTabsExpanded] = useState(false);
   const [mobileMarketingExpanded, setMobileMarketingExpanded] = useState(false);
@@ -110,6 +111,24 @@ export default function Resources() {
 
     fetchResources();
   }, []);
+
+  useEffect(() => {
+    if (!selectedImage) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setSelectedImage(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [selectedImage]);
 
   /* ----------------------------- COUNTS ----------------------------- */
 
@@ -444,7 +463,14 @@ export default function Resources() {
                     <img
                       src={langImage || "/placeholder.png"}
                       alt={img.title}
-                      className="max-h-40 max-w-40 w-full object-contain"
+                      className="max-h-40 max-w-40 w-full cursor-zoom-in object-contain"
+                      onClick={() =>
+                        langImage &&
+                        setSelectedImage({
+                          src: langImage,
+                          alt: img.title,
+                        })
+                      }
                     />
                   </div>
 
@@ -515,7 +541,7 @@ export default function Resources() {
                 >
                   {/* IMAGE / VIDEO */}
                   {!isPPT && (
-                    <div className="relative h-56 bg-black">
+                    <div className="relative h-56 overflow-hidden bg-[#f6efe8]">
                       {isWebinar && isPlaying ? (
                         <iframe
                           src={getEmbedUrl(item.video_url)}
@@ -528,12 +554,20 @@ export default function Resources() {
                           <img
                             src={langImage || "/placeholder.png"}
                             alt={item.title}
+                            onClick={() =>
+                              langImage &&
+                              setSelectedImage({
+                                src: langImage,
+                                alt: item.title,
+                              })
+                            }
                             className="
   w-full h-full object-cover
+  cursor-zoom-in
   transition-all duration-700 ease-out
   group-hover:brightness-105
   group-hover:contrast-105
-  group-hover:-translate-y-1
+  group-hover:scale-[1.03]
 "
                           />
 
@@ -620,7 +654,7 @@ export default function Resources() {
 
       {/* VIDEO MODAL */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-6">
+        <div className="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-6">
           <div className="relative w-full max-w-4xl aspect-video bg-black rounded-xl">
             <iframe
               src={`${selectedVideo}?autoplay=1&rel=0`}
@@ -637,9 +671,32 @@ export default function Resources() {
         </div>
       )}
 
+      {/* IMAGE MODAL */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 p-4 sm:p-6"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute right-4 top-4 rounded-full bg-white p-2 text-[#6B412E] shadow-lg"
+            aria-label="Close image preview"
+          >
+            <FiX />
+          </button>
+
+          <img
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            onClick={(event) => event.stopPropagation()}
+            className="max-h-[90vh] max-w-[95vw] rounded-2xl bg-white object-contain shadow-2xl"
+          />
+        </div>
+      )}
+
       {/* READ MORE MODAL */}
       {readMoreItem && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-6">
+        <div className="fixed inset-0 z-[200] bg-black/60 flex items-center justify-center p-6">
           <div className="bg-white max-w-2xl w-full rounded-2xl p-8 relative">
             <button
               onClick={() => setReadMoreItem(null)}

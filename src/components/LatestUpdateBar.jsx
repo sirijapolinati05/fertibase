@@ -4,133 +4,119 @@ import { fetchLatestUpdate } from "../lib/latestUpdates";
 export function LatestUpdateBar() {
   const [updates, setUpdates] = useState([]);
 
-  const marqueeItems =
-  updates.length > 1 ? [...updates, ...updates] : updates;
-
-
   useEffect(() => {
-  fetchLatestUpdate().then((data) => {
-    if (!data) {
-      setUpdates([]);
-    } else if (Array.isArray(data)) {
-      setUpdates(data);
-    } else {
-      setUpdates([data]);
-    }
-  });
-}, []);
+    fetchLatestUpdate().then((data) => {
+      if (!data) {
+        setUpdates([]);
+        return;
+      }
 
+      setUpdates(Array.isArray(data) ? data : [data]);
+    });
+  }, []);
 
-  if (!updates.length) return null;
+  const normalizedUpdates = updates.length
+    ? updates
+    : [
+        {
+          title: "Latest Update",
+          message: "This website is releasing soon.",
+        },
+      ];
+
+  const marqueeItems =
+    normalizedUpdates.length > 1
+      ? [...normalizedUpdates, ...normalizedUpdates]
+      : [...normalizedUpdates, ...normalizedUpdates, ...normalizedUpdates];
+
+  const animationClass =
+    normalizedUpdates.length > 2 ? "animate-[marquee_22s_linear_infinite]" : "animate-[marquee_30s_linear_infinite]";
 
   return (
-    <section className="relative overflow-hidden bg-white text-black border-b">
-      {/* Track */}
-      <div className="marquee">
-        <div
-  className={`marquee__content ${
-    updates.length > 1 ? "fast" : "slow"
-  }`}
->
-          {marqueeItems.map((update, idx) => (
-            <div key={idx} className="marquee__item">
-              {update.title && (
-                <span className="title">{update.title}:</span>
-              )}
+    <section className="relative z-40 border-y border-[#cba995]/75 bg-[#fffaf6] shadow-[0_-1px_0_rgba(122,74,51,0.08),0_10px_24px_rgba(122,74,51,0.06)]">
+      <div className="mx-auto flex w-full max-w-[100vw] flex-col sm:flex-row sm:items-center">
+        <div className="flex shrink-0 items-center justify-center border-b border-[#d9c0b3] bg-[#fff2e8] px-5 py-3 sm:min-w-[260px] sm:border-b-0 sm:border-r">
+          <span className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#8f2f22]">
+            Latest Update
+          </span>
+        </div>
 
-              <span className="message">{update.message}</span>
+        <div className="relative flex-1 overflow-hidden">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#fffaf6] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#fffaf6] to-transparent" />
 
-              {update.action_text && update.action_link && (
-                <a
-                  href={update.action_link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="cta"
-                >
-                  {update.action_text} →
-                </a>
-              )}
+          <div className="group overflow-hidden py-3">
+            <div
+              className={`flex w-max items-center gap-10 whitespace-nowrap px-6 ${animationClass} group-hover:[animation-play-state:paused]`}
+            >
+              {marqueeItems.map((update, idx) => {
+                const hasLink = !!update.action_link;
+
+                return (
+                  <div
+                    key={`${update.title || "update"}-${idx}`}
+                    className="flex items-center gap-4 text-[#34231b]"
+                  >
+                    {hasLink ? (
+                      <a
+                        href={update.action_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-4 hover:underline hover:text-[#8f2f22] transition-colors duration-200"
+                      >
+                        {update.title && (
+                          <span className="rounded-full border border-[#d6b8aa] bg-[#fff3eb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#8b3a2a] cursor-pointer">
+                            {update.title}
+                          </span>
+                        )}
+
+                        <span className="text-sm font-medium sm:text-[15px] cursor-pointer">
+                          {update.message}
+                        </span>
+                      </a>
+                    ) : (
+                      <>
+                        {update.title && (
+                          <span className="rounded-full border border-[#d6b8aa] bg-[#fff3eb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#8b3a2a]">
+                            {update.title}
+                          </span>
+                        )}
+
+                        <span className="text-sm font-medium sm:text-[15px]">
+                          {update.message}
+                        </span>
+                      </>
+                    )}
+
+                    {update.action_text && update.action_link && (
+                      <a
+                        href={update.action_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-full bg-[#7b4a33] px-4 py-1.5 text-xs font-semibold text-white transition-transform duration-300 hover:scale-105 hover:bg-[#643926]"
+                      >
+                        {update.action_text}
+                      </a>
+                    )}
+
+                    <span className="text-[#b78c79]">•</span>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
-      {/* Styles */}
       <style>{`
-        .marquee {
-          width: 100%;
-          overflow: hidden;
-        }
-
-        .marquee__content {
-  display: flex;
-  width: max-content;
-}
-
-.marquee__content.fast {
-  animation: marquee 12s linear infinite;
-}
-
-.marquee__content.slow {
-  animation: marquee 20s linear infinite;
-}
-
-
-        .marquee:hover .marquee__content {
-          animation-play-state: paused; /* 🛑 PAUSE ON HOVER */
-        }
-
-        .marquee__item {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          padding-right: 4rem; /* SPACE BETWEEN ITEMS */
-          white-space: nowrap;
-          font-size: 0.95rem;
-        }
-
-        .title {
-          font-weight: 700;
-          color: #741A1C;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
-        }
-
-        .message {
-          font-weight: 500;
-          color: rgba(0,0,0,0.85);
-        }
-
-        .cta {
-          background: #f4ece6;
-          color: #7a3e2e;
-          padding: 0.25rem 0.75rem;
-          border-radius: 999px;
-          font-weight: 600;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-          transition: transform 0.2s ease;
-        }
-
-        .cta:hover {
-          transform: scale(1.08);
-          background: white;
-        }
-
         @keyframes marquee {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-  .animate-marquee {
-  animation: marquee 12s linear infinite;
-}
-
-.animate-marquee-slow {
-  animation: marquee 20s linear infinite;
-}
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-33.333%);
+          }
+        }
       `}</style>
     </section>
   );

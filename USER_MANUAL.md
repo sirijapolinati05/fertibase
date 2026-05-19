@@ -517,7 +517,7 @@ supabase/                    # Supabase configurations
 
 **Environment variables required:**
 - `VITE_SUPABASE_URL` — Supabase project URL
-- `VITE_SUPABASE_KEY` — Supabase anon key
+- `VITE_SUPABASE_ANON_KEY` — Supabase anon key
 
 **Tables expected:**
 - `products` — product catalog
@@ -573,7 +573,7 @@ npm run build
 
 **Environment variables to configure on host:**
 - `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_KEY`
+- `VITE_SUPABASE_ANON_KEY`
 - Any additional API endpoints
 
 ---

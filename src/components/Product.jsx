@@ -1,5 +1,6 @@
 // Products.jsx – Supabase powered (FINAL)
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ArrowRight, Loader2, Search } from "lucide-react";
 import supabase from "../lib/supabaseClient";
 import ProductModal from "../components/ProductModal";
@@ -19,10 +20,20 @@ const MAX_MOBILE_FILTERS = 4;
 /* ---------------- MAIN COMPONENT ---------------- */
 
 export default function Products() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [activeCategory, setActiveCategory] = useState("All");
+  const categoryOptions = useMemo(
+    () => ["All", ...FIXED_CATEGORIES],
+    []
+  );
+  const requestedCategory = searchParams.get("category");
+  const initialCategory = categoryOptions.includes(requestedCategory)
+    ? requestedCategory
+    : "All";
+
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -33,6 +44,24 @@ export default function Products() {
   const scrollRef = useRef(null);
 const isPausedRef = useRef(false);
 const sectionRef = useRef(null);
+
+  const handleCategoryChange = (categoryName) => {
+    setActiveCategory(categoryName);
+    setSearchParams(
+      categoryName === "All" ? {} : { category: categoryName },
+      { replace: true }
+    );
+  };
+
+  useEffect(() => {
+    const nextCategory = categoryOptions.includes(requestedCategory)
+      ? requestedCategory
+      : "All";
+
+    setActiveCategory((currentCategory) =>
+      currentCategory === nextCategory ? currentCategory : nextCategory
+    );
+  }, [categoryOptions, requestedCategory]);
 
   /* ---------------- FETCH PRODUCTS ---------------- */
 
@@ -207,7 +236,7 @@ if (loading) {
             (cat) => (
               <button
                 key={cat.name}
-                onClick={() => setActiveCategory(cat.name)}
+                onClick={() => handleCategoryChange(cat.name)}
                 className={`px-3 py-2 rounded-full border text-sm font-semibold
                   ${
                     activeCategory === cat.name
@@ -238,7 +267,7 @@ if (loading) {
         {categories.map((cat) => (
           <button
             key={cat.name}
-            onClick={() => setActiveCategory(cat.name)}
+            onClick={() => handleCategoryChange(cat.name)}
             className={`px-5 py-3 rounded-full text-sm font-semibold border-2
               ${
                 activeCategory === cat.name
@@ -308,7 +337,7 @@ if (loading) {
             className="
               relative rounded-2xl h-56
               flex items-center justify-center
-              mb-6 bg-white border
+              mb-6 bg-[#fbf5f0] border border-[#ead8cc]
               overflow-hidden
             "
           >
@@ -316,10 +345,11 @@ if (loading) {
               src={product.image_url || "/placeholder.png"}
               alt={product.name}
               className="
-                max-h-full max-w-full object-contain
+                h-full w-full scale-[1.08] object-cover object-center
                 transition-all duration-500 ease-out
                 group-hover:brightness-105
                 group-hover:contrast-105
+                group-hover:scale-[1.12]
                 group-hover:translate-y-[-2px]
               "
             />

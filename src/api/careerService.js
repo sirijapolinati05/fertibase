@@ -15,18 +15,23 @@ const transformJob = (job) => ({
   experience: job.experience,
 
   preview: job.short_preview || '',
+  short_preview: job.short_preview || '',
   about: job.description || '',
+  description: job.description || '',
 
   responsibilities: job.responsibilities || [],
   requirements: job.requirements || [],
   skills: job.skills || [],
   tools: job.tools || [],
   niceToHave: job.nice_to_have || [],
+  application_note: job.application_note || '',
 
   daysLeft: job.days_left ?? 30,
   salary: job.salary_range || null,
+  salary_range: job.salary_range || null,
   positions: job.positions ?? 1,
 
+  role: job.role || 'Open',
   createdAt: job.created_at,
 });
 

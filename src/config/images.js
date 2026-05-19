@@ -27,11 +27,15 @@ import beniBase4kg from "../assets/Beni_Base_4kg.png";
 
 // Carbomin Series
 import carbominInitial from "../assets/CARBOMIN - I(INITIAL).png";
-import carbominBooster from "../assets/CARBOMINBOOSTER.png";
-import carbominFA from "../assets/CARBOMINFA.png";
 import carbominSpecial from "../assets/CARBOMINSPECIAL.png";
-import carboMin from "../assets/carbo_min.png";
 import corbcen from "../assets/corbcen.png";
+
+// `CARBOMINBOOSTER.png` is not present in src/assets, so keep a safe fallback
+// until the real Booster asset or DB URL is available.
+const carbominFA =
+  "https://ekseutpxbtlbcbjxalna.supabase.co/storage/v1/object/public/products/products/CARBOMINFA.png";
+const carbominBooster = carbominFA;
+const carboMin = carbominFA;
 
 // Hydromin Series
 import hydrominLevel1 from "../assets/HYDROMINLEVEL1.png";

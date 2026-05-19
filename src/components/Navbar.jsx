@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { LOGOS } from "../config/images";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
 
   const navLinks = [
@@ -22,14 +23,24 @@ export default function Navbar() {
     location.pathname === "/products" ||
     location.pathname.startsWith("/products/");
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <nav
       className={`
         fixed top-0 left-0 right-0 z-[100]
-        border-b-2 shadow-sm backdrop-blur-md
-        ${isProductsPage ? "border-[#8b3a2a]" : "border-[#c9a89a]"}
+        transition-all duration-300
+        ${isScrolled ? `border-b-2 shadow-sm backdrop-blur-md ${isProductsPage ? "border-[#8b3a2a] bg-[#efe3d8]/95" : "border-[#c9a89a] bg-[#efe3d8]/95"}` : "border-b-0 bg-transparent shadow-none"}
       `}
-      style={{ backgroundColor: "#efe3d8" }}
     >
       <div
         className="
@@ -102,7 +113,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-[#c9a89a] bg-[#faf7f4]">
+        <div className="md:hidden bg-[#faf7f4]">
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => {
               const isActive =

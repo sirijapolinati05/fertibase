@@ -1,7 +1,18 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Loader2, PlayCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import supabase from "../lib/supabaseClient";
+import FarmerImage from "../assets/Farmer.png";
+
+const filterOptions = [
+  { value: "All", label: "All" },
+  { value: "Andhra Pradesh", label: "AP" },
+  { value: "Telangana", label: "Telangana" },
+  { value: "Karnataka", label: "Karnataka" },
+  { value: "Tamil Nadu", label: "Tamilnadu" },
+  { value: "Maharashtra", label: "Maharastra" },
+  { value: "Uttar Pradesh", label: "UP" },
+];
 
 export default function FarmerStories() {
   const [testimonials, setTestimonials] = useState([]);
@@ -9,30 +20,33 @@ export default function FarmerStories() {
   const [selectedState, setSelectedState] = useState("All");
   const [playingId, setPlayingId] = useState(null);
 
-  /* ---------------- HELPERS ---------------- */
-
-  const normalize = (val = "") =>
-    val.toLowerCase().replace(/\./g, "").trim();
+  const normalize = (value = "") =>
+    value.toLowerCase().replace(/\./g, "").trim();
 
   const getYoutubeEmbed = (url) => {
     if (!url) return null;
+
     try {
-      const u = new URL(url);
-      if (u.hostname.includes("youtu.be"))
-        return `https://www.youtube.com/embed/${u.pathname.slice(1)}?autoplay=1&mute=1`;
-      if (u.searchParams.get("v"))
-        return `https://www.youtube.com/embed/${u.searchParams.get("v")}?autoplay=1&mute=1`;
-      if (u.pathname.includes("/shorts/")) {
-        const id = u.pathname.split("/shorts/")[1];
-        return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+      const parsedUrl = new URL(url);
+
+      if (parsedUrl.hostname.includes("youtu.be")) {
+        return `https://www.youtube.com/embed/${parsedUrl.pathname.slice(1)}?autoplay=1&mute=1`;
       }
+
+      if (parsedUrl.searchParams.get("v")) {
+        return `https://www.youtube.com/embed/${parsedUrl.searchParams.get("v")}?autoplay=1&mute=1`;
+      }
+
+      if (parsedUrl.pathname.includes("/shorts/")) {
+        const shortId = parsedUrl.pathname.split("/shorts/")[1];
+        return `https://www.youtube.com/embed/${shortId}?autoplay=1&mute=1`;
+      }
+
       return null;
     } catch {
       return null;
     }
   };
-
-  /* ---------------- FETCH ---------------- */
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -44,8 +58,8 @@ export default function FarmerStories() {
 
         if (error) throw error;
         setTestimonials(data || []);
-      } catch (err) {
-        console.error("Failed to load testimonials:", err);
+      } catch (error) {
+        console.error("Failed to load testimonials:", error);
       } finally {
         setLoading(false);
       }
@@ -58,83 +72,87 @@ export default function FarmerStories() {
     setPlayingId(null);
   }, [selectedState]);
 
-  /* ---------------- FILTERED DATA ---------------- */
-
   const filteredTestimonials = useMemo(() => {
     if (selectedState === "All") return testimonials;
 
-    return testimonials.filter((t) => {
-      if (!t.state) return false;
-      const dbState = normalize(t.state);
+    return testimonials.filter((testimonial) => {
+      if (!testimonial.state) return false;
+
+      const dbState = normalize(testimonial.state);
       const selected = normalize(selectedState);
-      if (selected === "ap") return dbState.includes("andhra");
+
+      if (selected === "andhra pradesh") {
+        return dbState.includes("andhra");
+      }
+
+      if (selected === "uttar pradesh") {
+        return dbState.includes("uttar");
+      }
+
       return dbState === selected;
     });
-  }, [testimonials, selectedState]);
+  }, [selectedState, testimonials]);
 
-  /* ---------------- LOADING ---------------- */
+  const displayedTestimonials = useMemo(() => {
+    if (filteredTestimonials.length === 0) return [];
+
+    if (filteredTestimonials.length === 1) {
+      return [
+        { ...filteredTestimonials[0], renderKey: `${filteredTestimonials[0].id}-primary` },
+        { ...filteredTestimonials[0], renderKey: `${filteredTestimonials[0].id}-duplicate` },
+      ];
+    }
+
+    return filteredTestimonials.slice(0, 2).map((testimonial, index) => ({
+      ...testimonial,
+      renderKey: `${testimonial.id}-${index}`,
+    }));
+  }, [filteredTestimonials]);
 
   if (loading) {
     return (
       <div className="flex justify-center py-16">
-        <Loader2 className="w-10 h-10 animate-spin text-[#6B412E]" />
+        <Loader2 className="h-10 w-10 animate-spin text-[#6B412E]" />
       </div>
     );
   }
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-
-        {/* HEADER */}
-        <div className="text-center mb-10">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#6B412E] mb-4">
+    <section className="bg-white py-16 md:py-20">
+      <div className="mx-auto max-w-7xl px-5 md:px-6">
+        <div className="mb-10 max-w-2xl">
+          <h2 className="text-[40px] font-bold leading-[1.05] text-[#7b4a33] md:text-[56px]">
             Farmer Success Stories
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+          <p className="mt-3 text-[18px] text-[#2e2621] md:text-[24px]">
             Real experiences from farmers who trust FertiBase
           </p>
         </div>
 
-        {/* FILTER TABS – PREMIUM */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {[
-            "All",
-            "Andhra Pradesh",
-            "Telangana",
-            "Maharashtra",
-            "Karnataka",
-            "Gujarat",
-          ].map((state) => {
-            const active = selectedState === state;
+        <div className="mb-12 flex flex-wrap gap-4">
+          {filterOptions.map((option) => {
+            const isActive = selectedState === option.value;
+
             return (
               <motion.button
-                key={state}
-                whileHover={{ y: -3, scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => setSelectedState(state)}
-                className={`relative px-5 py-2 rounded-full text-sm font-semibold border
-                  transition-all duration-300 overflow-hidden
-                  ${active
-                    ? "bg-[#6B412E] text-white border-[#6B412E] shadow-lg"
-                    : "bg-white border-gray-300 hover:bg-[#f3ede6]"
-                  }`}
+                key={option.value}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedState(option.value)}
+                className={`rounded-[10px] border px-6 py-2 text-[15px] font-medium transition-all duration-300 ${
+                  isActive
+                    ? "border-[#7b4a33] bg-[#7b4a33] text-white shadow-[0_10px_24px_rgba(123,74,51,0.18)]"
+                    : "border-[#bc9985] bg-white text-[#7b4a33] hover:bg-[#faf3ed]"
+                }`}
               >
-                {/* Active glow */}
-                {active && (
-                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.35),transparent_60%)]" />
-                )}
-                <span className="relative z-10">
-                  {state === "Andhra Pradesh" ? "A.P" : state}
-                </span>
+                {option.label}
               </motion.button>
             );
           })}
         </div>
 
-        {/* EMPTY STATE */}
         {filteredTestimonials.length === 0 && (
-          <div className="text-center py-16 text-slate-500">
+          <div className="py-16 text-center text-slate-500">
             <p className="text-lg font-semibold">
               No testimonials available
               {selectedState !== "All" && ` in ${selectedState}`}
@@ -142,93 +160,69 @@ export default function FarmerStories() {
           </div>
         )}
 
-        {/* GRID */}
-        {filteredTestimonials.length > 0 && (
-          <div className="grid md:grid-cols-3 gap-8">
-            {filteredTestimonials.map((t) => {
-              const embedUrl = getYoutubeEmbed(t.video_url);
+        {displayedTestimonials.length > 0 && (
+          <div className="grid gap-10 md:grid-cols-2">
+            {displayedTestimonials.map((testimonial) => {
+              const embedUrl = getYoutubeEmbed(testimonial.video_url);
+              const title = testimonial.title || "copious NPK";
+              const description =
+                testimonial.description ||
+                '"This is the most commonly used product"';
 
               return (
-                <motion.div
-                  key={t.id}
-                  whileHover={{
-                    y: -10,
-                    rotateX: 4,
-                    rotateY: -4,
-                  }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="
-                    group bg-white rounded-3xl shadow-lg border
-                    overflow-hidden transition-all duration-500
-                    hover:shadow-2xl
-                  "
+                <motion.article
+                  key={testimonial.renderKey}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="group"
                 >
-                  {/* IMAGE / VIDEO */}
                   <div
-                    className="relative bg-[#F4EADF] flex justify-center items-center py-10 cursor-pointer"
+                    className="relative aspect-[1.48/1] cursor-pointer overflow-hidden bg-[#d8d0c8]"
                     onClick={() => {
-                      if (!t.video_url) return;
-                      setPlayingId((prev) => (prev === t.id ? null : t.id));
+                      if (!testimonial.video_url) return;
+                      setPlayingId((current) =>
+                        current === testimonial.id ? null : testimonial.id
+                      );
                     }}
                   >
-                    <div className="relative w-[260px] aspect-[9/16] rounded-2xl overflow-hidden shadow-xl bg-black">
-                      {playingId === t.id && embedUrl ? (
-                        <iframe
-                          src={embedUrl}
-                          className="w-full h-full"
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
+                    {playingId === testimonial.id && embedUrl ? (
+                      <iframe
+                        src={embedUrl}
+                        title={title}
+                        className="h-full w-full"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <>
+                        <img
+                          src={FarmerImage}
+                          alt={testimonial.name || title}
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />
-                      ) : (
-                        <>
-                          <img
-                            src={t.image_url || t.image_src}
-                            alt={t.name}
-                            className="
-                              w-full h-full object-cover
-                              transition-transform duration-700
-                              group-hover:scale-110
-                            "
-                          />
 
-                          {t.video_url && (
-                            <div className="absolute inset-0 flex items-center justify-center
-                                            bg-black/30 group-hover:bg-black/40 transition">
-                              <motion.div
-                                whileHover={{ scale: 1.15 }}
-                                className="w-16 h-16 rounded-full bg-white/90
-                                           flex items-center justify-center
-                                           shadow-xl"
-                              >
-                                <PlayCircle className="w-10 h-10 text-[#6B412E]" />
-                              </motion.div>
+                        <div className="absolute inset-0 bg-black/20" />
+
+                        {testimonial.video_url && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-md border-2 border-white/95 bg-black/20 backdrop-blur-[2px]">
+                              <PlayCircle className="h-8 w-8 text-white" />
                             </div>
-                          )}
-                        </>
-                      )}
-                    </div>
+                          </div>
+                        )}
+
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/38 to-transparent px-6 pb-5 pt-20 text-white">
+                          <h3 className="text-[22px] font-bold leading-none md:text-[24px]">
+                            {title}
+                          </h3>
+                          <p className="mt-2 text-[14px] leading-tight text-white/90 md:text-[15px]">
+                            {description}
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </div>
-
-                  {/* CONTENT */}
-                  <div className="p-6 space-y-3">
-                    <h3 className="text-xl font-bold text-slate-900">
-                      {t.title}
-                    </h3>
-
-                    <p className="text-slate-600 text-sm line-clamp-3">
-                      “{t.description}”
-                    </p>
-
-                    <div className="pt-3 border-t">
-                      <p className="font-semibold text-slate-800">
-                        {t.name}
-                      </p>
-                      <p className="text-xs text-slate-500">
-                        {t.state}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                </motion.article>
               );
             })}
           </div>
