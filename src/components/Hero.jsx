@@ -20,8 +20,6 @@ export default function Hero() {
           className="absolute inset-0 h-full w-full object-cover object-[62%_bottom] sm:object-bottom"
         />
 
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,243,235,0.78)_0%,rgba(255,243,235,0.3)_40%,rgba(255,243,235,0.16)_100%)] sm:bg-white/12" />
-
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
