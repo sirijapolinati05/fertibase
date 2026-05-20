@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import supabase from "../lib/supabaseClient";
+import { useTranslation } from "../i18n/useTranslation";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("Verifying your email confirmation...");
 
@@ -20,13 +22,24 @@ export default function AuthCallback() {
 
         if (error) {
           setStatus("error");
-          setMessage(error.message || "Unable to verify your email right now.");
+          setMessage(
+            error.message ||
+              t(
+                "auth_unable_to_verify_email",
+                "Unable to verify your email right now."
+              )
+          );
           return;
         }
 
         if (data.session) {
           setStatus("success");
-          setMessage("Email confirmed successfully");
+          setMessage(
+            t(
+              "auth_email_confirmed_successfully",
+              "Email confirmed successfully"
+            )
+          );
           redirectTimer = setTimeout(() => {
             navigate("/", { replace: true });
           }, 2000);
@@ -34,12 +47,22 @@ export default function AuthCallback() {
         }
 
         setStatus("error");
-        setMessage("No active session found. Please open the latest magic link again.");
+        setMessage(
+          t(
+            "auth_no_active_session",
+            "No active session found. Please open the latest magic link again."
+          )
+        );
       } catch (err) {
         console.error(err);
         if (!isMounted) return;
         setStatus("error");
-        setMessage("Verification failed. Please try the magic link again.");
+        setMessage(
+          t(
+            "auth_verification_failed",
+            "Verification failed. Please try the magic link again."
+          )
+        );
       }
     };
 
@@ -51,7 +74,12 @@ export default function AuthCallback() {
       if (!isMounted || !session) return;
 
       setStatus("success");
-      setMessage("Email confirmed successfully");
+      setMessage(
+        t(
+          "auth_email_confirmed_successfully",
+          "Email confirmed successfully"
+        )
+      );
       clearTimeout(redirectTimer);
       redirectTimer = setTimeout(() => {
         navigate("/", { replace: true });
@@ -63,7 +91,7 @@ export default function AuthCallback() {
       clearTimeout(redirectTimer);
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, t]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#F5E9E2] px-6">
@@ -79,16 +107,24 @@ export default function AuthCallback() {
         )}
 
         <h1 className="mt-6 text-3xl font-bold text-[#1c2537]">
-          {status === "loading" && "Confirming Email"}
-          {status === "success" && "Success"}
-          {status === "error" && "Verification Problem"}
+          {status === "loading" &&
+            t("auth_confirming_email", "Confirming Email")}
+          {status === "success" && t("auth_success", "Success")}
+          {status === "error" &&
+            t(
+              "auth_verification_problem",
+              "Verification Problem"
+            )}
         </h1>
 
         <p className="mt-4 text-lg text-[#6B4A3A]">{message}</p>
 
         {status === "success" && (
           <p className="mt-3 text-sm text-[#7A5A46]">
-            Redirecting you to the home page...
+            {t(
+              "auth_redirecting_home",
+              "Redirecting you to the home page..."
+            )}
           </p>
         )}
       </div>

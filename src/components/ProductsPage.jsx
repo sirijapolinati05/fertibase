@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Loader2 } from "lucide-react";
 import productService from "../api/productService";
+import { useTranslation } from "../i18n/useTranslation";
 // import { products as fallbackProducts } from "../../data/productsData";
 
 export default function ProductsPage() {
@@ -10,6 +11,7 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const { t, td } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -61,14 +63,20 @@ export default function ProductsPage() {
         >
           <div className="inline-block mb-4">
             <span className="px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold">
-              Red Soil Solutions
+              {t("products_page_badge", "Red Soil Solutions")}
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-primary-700 mb-4">
-            Our <span className="text-primary-600">Products</span>
+            {t("products_page_heading_our", "Our")}{" "}
+            <span className="text-primary-600">
+              {t("products_page_heading_products", "Products")}
+            </span>
           </h1>
           <p className="text-xl text-text-base max-w-3xl mx-auto font-medium">
-            Discover our range of innovative biological solutions for sustainable agriculture
+            {t(
+              "products_page_subtitle",
+              "Discover our range of innovative biological solutions for sustainable agriculture"
+            )}
           </p>
         </motion.div>
 
@@ -83,7 +91,10 @@ export default function ProductsPage() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-primary-500" size={20} />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={t(
+                "products_page_search_placeholder",
+                "Search products..."
+              )}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-primary-200 shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-600 outline-none bg-white text-text-base placeholder:text-primary-600 hover:border-primary-300 transition-colors"
@@ -112,11 +123,25 @@ export default function ProductsPage() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-primary-800 mb-2 line-clamp-2 group-hover:text-primary-700 transition-colors">
-                    {product.name}
+                    {td("product", product.id, "name", product.name)}
                   </h3>
-                  <p className="text-sm text-primary-600 mb-3 font-medium">{product.category}</p>
+                  <p className="text-sm text-primary-600 mb-3 font-medium">
+                    {td(
+                      "product",
+                      product.id,
+                      "category",
+                      product.category
+                    )}
+                  </p>
                   <p className="text-text-base text-sm line-clamp-3 font-medium">
-                    {product.desc || product.overview || product.description}
+                    {td(
+                      "product",
+                      product.id,
+                      "description",
+                      product.desc ||
+                        product.overview ||
+                        product.description
+                    )}
                   </p>
 
                 </div>
@@ -127,7 +152,12 @@ export default function ProductsPage() {
 
         {filteredProducts.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-text-base text-lg font-semibold">No products found matching your search.</p>
+            <p className="text-text-base text-lg font-semibold">
+              {t(
+                "products_page_no_results",
+                "No products found matching your search."
+              )}
+            </p>
           </div>
         )}
       </div>

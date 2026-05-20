@@ -3,6 +3,7 @@ import { Loader2, PlayCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import supabase from "../lib/supabaseClient";
 import FarmerImage from "../assets/Farmer.png";
+import { useTranslation } from "../i18n/useTranslation";
 
 const filterOptions = [
   { value: "All", label: "All" },
@@ -15,6 +16,7 @@ const filterOptions = [
 ];
 
 export default function FarmerStories() {
+  const { t } = useTranslation();
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedState, setSelectedState] = useState("All");
@@ -122,10 +124,13 @@ export default function FarmerStories() {
       <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-6">
         <div className="mb-10 max-w-2xl">
           <h2 className="text-[32px] font-bold leading-[1.08] text-[#7b4a33] sm:text-[40px] md:text-[56px]">
-            Farmer Success Stories
+            {t("stories_heading", "Farmer Success Stories")}
           </h2>
           <p className="mt-3 text-[16px] text-[#2e2621] sm:text-[18px] md:text-[24px]">
-            Real experiences from farmers who trust FertiBase
+            {t(
+              "stories_subtitle",
+              "Real experiences from farmers who trust FertiBase"
+            )}
           </p>
         </div>
 
@@ -145,7 +150,9 @@ export default function FarmerStories() {
                     : "border-[#bc9985] bg-white text-[#7b4a33] hover:bg-[#faf3ed]"
                 }`}
               >
-                {option.label}
+                {option.value === "All"
+                  ? t("stories_filter_all", option.label)
+                  : option.label}
               </motion.button>
             );
           })}
@@ -154,77 +161,89 @@ export default function FarmerStories() {
         {filteredTestimonials.length === 0 && (
           <div className="py-16 text-center text-slate-500">
             <p className="text-lg font-semibold">
-              No testimonials available
-              {selectedState !== "All" && ` in ${selectedState}`}
+              {t("stories_empty", "No testimonials available")}
+              {selectedState !== "All" &&
+                ` ${t("stories_empty_in", "in")} ${selectedState}`}
             </p>
           </div>
         )}
 
         {displayedTestimonials.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2 md:gap-10">
-            {displayedTestimonials.map((testimonial) => {
-              const embedUrl = getYoutubeEmbed(testimonial.video_url);
-              const title = testimonial.title || "copious NPK";
-              const description =
-                testimonial.description ||
-                '"This is the most commonly used product"';
+          <div className="overflow-hidden">
+            <div className="mb-4 px-1 md:hidden">
+              <p className="text-sm font-medium text-[#7b4a33]">
+                {t(
+                  "stories_swipe_more",
+                  "Swipe to view more stories"
+                )}
+              </p>
+            </div>
 
-              return (
-                <motion.article
-                  key={testimonial.renderKey}
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="group"
-                >
-                  <div
-                    className="relative aspect-[1.1/1] cursor-pointer overflow-hidden rounded-[1.5rem] bg-[#d8d0c8] sm:aspect-[1.25/1] md:aspect-[1.48/1]"
-                    onClick={() => {
-                      if (!testimonial.video_url) return;
-                      setPlayingId((current) =>
-                        current === testimonial.id ? null : testimonial.id
-                      );
-                    }}
+            <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-10 md:overflow-visible md:pb-0">
+              {displayedTestimonials.map((testimonial) => {
+                const embedUrl = getYoutubeEmbed(testimonial.video_url);
+                const title = testimonial.title || "copious NPK";
+                const description =
+                  testimonial.description ||
+                  '"This is the most commonly used product"';
+
+                return (
+                  <motion.article
+                    key={testimonial.renderKey}
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    className="group w-full min-w-full shrink-0 snap-center px-4 md:w-auto md:min-w-0 md:px-0"
                   >
-                    {playingId === testimonial.id && embedUrl ? (
-                      <iframe
-                        src={embedUrl}
-                        title={title}
-                        className="h-full w-full"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
-                      />
-                    ) : (
-                      <>
-                        <img
-                          src={FarmerImage}
-                          alt={testimonial.name || title}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    <div
+                      className="relative aspect-[1.1/1] cursor-pointer overflow-hidden border border-[#b58d78] bg-[#d8d0c8] sm:aspect-[1.25/1] md:aspect-[1.48/1]"
+                      onClick={() => {
+                        if (!testimonial.video_url) return;
+                        setPlayingId((current) =>
+                          current === testimonial.id ? null : testimonial.id
+                        );
+                      }}
+                    >
+                      {playingId === testimonial.id && embedUrl ? (
+                        <iframe
+                          src={embedUrl}
+                          title={title}
+                          className="h-full w-full"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
                         />
+                      ) : (
+                        <>
+                          <img
+                            src={FarmerImage}
+                            alt={testimonial.name || title}
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          />
 
-                        <div className="absolute inset-0 bg-black/20" />
+                          <div className="absolute inset-0 bg-black/20" />
 
-                        {testimonial.video_url && (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-md border-2 border-white/95 bg-black/20 backdrop-blur-[2px]">
-                              <PlayCircle className="h-8 w-8 text-white" />
+                          {testimonial.video_url && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="flex h-12 w-12 items-center justify-center border-2 border-white/95 bg-black/20 backdrop-blur-[2px]">
+                                <PlayCircle className="h-8 w-8 text-white" />
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/38 to-transparent px-4 pb-4 pt-16 text-white sm:px-6 sm:pb-5 sm:pt-20">
-                          <h3 className="text-[20px] font-bold leading-none md:text-[24px]">
-                            {title}
-                          </h3>
-                          <p className="mt-2 text-[13px] leading-snug text-white/90 md:text-[15px]">
-                            {description}
-                          </p>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </motion.article>
-              );
-            })}
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/38 to-transparent px-4 pb-4 pt-16 text-white sm:px-6 sm:pb-5 sm:pt-20">
+                            <h3 className="text-[20px] font-bold leading-none md:text-[24px]">
+                              {title}
+                            </h3>
+                            <p className="mt-2 text-[13px] leading-snug text-white/90 md:text-[15px]">
+                              {description}
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </motion.article>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

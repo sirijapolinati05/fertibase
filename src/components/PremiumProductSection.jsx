@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays, Leaf, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import PremiumProductImage from "../assets/Premium-Product.png";
 import CorbominImage from "../assets/Corbomin.png";
+import { useTranslation } from "../i18n/useTranslation";
 
 const productCategories = [
 
@@ -58,6 +59,44 @@ const tagStyles = {
 };
 
 export default function PremiumProductSection() {
+  const { t } = useTranslation();
+
+  const localizedCategories = [
+    {
+      ...productCategories[0],
+      label: [
+        t("premium_category_beneficial_1", "Beneficial"),
+        t("premium_category_beneficial_2", "Element"),
+        t("premium_category_beneficial_3", "Fertilizer"),
+      ],
+    },
+    {
+      ...productCategories[1],
+      label: [t("premium_category_bio_1", "Biofertilizers")],
+    },
+    {
+      ...productCategories[2],
+      label: [
+        t("premium_category_straight_1", "Straight"),
+        t("premium_category_straight_2", "Micronutrient"),
+      ],
+    },
+    {
+      ...productCategories[3],
+      label: [
+        t("premium_category_organic_1", "Organic"),
+        t("premium_category_organic_2", "Biofertilizers"),
+      ],
+    },
+    {
+      ...productCategories[4],
+      label: [
+        t("premium_category_liquid_1", "Liquid"),
+        t("premium_category_liquid_2", "Fertilizer"),
+      ],
+    },
+  ];
+
   return (
     <section className="bg-[#fff3eb] px-4 pb-10 pt-2 sm:px-5 md:px-8">
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
@@ -71,20 +110,23 @@ export default function PremiumProductSection() {
           className="max-w-[520px] text-center lg:text-left"
         >
           <h2 className="text-[34px] font-bold leading-[1.05] text-[#7b4a33] sm:text-[42px] md:text-[48px]">
-            Our Premium Product
+            {t("premium_heading_line_1", "Our Premium Product")}
             <br />
-            Range
+            {t("premium_heading_line_2", "Range")}
           </h2>
 
           <p className="mt-4 text-[17px] leading-[1.45] text-[#1f1f1f] sm:mt-5 sm:text-[20px] sm:leading-[1.25] md:mt-6 md:text-[24px] md:leading-[1.08]">
-            Trusted microbiological & nutrient solutions designed for modern agriculture.
+            {t(
+              "premium_subtitle",
+              "Trusted microbiological & nutrient solutions designed for modern agriculture."
+            )}
           </p>
 
           <Link
             to="/product?category=All"
             className="mt-7 inline-flex min-h-[50px] w-full max-w-[280px] items-center justify-center rounded-full bg-[#7b4a33] px-6 text-[16px] font-medium text-white shadow-[0_8px_18px_rgba(123,74,51,0.28)] sm:max-w-fit sm:min-w-[256px] sm:px-10 sm:text-[20px]"
           >
-            Explore Our Products
+            {t("premium_explore_products", "Explore Our Products")}
           </Link>
         </motion.div>
 
@@ -107,7 +149,7 @@ export default function PremiumProductSection() {
           </div>
 
           {/* CATEGORY CIRCLES */}
-          {productCategories.map((item, index) => (
+          {localizedCategories.map((item, index) => (
             <motion.div
               key={item.label.join("-")}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -145,7 +187,7 @@ export default function PremiumProductSection() {
           />
 
           <div className="grid w-full grid-cols-2 justify-items-center gap-4 sm:gap-5">
-            {productCategories.map((item, index) => (
+            {localizedCategories.map((item, index) => (
               <Link
                 key={item.label.join("-")}
                 to={`/product?category=${encodeURIComponent(item.routeCategory)}`}
@@ -168,112 +210,140 @@ export default function PremiumProductSection() {
       </div>
 
       {/* PRODUCT CARDS */}
-      <div className="mx-auto mt-12 grid max-w-7xl gap-6 md:mt-14 md:grid-cols-2 md:gap-8 xl:grid-cols-3">
+      <div className="mx-auto mt-12 max-w-7xl overflow-hidden md:mt-14">
+        <div className="mb-4 flex items-center justify-between px-1 md:hidden">
+          <p className="text-sm font-medium text-[#7b4a33]">
+            {t(
+              "premium_swipe_more",
+              "Swipe to explore more products"
+            )}
+          </p>
+        </div>
 
-        {premiumCards.map((card, index) => (
-          <motion.article
-            key={card.id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              delay: index * 0.08,
-            }}
-            viewport={{ once: true }}
-            className="group"
-          >
-            <div className="relative overflow-hidden rounded-[24px] bg-[#fff3eb] p-4 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)] sm:rounded-[30px] sm:p-5">
+        <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 xl:grid-cols-3">
 
-              <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)]" />
+          {premiumCards.map((card, index) => (
+            <motion.article
+              key={card.id}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.08,
+              }}
+              viewport={{ once: true }}
+              className="group w-full min-w-full shrink-0 snap-center px-4 md:w-auto md:min-w-0 md:px-0"
+            >
+              <div className="relative overflow-hidden rounded-[24px] bg-[#fff3eb] p-4 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)] sm:rounded-[30px] sm:p-5">
 
-              <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
+                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)]" />
 
-                <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
-                  New
-                </span>
+                <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
 
-                <div className="mx-auto aspect-square w-full overflow-hidden rounded-[14px]">
-                  <img
-                    src={CorbominImage}
-                    alt={card.title}
-                    className="h-full w-full object-cover object-center transition-all duration-500 ease-out group-hover:scale-[1.04]"
-                  />
+                  <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
+                    {t("premium_badge_new", "New")}
+                  </span>
+
+                  <div className="mx-auto aspect-square w-full overflow-hidden rounded-[14px]">
+                    <img
+                      src={CorbominImage}
+                      alt={card.title}
+                      className="h-full w-full object-cover object-center transition-all duration-500 ease-out group-hover:scale-[1.04]"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="relative mt-5">
+                <div className="relative mt-5">
 
-                <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
-                  {card.title}
-                </h3>
+                  <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
+                    {t("premium_card_title", card.title)}
+                  </h3>
 
-                <p className="mt-1 text-[14px] text-[#3f312a] sm:text-[15px]">
-                  {card.subtitle}
-                </p>
+                  <p className="mt-1 text-[14px] text-[#3f312a] sm:text-[15px]">
+                    {t(
+                      "premium_card_subtitle",
+                      card.subtitle
+                    )}
+                  </p>
 
-                <div className="mt-3 flex items-center gap-2 text-[15px] text-[#666666]">
+                  <div className="mt-3 flex items-center gap-2 text-[15px] text-[#666666]">
 
-                  <div className="flex items-center gap-0.5 text-[#ffb400]">
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <Star
-                        key={starIndex}
-                        className="h-4 w-4 fill-current"
-                      />
+                    <div className="flex items-center gap-0.5 text-[#ffb400]">
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <Star
+                          key={starIndex}
+                          className="h-4 w-4 fill-current"
+                        />
+                      ))}
+                    </div>
+
+                    <span className="font-semibold text-[#3d3028]">
+                      {card.rating}
+                    </span>
+
+                    <span>|</span>
+
+                    <span>
+                      ({card.reviews}{" "}
+                      {t("premium_reviews_suffix", "reviews")})
+                    </span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {card.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs text-white ${tagStyles[tag]}`}
+                      >
+                        <Leaf className="h-3 w-3" />
+                        {tag === "Organic"
+                          ? t("premium_tag_organic", "Organic")
+                          : tag === "Liquid"
+                            ? t("premium_tag_liquid", "Liquid")
+                            : t(
+                                "premium_tag_all_crops",
+                                "All Crops"
+                              )}
+                      </span>
                     ))}
                   </div>
 
-                  <span className="font-semibold text-[#3d3028]">
-                    {card.rating}
-                  </span>
+                  <div className="mt-4 inline-flex items-start gap-3 rounded-[12px] border border-[#f0e4da] bg-[#fff8f3] px-3 py-2 shadow-sm">
 
-                  <span>|</span>
+                    <div className="rounded-[10px] border border-[#eadbd0] bg-[#fffdf9] p-2">
+                      <CalendarDays className="h-4 w-4 text-[#7b4a33]" />
+                    </div>
 
-                  <span>({card.reviews} reviews)</span>
-                </div>
+                    <div>
+                      <p className="text-[11px] leading-none text-[#8f8f8f]">
+                        {t(
+                          "premium_application_stage",
+                          "Application Stage"
+                        )}
+                      </p>
 
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {card.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs text-white ${tagStyles[tag]}`}
-                    >
-                      <Leaf className="h-3 w-3" />
-                      {tag}
+                      <p className="mt-1 text-[16px] leading-none text-[#444444]">
+                        {t("premium_all_stages", "All Stages")}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    to="/product?category=All"
+                    className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
+                  >
+                    <span>
+                      {t("premium_view_details", "View Details")}
                     </span>
-                  ))}
+
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+
                 </div>
-
-                <div className="mt-4 inline-flex items-start gap-3 rounded-[12px] border border-[#f0e4da] bg-[#fff8f3] px-3 py-2 shadow-sm">
-
-                  <div className="rounded-[10px] border border-[#eadbd0] bg-[#fffdf9] p-2">
-                    <CalendarDays className="h-4 w-4 text-[#7b4a33]" />
-                  </div>
-
-                  <div>
-                    <p className="text-[11px] leading-none text-[#8f8f8f]">
-                      Application Stage
-                    </p>
-
-                    <p className="mt-1 text-[16px] leading-none text-[#444444]">
-                      All Stages
-                    </p>
-                  </div>
-                </div>
-
-                <Link
-                  to="/product?category=All"
-                  className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
-                >
-                  <span>View Details</span>
-
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-
               </div>
-            </div>
-          </motion.article>
-        ))}
-
+            </motion.article>
+          ))}
+        </div>
       </div>
     </section>
   );
