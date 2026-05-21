@@ -9,9 +9,11 @@ import {
 import { useState, useEffect } from "react";
 
 import productService from "../api/productService";
+import { useTranslation } from "../i18n/useTranslation";
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const { t, td } = useTranslation();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,20 +29,25 @@ export default function ProductDetails() {
         setLoading(false);
       } catch (err) {
         console.error('Error fetching product:', err);
-        setError(err.message || 'Failed to load product');
+        setError(
+          err.message ||
+            t("product_details_failed_to_load", "Failed to load product")
+        );
         setLoading(false);
       }
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, t]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-soil-light">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-text-base font-semibold text-lg">Loading product...</p>
+          <p className="text-text-base font-semibold text-lg">
+            {t("product_details_loading_product", "Loading product...")}
+          </p>
         </div>
       </div>
     );
@@ -49,12 +56,14 @@ export default function ProductDetails() {
   if (error || !product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-soil-light">
-        <h2 className="text-4xl font-bold text-text-base mb-4">Product Not Found</h2>
+        <h2 className="text-4xl font-bold text-text-base mb-4">
+          {t("product_details_not_found", "Product Not Found")}
+        </h2>
         <Link
           to="/products"
           className="px-6 py-3 bg-primary-600 text-soil-base rounded-full font-semibold hover:bg-primary-700 transition-colors shadow-lg"
         >
-          Back to Products
+          {t("product_details_back_to_products", "Back to Products")}
         </Link>
       </div>
     );
@@ -84,7 +93,8 @@ export default function ProductDetails() {
         {/* Back Button - Below Header, Top Left */}
         <div className="absolute top-6 left-6 z-40 mt-12 ml-5">
           <Link to="/products" className="inline-flex items-center text-primary-700 font-semibold hover:text-primary-800 transition-all hover:shadow-xl hover:scale-105">
-            <ArrowLeft size={18} className="mr-2" /> Back to Products
+            <ArrowLeft size={18} className="mr-2" />{" "}
+            {t("product_details_back_to_products", "Back to Products")}
           </Link>
         </div>
 
@@ -104,15 +114,20 @@ export default function ProductDetails() {
 
             <div>
               <div className="inline-block px-4 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-bold tracking-wide mb-4">
-                {product.category || "Biofertilizer"}
+                {td(
+                  "product",
+                  product.id,
+                  "category",
+                  product.category || "Biofertilizer"
+                )}
               </div>
               <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight text-text-base drop-shadow-sm">
-                {product.name}
+                {td("product", product.id, "name", product.name)}
               </h1>
             </div>
 
             <p className="text-xl text-text-light max-w-2xl leading-relaxed">
-              {product.overview}
+              {td("product", product.id, "overview", product.overview)}
             </p>
 
 
@@ -146,23 +161,52 @@ export default function ProductDetails() {
 
             {showImageDetails && (
               <div className="mt-4 bg-white rounded-xl p-4 border border-primary-100 shadow-sm text-text-base">
-                <h4 className="font-bold text-primary-700 mb-2">Quick overview</h4>
-                <p className="text-text-light text-sm">{product.overview ? product.overview : 'No additional details available.'}</p>
-                <div className="mt-3 text-xs text-text-muted">Full dosage & pack information is available in the Dosage & Application section below.</div>
+                <h4 className="font-bold text-primary-700 mb-2">
+                  {t("product_details_quick_overview", "Quick overview")}
+                </h4>
+                <p className="text-text-light text-sm">
+                  {product.overview
+                    ? td(
+                        "product",
+                        product.id,
+                        "overview",
+                        product.overview
+                      )
+                    : t(
+                        "product_details_no_additional_details",
+                        "No additional details available."
+                      )}
+                </p>
+                <div className="mt-3 text-xs text-text-muted">
+                  {t(
+                    "product_details_full_dosage_note",
+                    "Full dosage & pack information is available in the Dosage & Application section below."
+                  )}
+                </div>
               </div>
             )}
 
             <div className="mt-6 md:mt-auto space-y-4">
               {product.dosage && product.dosage.length > 0 && (
                 <div className="bg-white rounded-xl p-4 border border-primary-100 shadow-sm">
-                  <h4 className="font-bold text-primary-700 mb-2">Suggested dosage</h4>
+                  <h4 className="font-bold text-primary-700 mb-2">
+                    {t(
+                      "product_details_suggested_dosage",
+                      "Suggested dosage"
+                    )}
+                  </h4>
                   <p className="text-text-light text-sm">{typeof product.dosage[0] === 'string' ? product.dosage[0] : (product.dosage[0].dosage || product.dosage[0].details)}</p>
                 </div>
               )}
 
               {product.packSizes && product.packSizes.length > 0 && (
                 <div className="bg-white rounded-xl p-4 border border-primary-100 shadow-sm">
-                  <h4 className="font-bold text-primary-700 mb-2">Available Packs</h4>
+                  <h4 className="font-bold text-primary-700 mb-2">
+                    {t(
+                      "product_details_available_packs",
+                      "Available Packs"
+                    )}
+                  </h4>
                   <div className="flex gap-3">
                     {product.packSizes.map((size,i)=>(
                       <span key={i} className="px-3 py-1 bg-white border border-primary-200 rounded-lg text-sm font-bold text-primary-700 shadow-sm">
@@ -184,7 +228,8 @@ export default function ProductDetails() {
         {product.crops && product.crops.length > 0 && (
           <div className="mb-20">
             <h3 className="text-2xl font-bold text-text-base mb-6 flex items-center gap-2">
-              <Sprout className="text-primary-600" /> Suitable Crops
+              <Sprout className="text-primary-600" />{" "}
+              {t("product_details_suitable_crops", "Suitable Crops")}
             </h3>
             <div className="bg-white p-8 rounded-3xl shadow-lg border border-primary-100">
               {isRichCrops ? (
@@ -216,9 +261,11 @@ export default function ProductDetails() {
               <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-6">
                 <FileText size={24} />
               </div>
-              <h3 className="text-xl font-bold text-text-base mb-3">What Is It?</h3>
+              <h3 className="text-xl font-bold text-text-base mb-3">
+                {t("product_details_what_is_it", "What Is It?")}
+              </h3>
               <p className="text-text-light leading-relaxed">
-                {product.whatIs}
+                {td("product", product.id, "what_is", product.whatIs)}
               </p>
             </motion.div>
           )}
@@ -229,9 +276,16 @@ export default function ProductDetails() {
               <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-6">
                 <Leaf size={24} />
               </div>
-              <h3 className="text-xl font-bold text-text-base mb-3">How It Works?</h3>
+              <h3 className="text-xl font-bold text-text-base mb-3">
+                {t("product_details_how_it_works", "How It Works?")}
+              </h3>
               <p className="text-text-light leading-relaxed">
-                {product.howItWorks}
+                {td(
+                  "product",
+                  product.id,
+                  "how_it_works",
+                  product.howItWorks
+                )}
               </p>
             </motion.div>
           )}
@@ -242,9 +296,16 @@ export default function ProductDetails() {
               <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-6">
                 <ShieldCheck size={24} />
               </div>
-              <h3 className="text-xl font-bold text-text-base mb-3">Why Choose?</h3>
+              <h3 className="text-xl font-bold text-text-base mb-3">
+                {t("product_details_why_choose", "Why Choose?")}
+              </h3>
               <p className="text-text-light leading-relaxed">
-                {product.whyChoose}
+                {td(
+                  "product",
+                  product.id,
+                  "why_choose",
+                  product.whyChoose
+                )}
               </p>
             </motion.div>
           )}
@@ -254,7 +315,9 @@ export default function ProductDetails() {
         {product.benefits && product.benefits.length > 0 && (
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-text-base">Key Benefits</h2>
+              <h2 className="text-3xl font-bold text-text-base">
+                {t("product_details_key_benefits", "Key Benefits")}
+              </h2>
               <div className="w-20 h-1 bg-primary-600 mx-auto mt-4 rounded-full"></div>
             </div>
 
@@ -267,11 +330,27 @@ export default function ProductDetails() {
                     </div>
                     <div>
                       {typeof b === 'string' ? (
-                        <span className="text-text-light text-lg">{b}</span>
+                        <span className="text-text-light text-lg">
+                          {td("product", product.id, `benefit_${i}`, b)}
+                        </span>
                       ) : (
                         <>
-                          <span className="block text-text-base font-bold text-lg">{b.title}</span>
-                          <span className="text-text-light">{b.desc}</span>
+                          <span className="block text-text-base font-bold text-lg">
+                            {td(
+                              "product",
+                              product.id,
+                              `benefit_${i}_title`,
+                              b.title
+                            )}
+                          </span>
+                          <span className="text-text-light">
+                            {td(
+                              "product",
+                              product.id,
+                              `benefit_${i}_desc`,
+                              b.desc
+                            )}
+                          </span>
                         </>
                       )}
                     </div>
@@ -288,9 +367,18 @@ export default function ProductDetails() {
             <div className="bg-primary-700 text-soil-base p-8 md:p-10 flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
                 <h3 className="text-3xl font-bold flex items-center gap-3">
-                  <TableIcon className="text-primary-300" /> Dosage & Application
+                  <TableIcon className="text-primary-300" />{" "}
+                  {t(
+                    "product_details_dosage_application",
+                    "Dosage & Application"
+                  )}
                 </h3>
-                <p className="text-primary-100 mt-2">Recommended usage for optimal results.</p>
+                <p className="text-primary-100 mt-2">
+                  {t(
+                    "product_details_recommended_usage",
+                    "Recommended usage for optimal results."
+                  )}
+                </p>
               </div>
               {/* Decorative element */}
               <div className="hidden md:block opacity-20">
@@ -308,15 +396,24 @@ export default function ProductDetails() {
                       ) : (
                         <div className="grid md:grid-cols-3 gap-4">
                           <div>
-                            <span className="block text-sm font-bold text-primary-600 uppercase tracking-wide">Method</span>
+                            <span className="block text-sm font-bold text-primary-600 uppercase tracking-wide">
+                              {t("product_details_method", "Method")}
+                            </span>
                             <span className="text-text-base font-semibold">{item.method}</span>
                           </div>
                           <div>
-                            <span className="block text-sm font-bold text-primary-600 uppercase tracking-wide">Dosage</span>
+                            <span className="block text-sm font-bold text-primary-600 uppercase tracking-wide">
+                              {t("product_details_dosage", "Dosage")}
+                            </span>
                             <span className="text-text-light">{item.dosage}</span>
                           </div>
                           <div>
-                            <span className="block text-sm font-bold text-primary-600 uppercase tracking-wide">Timing/Details</span>
+                            <span className="block text-sm font-bold text-primary-600 uppercase tracking-wide">
+                              {t(
+                                "product_details_timing_details",
+                                "Timing/Details"
+                              )}
+                            </span>
                             <span className="text-text-muted">{item.timing || item.details}</span>
                           </div>
                         </div>
@@ -336,7 +433,12 @@ export default function ProductDetails() {
           {product.techInfo && product.techInfo.length > 0 && (
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-primary-100">
               <div className="p-8 border-b border-primary-100 bg-soil-light">
-                <h3 className="text-2xl font-bold text-text-base">Technical Specifications</h3>
+                <h3 className="text-2xl font-bold text-text-base">
+                  {t(
+                    "product_details_technical_specifications",
+                    "Technical Specifications"
+                  )}
+                </h3>
               </div>
               <div className="p-8 space-y-6">
                 {product.techInfo.map((info, i) => (
@@ -352,7 +454,12 @@ export default function ProductDetails() {
           {/* FAQs */}
           {product.faqs && product.faqs.length > 0 && (
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-text-base mb-6">Frequently Asked Questions</h3>
+              <h3 className="text-2xl font-bold text-text-base mb-6">
+                {t(
+                  "product_details_faqs",
+                  "Frequently Asked Questions"
+                )}
+              </h3>
               <div className="space-y-4">
                 {product.faqs.map((faq, i) => (
                   <FAQItem key={i} question={faq.question} answer={faq.answer} />

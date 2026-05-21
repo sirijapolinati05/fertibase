@@ -2,26 +2,30 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { LOGOS } from "../config/images";
+import { useTranslation } from "../i18n/useTranslation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { language, setLanguage, supportedLanguages, t } =
+    useTranslation();
+
   const location = useLocation();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Product", path: "/product" },
-    { name: "Resources", path: "/resources" },
-    { name: "About", path: "/aboutus" },
-    { name: "Career", path: "/CareerPage" },
-    { name: "Contact", path: "/contactus" },
+    { key: "nav_home", path: "/" },
+    { key: "nav_product", path: "/product" },
+    { key: "nav_resources", path: "/resources" },
+    { key: "nav_about", path: "/aboutus" },
+    { key: "nav_career", path: "/CareerPage" },
+    { key: "nav_contact", path: "/contactus" },
   ];
 
   const closeMenu = () => setIsOpen(false);
 
   const isProductsPage =
-    location.pathname === "/products" ||
-    location.pathname.startsWith("/products/");
+    location.pathname === "/product" ||
+    location.pathname.startsWith("/product/");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,118 +33,316 @@ export default function Navbar() {
     };
 
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener(
+      "scroll",
+      handleScroll
+    );
+
+    return () =>
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
   }, []);
 
   return (
     <nav
       className={`
-        fixed top-0 left-0 right-0 z-[100]
-        transition-all duration-300
-        ${isScrolled ? `border-b-2 shadow-sm backdrop-blur-md ${isProductsPage ? "border-[#8b3a2a] bg-[#efe3d8]/95" : "border-[#c9a89a] bg-[#efe3d8]/95"}` : "border-b-0 bg-transparent shadow-none"}
+        fixed
+        top-0
+        left-0
+        right-0
+
+        z-[100]
+
+        transition-all
+        duration-500
+        ease-in-out
+
+        backdrop-blur-2xl
+
+        ${
+          isScrolled
+            ? `
+              bg-white/22
+              shadow-[0_10px_35px_rgba(0,0,0,0.12)]
+            `
+            : `
+              bg-white/12
+              shadow-[0_6px_20px_rgba(0,0,0,0.05)]
+            `
+        }
+
+        border-b
+
+        ${
+          isProductsPage
+            ? "border-[#8b3a2a]/30"
+            : "border-white/20"
+        }
       `}
+      style={{
+        WebkitBackdropFilter:
+          "blur(24px)",
+      }}
     >
+
+      {/* overlay */}
       <div
         className="
-          max-w-7xl mx-auto
-          flex items-center justify-between
+          absolute
+          inset-0
+
+          bg-gradient-to-b
+          from-white/20
+          to-white/5
+
+          pointer-events-none
+        "
+      />
+
+      <div
+        className="
+          relative
+          mx-auto
+          flex
+          max-w-7xl
+          items-center
+          justify-between
+
           px-4
           py-2
+
           md:py-3
         "
       >
-        {/* Logo */}
+
+        {/* LOGO */}
         <Link
           to="/"
           onClick={closeMenu}
           className="flex items-center"
         >
+
           <img
             src={LOGOS.main}
             alt="FertiBase Logo"
             className="
               h-9
+              w-auto
+
+              object-contain
+
               sm:h-10
               md:h-14
               lg:h-16
-              w-auto
-              object-contain
             "
             style={{
-              backgroundColor: "transparent",
-              mixBlendMode: "multiply",
+              mixBlendMode:
+                "multiply",
             }}
           />
+
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8 text-text-base font-medium">
+        {/* DESKTOP */}
+        <div
+          className="
+            hidden
+            items-center
+            space-x-7
+            md:flex
+          "
+        >
+
           {navLinks.map((link) => {
             const isActive =
-              location.pathname === link.path ||
-              (link.path === "/products" && isProductsPage);
+              location.pathname ===
+                link.path ||
+              (link.path ===
+                "/product" &&
+                isProductsPage);
 
             return (
               <Link
-                key={link.name}
+                key={link.key}
                 to={link.path}
                 className={`
-                  relative px-2 py-1 transition-colors duration-300
-                  hover:text-[#a04a38]
-                  ${isActive ? "text-[#8b3a2a] font-semibold" : ""}
+                  relative
+
+                  px-3
+                  py-1
+
+                  text-[15px]
+
+                  transition-all
+                  duration-300
+
+                  hover:text-[#8b3a2a]
+                  hover:scale-[1.03]
+
+                  ${
+                    isActive
+                      ? "text-[#8b3a2a] font-semibold"
+                      : "text-[#2b2b2b]"
+                  }
                 `}
               >
-                {link.name}
+
+                {t(link.key)}
+
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#8b3a2a] rounded-full" />
+                  <span
+                    className="
+                      absolute
+                      left-0
+                      right-0
+                      -bottom-1
+
+                      h-[2px]
+
+                      rounded-full
+
+                      bg-[#8b3a2a]
+                    "
+                  />
                 )}
+
               </Link>
             );
           })}
+
+          <label className="sr-only" htmlFor="language-switcher">
+            {t("nav_language", "Language")}
+          </label>
+          <select
+            id="language-switcher"
+            value={language}
+            onChange={(event) => setLanguage(event.target.value)}
+            className="rounded-full border border-white/30 bg-white/60 px-3 py-1 text-[14px] text-[#2b2b2b] outline-none backdrop-blur-md"
+            aria-label={t("nav_language", "Language")}
+          >
+            {supportedLanguages.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+
         </div>
 
-        {/* Mobile Toggle */}
+        {/* MOBILE */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-text-base hover:text-[#8b3a2a]"
-          aria-label="Toggle Menu"
+          onClick={() =>
+            setIsOpen(!isOpen)
+          }
+          className="
+            text-[#333]
+            md:hidden
+          "
+          aria-label={t("nav_menu", "Menu")}
         >
-          {isOpen ? <X size={26} /> : <Menu size={26} />}
+
+          {isOpen ? (
+            <X size={28} />
+          ) : (
+            <Menu size={28} />
+          )}
+
         </button>
+
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       {isOpen && (
-        <div className="md:hidden bg-[#faf7f4]">
-          <div className="px-4 py-4 space-y-3">
+        <div
+          className="
+            md:hidden
+
+            border-t
+            border-white/20
+
+            bg-white/20
+
+            backdrop-blur-3xl
+          "
+        >
+
+          <div className="space-y-3 px-4 py-4">
+
             {navLinks.map((link) => {
               const isActive =
-                location.pathname === link.path ||
-                (link.path === "/products" && isProductsPage);
+                location.pathname ===
+                  link.path ||
+                (link.path ===
+                  "/product" &&
+                  isProductsPage);
 
               return (
                 <Link
-                  key={link.name}
+                  key={link.key}
                   to={link.path}
                   onClick={closeMenu}
                   className={`
-                    block px-4 py-2 rounded-md transition-colors
+                    block
+
+                    rounded-xl
+
+                    px-4
+                    py-3
+
+                    transition
+
+                    backdrop-blur-md
+
                     ${
                       isActive
-                        ? "bg-[#f7e6de] text-[#8b3a2a] font-semibold border-l-4 border-[#8b3a2a]"
-                        : "hover:bg-[#f7e6de]"
+                        ? `
+                          border
+                          border-white/30
+                          bg-white/40
+                          text-[#8b3a2a]
+                        `
+                        : `
+                          hover:bg-white/20
+                        `
                     }
                   `}
                 >
-                  {link.name}
+
+                  {t(link.key)}
+
                 </Link>
               );
             })}
+
+            <div className="pt-2">
+              <label
+                htmlFor="mobile-language-switcher"
+                className="mb-2 block text-sm font-medium text-[#2b2b2b]"
+              >
+                {t("nav_language", "Language")}
+              </label>
+              <select
+                id="mobile-language-switcher"
+                value={language}
+                onChange={(event) => setLanguage(event.target.value)}
+                className="w-full rounded-xl border border-white/30 bg-white/70 px-4 py-3 text-[#2b2b2b] outline-none"
+              >
+                {supportedLanguages.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
           </div>
+
         </div>
       )}
+
     </nav>
   );
 }

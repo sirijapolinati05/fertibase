@@ -4,8 +4,14 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import careerService from "../api/careerService";
 import ApplyForm from "./ApplyForm";
+import { useTranslation } from "../i18n/useTranslation";
+import {
+  getLocalizedEntityField,
+  getLocalizedEntityList,
+} from "../i18n/entityTranslations";
 
 export default function JobDetails() {
+  const { language, t, td } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -46,7 +52,7 @@ export default function JobDetails() {
           onClick={() => navigate(-1)}
           className="rounded-lg bg-[#6B412E] px-6 py-3 text-white"
         >
-          Go Back
+          {t("common_go_back", "Go Back")}
         </button>
       </div>
     );
@@ -67,77 +73,79 @@ export default function JobDetails() {
           onClick={() => navigate(-1)}
           className="mb-6 flex items-center gap-2 font-medium text-[#6B412E]"
         >
-          <ArrowLeft size={18} /> Back
+          <ArrowLeft size={18} /> {t("common_back", "Back")}
         </button>
 
         <motion.div className="rounded-3xl border border-[#E8D5C9] bg-white p-8 shadow-xl">
-          <h1 className="text-4xl font-bold text-[#6B412E]">{job.title}</h1>
-          <p className="mt-2 text-[#6B4A3A]">{job.preview}</p>
+          <h1 className="text-4xl font-bold text-[#6B412E]">
+            {localizeJobField("title", job.title)}
+          </h1>
+          <p className="mt-2 text-[#6B4A3A]">{localizeJobField("preview", job.preview)}</p>
 
           <div className="mt-4 flex flex-wrap gap-3 text-sm">
             {status !== "Open" && <StatusBadge status={status} />}
-            {job.category && <Badge>{job.category}</Badge>}
-            {job.type && <Badge>{job.type}</Badge>}
-            {job.mode && <Badge>{job.mode}</Badge>}
-            {job.experience && <Badge>{job.experience}</Badge>}
+            {job.category && <Badge>{localizeJobField("category", job.category)}</Badge>}
+            {job.type && <Badge>{localizeJobField("type", job.type)}</Badge>}
+            {job.mode && <Badge>{localizeJobField("mode", job.mode)}</Badge>}
+            {job.experience && <Badge>{localizeJobField("experience", job.experience)}</Badge>}
           </div>
 
           <div className="mt-6 grid gap-6 text-sm md:grid-cols-3">
-            <Info label="Location" value={job.location} />
-            <Info label="Positions" value={job.positions} />
-            <Info label="Deadline" value={deadline} />
-            {job.salary && <Info label="Salary" value={job.salary} />}
+            <Info label={t("career_label_location", "Location")} value={localizeJobField("location", job.location)} />
+            <Info label={t("career_label_positions", "Positions")} value={job.positions} />
+            <Info label={t("career_label_deadline", "Deadline")} value={deadline} />
+            {job.salary && <Info label={t("career_label_salary", "Salary")} value={localizeJobField("salary", job.salary)} />}
           </div>
 
           <Divider />
 
           {job.about && (
-            <Section title="Job Description">
-              <p>{job.about}</p>
+            <Section title={t("career_job_description", "Job Description")}>
+              <p>{localizeJobField("about", job.about)}</p>
             </Section>
           )}
 
-          <Section title="Responsibilities">
+          <Section title={t("career_responsibilities", "Responsibilities")}>
             {Array.isArray(job.responsibilities) && job.responsibilities.length > 0 ? (
-              <List items={job.responsibilities} />
+              <List items={localizeJobList("responsibilities", job.responsibilities)} />
             ) : (
-              <EmptyText text="No responsibilities required." />
+              <EmptyText text={t("career_no_responsibilities", "No responsibilities required.")} />
             )}
           </Section>
 
-          <Section title="Requirements">
+          <Section title={t("career_requirements", "Requirements")}>
             {Array.isArray(job.requirements) && job.requirements.length > 0 ? (
-              <List items={job.requirements} />
+              <List items={localizeJobList("requirements", job.requirements)} />
             ) : (
-              <EmptyText text="No requirements needed." />
+              <EmptyText text={t("career_no_requirements", "No requirements needed.")} />
             )}
           </Section>
 
-          <Section title="Skills">
+          <Section title={t("career_skills", "Skills")}>
             {Array.isArray(job.skills) && job.skills.length > 0 ? (
-              <TagList items={job.skills} />
+              <TagList items={localizeJobList("skills", job.skills)} />
             ) : (
-              <EmptyText text="No skills required." />
+              <EmptyText text={t("career_no_skills", "No skills required.")} />
             )}
           </Section>
 
-          <Section title="Tools">
+          <Section title={t("career_tools", "Tools")}>
             {Array.isArray(job.tools) && job.tools.length > 0 ? (
-              <TagList items={job.tools} />
+              <TagList items={localizeJobList("tools", job.tools)} />
             ) : (
-              <EmptyText text="No tools required." />
+              <EmptyText text={t("career_no_tools", "No tools required.")} />
             )}
           </Section>
 
           {Array.isArray(job.nice_to_have) && job.nice_to_have.length > 0 && (
-            <Section title="Nice to Have">
-              <List items={job.nice_to_have} />
+            <Section title={t("career_nice_to_have", "Nice to Have")}>
+              <List items={localizeJobList("nice_to_have", job.nice_to_have)} />
             </Section>
           )}
 
           {job.application_note && (
-            <Section title="Application Note">
-              <p>{job.application_note}</p>
+            <Section title={t("career_application_note", "Application Note")}>
+              <p>{localizeJobField("application_note", job.application_note)}</p>
             </Section>
           )}
 
@@ -148,7 +156,7 @@ export default function JobDetails() {
               onClick={() => setShowForm(true)}
               className="w-full rounded-xl bg-[#6B412E] px-8 py-3 font-semibold text-white shadow-md transition-all hover:bg-[#5e1416] md:w-auto"
             >
-              Apply Now
+              {t("career_apply_now", "Apply Now")}
             </button>
           ) : (
             <button
@@ -245,3 +253,22 @@ function TagList({ items }) {
     </div>
   );
 }
+  const localizeJobField = (field, fallback = "") =>
+    getLocalizedEntityField({
+      item: job,
+      field,
+      language,
+      td,
+      namespace: "career",
+      fallback,
+    });
+
+  const localizeJobList = (field, fallback = []) =>
+    getLocalizedEntityList({
+      item: job,
+      field,
+      language,
+      td,
+      namespace: "career",
+      fallback,
+    });

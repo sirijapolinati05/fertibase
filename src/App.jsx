@@ -16,16 +16,22 @@ import Product from "./components/Product";
 import Resources from "./components/Resources";
 import ScrollToTop from "./components/ScrollToTop";
 import AuthCallback from "./components/AuthCallback";
+import { useTranslation } from "./i18n/useTranslation";
 
 
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const { language } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 3000); // Splash duration
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-language", language);
+  }, [language]);
 
   if (showSplash) {
     return <FertibaseSplash logoSrc="/logo.png" />;

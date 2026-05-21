@@ -1,8 +1,44 @@
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import indiaMapImage from "../assets/indiamap.png";
 import circle1Image from "../assets/circle1.png";
 import circle2Image from "../assets/circle2.png";
 import circle3Image from "../assets/circle3.png";
+import { useTranslation } from "../i18n/useTranslation";
+
+const sectionViewport = { once: true, amount: 0.25 };
+
+const revealVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const circleVariants = {
+  hidden: { opacity: 0, scale: 0.88, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const mapVariants = {
+  hidden: { opacity: 0, scale: 0.88, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut", delay: 0.18 },
+  },
+};
 
 const stats = [
   {
@@ -30,26 +66,62 @@ const stats = [
   },
 ];
 
-function StatCircle({ stat, index }) {
+function StatCircle({ stat }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.88, y: 20 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.15 + index * 0.1 }}
-      viewport={{ once: true }}
+      variants={circleVariants}
       whileHover={{ y: -6, scale: 1.03 }}
-      className={`group relative overflow-hidden rounded-full ${stat.className}`}
+      whileTap={{ y: -6, scale: 1.03 }}
+      className={`group relative overflow-hidden rounded-full lg:absolute ${stat.className}`}
     >
       <img
         src={stat.image}
         alt={stat.label}
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
+        <p className="text-[30px] font-bold leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-[34px] lg:text-[52px]">
+          {stat.value}
+        </p>
+        <p className="mt-1 text-[11px] font-medium leading-tight text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] sm:text-[12px] lg:text-[20px]">
+          {stat.label}
+        </p>
+      </div>
     </motion.div>
   );
 }
 
 export default function IndiaMap() {
+  const { language, t } = useTranslation();
+
+  const localizedStats = useMemo(
+    () =>
+      stats.map((stat) => ({
+        ...stat,
+        label:
+          stat.label === "Farmer Network"
+            ? t("india_stat_farmer_network", stat.label)
+            : stat.label === "Dealer Network"
+              ? t("india_stat_dealer_network", stat.label)
+              : t("india_stat_states", stat.label),
+      })),
+    [t]
+  );
+
+  const mobileStats = useMemo(
+    () =>
+      [...localizedStats].sort((a, b) => {
+        const getSize = (cls) => {
+          const match = cls.match(/h-\[(\d+)/);
+          return match ? Number(match[1]) : 0;
+        };
+
+        return getSize(a.className) - getSize(b.className);
+      }),
+    [localizedStats]
+  );
+
   return (
     <section className="overflow-hidden bg-[#fff3eb] py-8 sm:py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -63,41 +135,53 @@ export default function IndiaMap() {
             className="max-w-[580px] text-center lg:text-left"
           >
             <h2 className="max-w-[820px] text-[32px] font-bold leading-[1.02] text-[#764734] sm:text-[48px] lg:text-[64px]">
-              Making a Difference in
+              {t("india_heading_line_1", "Making a Difference in")}
               <br />
-              Agriculture
+              {t("india_heading_line_2", "Agriculture")}
             </h2>
 
             <p className="mx-auto mt-4 max-w-[520px] text-[16px] leading-[1.5] text-[#2f241f] sm:mt-6 sm:text-[20px] sm:leading-[1.2] lg:mx-0">
-              Years of innovation and dedication have resulted in significant
-              achievements across the agricultural sector.
+              {t(
+                "india_subtitle",
+                "Years of innovation and dedication have resulted in significant achievements across the agricultural sector."
+              )}
             </p>
 
             {/* MOBILE STATS */}
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
-              {stats.map((stat, index) => (
-                <div key={stat.label} className="flex justify-center">
+            <motion.div
+              key={`mobile-stats-${language}`}
+              variants={revealVariants}
+              initial="hidden"
+              animate="visible"
+              className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden"
+            >
+              {mobileStats.map((stat) => (
+                <div key={stat.value} className="flex justify-center">
                   <StatCircle
                     stat={{
                       ...stat,
                       className: stat.className.split(" lg:")[0],
                     }}
-                    index={index}
                   />
                 </div>
               ))}
-            </div>
+            </motion.div>
 
             {/* DESKTOP STATS */}
-            <div className="relative mt-10 hidden h-[660px] lg:block">
-              {stats.map((stat, index) => (
-                <div key={stat.label} className="absolute">
-                  <StatCircle stat={stat} index={index} />
+            <motion.div
+              key={`desktop-stats-${language}`}
+              variants={revealVariants}
+              initial="hidden"
+              animate="visible"
+              className="relative mt-10 hidden h-[660px] lg:block"
+            >
+              {localizedStats.map((stat) => (
+                <div key={stat.value} className="absolute">
+                  <StatCircle stat={stat} />
                 </div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
-
           {/* RIGHT */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
@@ -113,59 +197,81 @@ export default function IndiaMap() {
                   <div className="w-full text-center">
                     <h3 className="text-[24px] font-black uppercase leading-[0.95] text-[#764734]">
                       <span className="block">
-                        OUR PRESENCE
+                        {t("india_presence_line_1", "OUR PRESENCE")}
                       </span>
 
                       <span className="block">
-                        ACROSS INDIA
+                        {t("india_presence_line_2", "ACROSS INDIA")}
                       </span>
                     </h3>
 
                     <div className="mx-auto mt-4 h-[2px] w-[70px] bg-[#8e715c]" />
 
                     <p className="mt-4 text-[12px] leading-[1.55] text-[#5d5047]">
-                      Delivering trusted agricultural solutions across the country.
-                      Strong roots, wider reach, better tomorrow.
+                      {t(
+                        "india_presence_copy_1",
+                        "Delivering trusted agricultural solutions across the country."
+                      )}{" "}
+                      {t(
+                        "india_presence_copy_2",
+                        "Strong roots, wider reach, better tomorrow."
+                      )}
                     </p>
                   </div>
                 </div>
 
-                <img
-                  src={indiaMapImage}
-                  alt="India active states map"
-                  loading="lazy"
-                  className="
-                    mx-auto
-                    w-full
-                    max-w-[760px]
-                    object-contain
-                    rounded-[1.5rem]
-                    -mt-12
-                    -mb-12
-                    sm:-mt-8
-                    sm:-mb-8
-                    lg:h-[920px]
-                    lg:w-[860px]
-                    lg:mt-0
-                    lg:mb-0
-                    lg:-ml-[55px]
-                  "
-                />
+                <motion.div
+                  variants={mapVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={sectionViewport}
+                  whileHover={{ y: -6, scale: 1.03 }}
+                  whileTap={{ y: -6, scale: 1.03 }}
+                  className="group mx-auto w-fit"
+                >
+                  <img
+                    src={indiaMapImage}
+                    alt="India active states map"
+                    loading="lazy"
+                    className="
+                      mx-auto
+                      w-full
+                      max-w-[760px]
+                      object-contain
+                      rounded-[1.5rem]
+                      transition-transform
+                      duration-500
+                      group-hover:scale-105
+                      -mt-12
+                      -mb-12
+                      sm:-mt-8
+                      sm:-mb-8
+                      lg:h-[920px]
+                      lg:w-[860px]
+                      lg:mt-0
+                      lg:mb-0
+                      lg:-ml-[55px]
+                    "
+                  />
+                </motion.div>
 
                 <div className="mx-auto mt-4 w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:hidden">
                   <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
-                    India - Active States
+                    {t(
+                      "india_legend_title",
+                      "India - Active States"
+                    )}
                   </p>
 
                   <div className="mt-4 space-y-3 text-sm text-[#3b312b]">
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded-[4px] bg-[#764734]" />
-                      <span>Active States</span>
+                      <span>{t("india_legend_active", "Active States")}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded-[4px] border border-[#764734] bg-[#f3e5dc]" />
-                      <span>Other States</span>
+                      <span>{t("india_legend_other", "Other States")}</span>
                     </div>
                   </div>
                 </div>
@@ -174,19 +280,22 @@ export default function IndiaMap() {
                 <div className="relative z-10 mx-auto mt-4 hidden w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:ml-[360px] lg:mt-[-320px] lg:block lg:w-fit lg:max-w-none lg:px-6">
 
                   <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
-                    India - Active States
+                    {t(
+                      "india_legend_title",
+                      "India - Active States"
+                    )}
                   </p>
 
                   <div className="mt-4 space-y-3 text-sm text-[#3b312b]">
 
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded-[4px] bg-[#764734]" />
-                      <span>Active States</span>
+                      <span>{t("india_legend_active", "Active States")}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded-[4px] border border-[#764734] bg-[#f3e5dc]" />
-                      <span>Other States</span>
+                      <span>{t("india_legend_other", "Other States")}</span>
                     </div>
 
                   </div>
@@ -199,19 +308,25 @@ export default function IndiaMap() {
 
                 <h3 className="text-[24px] font-black uppercase leading-[0.95] text-[#764734] sm:text-[28px] lg:text-[32px]">
                   <span className="block">
-                    OUR PRESENCE
+                    {t("india_presence_line_1", "OUR PRESENCE")}
                   </span>
 
                   <span className="block">
-                    ACROSS INDIA
+                    {t("india_presence_line_2", "ACROSS INDIA")}
                   </span>
                 </h3>
 
                 <div className="mx-auto mt-4 h-[2px] w-[70px] bg-[#8e715c] lg:mx-0" />
 
                 <p className="mt-4 text-[12px] leading-[1.55] text-[#5d5047]">
-                  Delivering trusted agricultural solutions across the country.
-                  Strong roots, wider reach, better tomorrow.
+                  {t(
+                    "india_presence_copy_1",
+                    "Delivering trusted agricultural solutions across the country."
+                  )}{" "}
+                  {t(
+                    "india_presence_copy_2",
+                    "Strong roots, wider reach, better tomorrow."
+                  )}
                 </p>
               </div>
             </div>

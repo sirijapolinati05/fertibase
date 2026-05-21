@@ -4,6 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import { ArrowRight, Loader2, Search } from "lucide-react";
 import supabase from "../lib/supabaseClient";
 import ProductModal from "../components/ProductModal";
+import { useTranslation } from "../i18n/useTranslation";
+import { getLocalizedEntityField } from "../i18n/entityTranslations";
 
 /* ---------------- CONSTANTS ---------------- */
 
@@ -20,6 +22,7 @@ const MAX_MOBILE_FILTERS = 4;
 /* ---------------- MAIN COMPONENT ---------------- */
 
 export default function Products() {
+  const { language, t, td } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +47,20 @@ export default function Products() {
   const scrollRef = useRef(null);
 const isPausedRef = useRef(false);
 const sectionRef = useRef(null);
+
+  const getCategoryLabel = (categoryName) => {
+    const categoryKeyMap = {
+      All: "products_filter_all",
+      Biofertilizer: "products_category_biofertilizer",
+      "Organic Biofertilizer": "products_category_organic_biofertilizer",
+      "Liquid Fertilizer": "products_category_liquid_fertilizer",
+      "Straight Micronutrient": "products_category_straight_micronutrient",
+      "Beneficial Element Fertilizer":
+        "products_category_beneficial_element_fertilizer",
+    };
+
+    return t(categoryKeyMap[categoryName] || "", categoryName);
+  };
 
   const handleCategoryChange = (categoryName) => {
     setActiveCategory(categoryName);
@@ -106,14 +123,48 @@ const filteredProducts = useMemo(() => {
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     list = list.filter(
-      (p) =>
-        p.name?.toLowerCase().includes(q) ||
-        p.description?.toLowerCase().includes(q)
+      (p) => {
+        const localizedName =
+          getLocalizedEntityField({
+            item: p,
+            field: "name",
+            language,
+            td,
+            namespace: "product",
+            fallback: p.name,
+          }) || "";
+
+        const localizedDescription =
+          getLocalizedEntityField({
+            item: p,
+            field: "description",
+            language,
+            td,
+            namespace: "product",
+            fallback: p.description,
+          }) || "";
+
+        const localizedCategory =
+          getLocalizedEntityField({
+            item: p,
+            field: "category",
+            language,
+            td,
+            namespace: "product",
+            fallback: getCategoryLabel(p.category),
+          }) || "";
+
+        return (
+          localizedName.toLowerCase().includes(q) ||
+          localizedDescription.toLowerCase().includes(q) ||
+          localizedCategory.toLowerCase().includes(q)
+        );
+      }
     );
   }
 
   return list;
-}, [products, activeCategory, searchQuery]);
+}, [products, activeCategory, searchQuery, language, td, t]);
 
 /* ---------------- AUTO SCROLL WHEN SECTION IS VISIBLE ---------------- */
 
@@ -210,9 +261,14 @@ if (loading) {
 
       {/* HEADER */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-black text-[#6B412E]">Our Products</h1>
+        <h1 className="text-4xl font-black text-[#6B412E]">
+          {t("products_listing_heading", "Our Products")}
+        </h1>
         <p className="text-slate-600 mt-2">
-          High-quality solutions for modern agriculture
+          {t(
+            "products_listing_subtitle",
+            "High-quality solutions for modern agriculture"
+          )}
         </p>
       </div>
 
@@ -221,7 +277,10 @@ if (loading) {
         <div className="relative w-full max-w-xl">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
-            placeholder="Search products..."
+            placeholder={t(
+              "products_listing_search_placeholder",
+              "Search products..."
+            )}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-12 pr-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-[#6B412E]/30"
@@ -244,7 +303,7 @@ if (loading) {
                       : "bg-white text-[#6B412E] border-[#E5CFC2]"
                   }`}
               >
-                {cat.name} ({cat.count})
+                {getCategoryLabel(cat.name)} ({cat.count})
               </button>
             )
           )}
@@ -256,7 +315,9 @@ if (loading) {
               onClick={() => setMobileExpanded(!mobileExpanded)}
               className="text-sm font-semibold text-[#6B412E]"
             >
-              {mobileExpanded ? "− View Less" : "+ View More"}
+              {mobileExpanded
+                ? t("common_view_less", "View Less")
+                : t("common_view_more", "View More")}
             </button>
           </div>
         )}
@@ -275,7 +336,7 @@ if (loading) {
                   : "bg-white text-[#6B412E] border-[#E8D5C9]"
               }`}
           >
-            {cat.name} ({cat.count})
+            {getCategoryLabel(cat.name)} ({cat.count})
           </button>
         ))}
       </div>
@@ -358,7 +419,14 @@ if (loading) {
           {/* CONTENT */}
           <div className="relative z-10">
             <h3 className="text-lg font-bold mb-3 text-[#4A2E1F]">
-              {product.name}
+              {getLocalizedEntityField({
+                item: product,
+                field: "name",
+                language,
+                td,
+                namespace: "product",
+                fallback: product.name,
+              })}
             </h3>
 
             <div
@@ -370,11 +438,18 @@ if (loading) {
                 mb-5
               "
             >
-              {product.category}
+              {getLocalizedEntityField({
+                item: product,
+                field: "category",
+                language,
+                td,
+                namespace: "product",
+                fallback: getCategoryLabel(product.category),
+              })}
             </div>
 
             <div className="flex items-center justify-between text-sm font-semibold text-[#6B412E]">
-              <span>View Details</span>
+              <span>{t("products_view_details", "View Details")}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -394,7 +469,8 @@ if (loading) {
   </div>
 ) : (
   <div className="text-center py-20 text-slate-500 text-lg font-medium">
-    No products available in <strong>{activeCategory}</strong>
+    {t("products_empty_prefix", "No products available in")}{" "}
+    <strong>{getCategoryLabel(activeCategory)}</strong>
   </div>
 )}
 

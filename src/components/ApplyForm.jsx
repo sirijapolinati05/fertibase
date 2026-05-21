@@ -9,6 +9,8 @@ import {
   X,
 } from "lucide-react";
 import supabase from "../lib/supabaseClient";
+import { useTranslation } from "../i18n/useTranslation";
+import { getLocalizedEntityField } from "../i18n/entityTranslations";
 
 const INITIAL_FORM = {
   full_name: "",
@@ -44,6 +46,7 @@ const getMinExperience = (expStr) => {
 };
 
 export default function ApplyForm({ close, jobId, job }) {
+  const { language, t, td } = useTranslation();
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
   const [resume, setResume] = useState(null);
@@ -91,12 +94,17 @@ export default function ApplyForm({ close, jobId, job }) {
     const normalizedEmail = form.email.trim().toLowerCase();
 
     if (!normalizedEmail) {
-      showToast("Please enter your email first.");
+      showToast(t("apply_email_first", "Please enter your email first."));
       return;
     }
 
     if (otpCooldown > 0) {
-      showToast(`Please wait ${otpCooldown}s before requesting another OTP.`);
+      showToast(
+        t(
+          "apply_otp_wait",
+          `Please wait ${otpCooldown}s before requesting another OTP.`
+        )
+      );
       return;
     }
 
@@ -116,7 +124,7 @@ export default function ApplyForm({ close, jobId, job }) {
       setForm((prev) => ({ ...prev, email: normalizedEmail }));
       setShowOtpInput(true);
       setOtpCooldown(60);
-      showToast("OTP sent to your email!", "success");
+      showToast(t("apply_otp_sent", "OTP sent to your email!"), "success");
     } catch (err) {
       console.error(err);
       const errorMessage =
@@ -152,7 +160,7 @@ export default function ApplyForm({ close, jobId, job }) {
       setEmailVerified(true);
       setShowOtpInput(false);
       setOtp("");
-      showToast("Email verified successfully!", "success");
+      showToast(t("apply_email_verified", "Email verified successfully!"), "success");
     } catch (err) {
       console.error(err);
       showToast(err.message || "Invalid or expired OTP.");
@@ -285,21 +293,21 @@ export default function ApplyForm({ close, jobId, job }) {
 
           <div className="mb-8">
             <span className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8b5a3c]">
-              Apply For
+              {t("apply_for", "Apply For")}
             </span>
             <h2 className="mt-2 text-3xl font-bold text-[#1f2937] md:text-4xl">
-              {job?.title || "This Role"}
+              {localizeJobField("title", job?.title || t("apply_this_role", "This Role"))}
             </h2>
             <p className="mt-3 flex flex-wrap items-center gap-2 text-[#6b7280]">
               {job?.location && (
                 <span className="inline-flex items-center gap-2">
-                  <MapPin className="h-4 w-4" /> {job.location}
+                  <MapPin className="h-4 w-4" /> {localizeJobField("location", job.location)}
                 </span>
               )}
               {job?.location && job?.type && <span>|</span>}
               {job?.type && (
                 <span className="inline-flex items-center gap-2">
-                  <BriefcaseBusiness className="h-4 w-4" /> {job.type}
+                  <BriefcaseBusiness className="h-4 w-4" /> {localizeJobField("type", job.type)}
                 </span>
               )}
             </p>
@@ -308,14 +316,14 @@ export default function ApplyForm({ close, jobId, job }) {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <Input
-                label="Full Name"
+                label={t("apply_full_name", "Full Name")}
                 required
                 value={form.full_name}
                 onChange={(e) => setField("full_name", e.target.value)}
               />
 
               <div>
-                <Label required>Email Address</Label>
+                <Label required>{t("apply_email_address", "Email Address")}</Label>
                 <div className="flex gap-2">
                   <input
                     required
@@ -337,18 +345,18 @@ export default function ApplyForm({ close, jobId, job }) {
                       className="min-w-[124px] rounded-[18px] bg-[#ead8ca] px-4 py-4 text-base font-semibold text-[#6B412E] transition hover:bg-[#dfc7b6] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {emailLoading
-                        ? "Sending..."
+                        ? t("apply_sending", "Sending...")
                         : otpCooldown > 0
                         ? `Retry in ${otpCooldown}s`
                         : showOtpInput
-                        ? "Resend"
-                        : "Verify"}
+                        ? t("apply_resend", "Resend")
+                        : t("apply_verify", "Verify")}
                     </button>
                   )}
                   {emailVerified && (
                     <span className="inline-flex items-center gap-1 rounded-[18px] bg-[#f5ede7] px-4 py-4 text-sm font-semibold text-[#6B412E]">
                       <CheckCircle2 className="h-4 w-4" />
-                      Verified
+                      {t("apply_verified", "Verified")}
                     </span>
                   )}
                 </div>
@@ -359,7 +367,7 @@ export default function ApplyForm({ close, jobId, job }) {
                       type="text"
                       inputMode="numeric"
                       maxLength={6}
-                      placeholder="Enter 6-digit OTP"
+                      placeholder={t("apply_enter_otp", "Enter 6-digit OTP")}
                       value={otp}
                       onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                       className="w-full rounded-[18px] border border-[#d9c1ad] px-5 py-4 text-center text-lg font-semibold tracking-[0.35em] text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
@@ -370,14 +378,16 @@ export default function ApplyForm({ close, jobId, job }) {
                       disabled={verifyLoading || otp.length < 6}
                       className="min-w-[124px] rounded-[18px] bg-[#6B412E] px-4 py-4 text-base font-semibold text-white transition hover:bg-[#5a3626] disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {verifyLoading ? "Checking..." : "Confirm"}
+                      {verifyLoading
+                        ? t("apply_checking", "Checking...")
+                        : t("apply_confirm", "Confirm")}
                     </button>
                   </div>
                 )}
               </div>
 
               <Input
-                label="Phone Number"
+                label={t("apply_phone_number", "Phone Number")}
                 required
                 type="tel"
                 value={form.phone}
@@ -385,48 +395,48 @@ export default function ApplyForm({ close, jobId, job }) {
               />
 
               <Input
-                label="Current Company"
+                label={t("apply_current_company", "Current Company")}
                 value={form.current_company}
                 onChange={(e) => setField("current_company", e.target.value)}
               />
 
               <div>
                 <Input
-                  label="Years of Experience"
+                  label={t("apply_experience_years", "Years of Experience")}
                   required
                   type="number"
                   min="0"
-                  placeholder="Enter years"
+                  placeholder={t("apply_experience_placeholder", "Enter years")}
                   value={form.experience_years}
                   onChange={(e) => setField("experience_years", e.target.value)}
                 />
                 {getMinExperience(job?.experience) > 0 && (
                   <p className="mt-1 text-xs italic text-[#7a5a46]">
-                    Minimum requirement for this job is {getMinExperience(job?.experience)} years
+                    {t("apply_min_requirement_prefix", "Minimum requirement for this job is")} {getMinExperience(job?.experience)} {t("apply_years", "years")}
                   </p>
                 )}
                 {form.experience_years &&
                   Number(form.experience_years) < getMinExperience(job?.experience) && (
                     <p className="mt-1 text-xs font-medium text-red-600">
-                      You have less than the required minimum experience.
+                      {t("apply_less_experience", "You have less than the required minimum experience.")}
                     </p>
                   )}
               </div>
 
               <Input
-                label="LinkedIn URL"
+                label={t("apply_linkedin_url", "LinkedIn URL")}
                 type="url"
-                placeholder="https://linkedin.com/in/..."
+                placeholder={t("apply_linkedin_placeholder", "https://linkedin.com/in/...")}
                 value={form.linkedin_url}
                 onChange={(e) => setField("linkedin_url", e.target.value)}
               />
 
               <div>
-                <Label required>Resume / CV</Label>
+                <Label required>{t("apply_resume", "Resume / CV")}</Label>
                 <label className="flex cursor-pointer items-center gap-3 rounded-[18px] border border-dashed border-[#d7dfe7] px-5 py-5 text-[18px] text-[#5b6472] transition hover:border-[#8b5a3c] hover:bg-[#faf7f4]">
                   <Upload className="h-5 w-5 text-[#6B412E]" />
                   <span className="truncate">
-                    {resume ? resume.name : "Upload PDF or DOC"}
+                    {resume ? resume.name : t("apply_upload_resume", "Upload PDF or DOC")}
                   </span>
                   <input
                     type="file"
@@ -439,13 +449,13 @@ export default function ApplyForm({ close, jobId, job }) {
               </div>
 
               <div>
-                <Label>Highest Course / Degree</Label>
+                <Label>{t("apply_course", "Highest Course / Degree")}</Label>
                 <select
                   value={form.course}
                   onChange={(e) => setField("course", e.target.value)}
                   className="w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-lg text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
                 >
-                  <option value="">Select Course</option>
+                  <option value="">{t("apply_select_course", "Select Course")}</option>
                   {DEGREE_OPTIONS.map((option) => (
                     <option key={option} value={option}>
                       {option}
@@ -457,40 +467,40 @@ export default function ApplyForm({ close, jobId, job }) {
                     rows={2}
                     value={form.course_other}
                     onChange={(e) => setField("course_other", e.target.value)}
-                    placeholder="Enter your course details..."
+                    placeholder={t("apply_course_details", "Enter your course details...")}
                     className="mt-2 w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-base text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
                   />
                 )}
               </div>
 
               <Input
-                label="Professional Domain"
-                placeholder="e.g. Developer, Designer, Research"
+                label={t("apply_professional_domain", "Professional Domain")}
+                placeholder={t("apply_domain_placeholder", "e.g. Developer, Designer, Research")}
                 value={form.domain}
                 onChange={(e) => setField("domain", e.target.value)}
               />
 
               <Input
-                label="Languages Known"
+                label={t("apply_languages_known", "Languages Known")}
                 required
-                placeholder="e.g. English, Telugu, Hindi"
+                placeholder={t("apply_languages_placeholder", "e.g. English, Telugu, Hindi")}
                 value={form.languages_known}
                 onChange={(e) => setField("languages_known", e.target.value)}
               />
 
               <Input
-                label="Your Location"
+                label={t("apply_your_location", "Your Location")}
                 required
-                placeholder="City, State"
+                placeholder={t("apply_location_placeholder", "City, State")}
                 value={form.location}
                 onChange={(e) => setField("location", e.target.value)}
               />
 
               <div className="md:col-span-2">
                 <Input
-                  label="Key Skills"
+                  label={t("apply_key_skills", "Key Skills")}
                   required
-                  placeholder="e.g. React, Python, SQL, Project Management"
+                  placeholder={t("apply_skills_placeholder", "e.g. React, Python, SQL, Project Management")}
                   value={form.skills}
                   onChange={(e) => setField("skills", e.target.value)}
                 />
@@ -498,21 +508,21 @@ export default function ApplyForm({ close, jobId, job }) {
             </div>
 
             <div>
-              <Label>Referred By</Label>
+              <Label>{t("apply_referred_by", "Referred By")}</Label>
               <textarea
                 rows={2}
                 value={form.referred_by}
                 onChange={(e) => setField("referred_by", e.target.value)}
-                placeholder="Name of person who referred you..."
+                placeholder={t("apply_referred_by_placeholder", "Name of person who referred you...")}
                 className="mb-4 w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-base text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
               />
 
-              <Label>Cover Letter / Note</Label>
+              <Label>{t("apply_cover_letter", "Cover Letter / Note")}</Label>
               <textarea
                 rows={4}
                 value={form.cover_letter}
                 onChange={(e) => setField("cover_letter", e.target.value)}
-                placeholder="Tell us why you are a great fit..."
+                placeholder={t("apply_cover_letter_placeholder", "Tell us why you are a great fit...")}
                 className="w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-base text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
               />
             </div>
@@ -523,7 +533,7 @@ export default function ApplyForm({ close, jobId, job }) {
                 onClick={close}
                 className="px-6 py-3 font-semibold text-[#4b5563] transition hover:bg-[#f7f4f1]"
               >
-                Cancel
+                {t("common_cancel", "Cancel")}
               </button>
 
               <button
@@ -534,12 +544,16 @@ export default function ApplyForm({ close, jobId, job }) {
                 {loading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{resume ? "Uploading & Submitting..." : "Submitting..."}</span>
+                    <span>
+                      {resume
+                        ? t("apply_uploading_submitting", "Uploading & Submitting...")
+                        : t("apply_submitting", "Submitting...")}
+                    </span>
                   </>
                 ) : emailVerified ? (
-                  "Submit Application"
+                  t("apply_submit_application", "Submit Application")
                 ) : (
-                  "Verify Email First"
+                  t("apply_verify_email_first", "Verify Email First")
                 )}
               </button>
             </div>
@@ -589,3 +603,12 @@ function Input({ label, required = false, ...props }) {
     </div>
   );
 }
+  const localizeJobField = (field, fallback = "") =>
+    getLocalizedEntityField({
+      item: job,
+      field,
+      language,
+      td,
+      namespace: "career",
+      fallback,
+    });

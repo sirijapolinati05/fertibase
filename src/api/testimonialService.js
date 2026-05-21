@@ -17,17 +17,18 @@ const transformTestimonial = (t) => ({
 
 const testimonialService = {
   async getTestimonials() {
-    const { data, error } = await supabase
-      .from('testimonials')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Supabase testimonials error:', error);
+    try {
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/testimonials`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.map(transformTestimonial);
+    } catch (error) {
+      console.error('API testimonials error:', error);
       throw error;
     }
-
-    return data.map(transformTestimonial);
   },
 };
 
