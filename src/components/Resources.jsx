@@ -7,6 +7,8 @@ import {
   FiShare2,
 } from "react-icons/fi";
 import supabase from "../lib/supabaseClient";
+import { useTranslation } from "../i18n/useTranslation";
+import { getLocalizedEntityField } from "../i18n/entityTranslations";
 
 /* ----------------------------- HELPERS ----------------------------- */
 
@@ -15,6 +17,7 @@ const normalize = (v) => (v ?? "").toLowerCase().replace(/\s|_/g, "");
 /* ----------------------------- COMPONENT ----------------------------- */
 
 export default function Resources() {
+  const { language, t, td } = useTranslation();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,21 +41,78 @@ export default function Resources() {
   const scrollRef = useRef(null);
   const isPausedRef = useRef(false);
 
-  const LANGUAGES = ["Telugu", "Marathi", "Kannada", "Gujarati"];
-  const [selectedLanguage, setSelectedLanguage] = useState("Marathi");
+  const selectedLanguage = "Marathi";
 
   const getLanguageImage = (item) => {
     switch (selectedLanguage) {
-      case "Marathi":
-        return item.image_url_marathi;
-      case "Kannada":
-        return item.image_url_kannada;
-      case "Gujarati":
-        return item.image_url_gujarati;
       case "Telugu":
+        return item.image_url_telugu || item.image_url_te || item.image_url;
+      case "Marathi":
+        return item.image_url_marathi || item.image_url_mr || item.image_url_telugu || item.image_url;
+      case "Kannada":
+        return item.image_url_kannada || item.image_url_kn || item.image_url_telugu || item.image_url;
+      case "Gujarati":
+        return item.image_url_gujarati || item.image_url_gu || item.image_url_telugu || item.image_url;
+      case "en":
+        return item.image_url_english || item.image_url || item.image_url_telugu;
+      case "hi":
+        return item.image_url_hindi || item.image_url_hi || item.image_url_telugu;
+      case "mr":
+        return item.image_url_marathi || item.image_url_mr || item.image_url_telugu;
+      case "te":
       default:
-        return item.image_url_telugu;
+        return item.image_url_telugu || item.image_url_te || item.image_url;
     }
+  };
+
+  const localizeResourceField = (item, field, fallback = "") =>
+    getLocalizedEntityField({
+      item,
+      field,
+      language,
+      td,
+      namespace: "resource",
+      fallback,
+    });
+
+  const getSafeResourceText = (item, field, fallback = "") => {
+    const value = localizeResourceField(item, field, fallback);
+
+    if (
+      typeof value === "string" &&
+      item?.id &&
+      value.trim() === `resource.${item.id}.${field}`
+    ) {
+      return fallback;
+    }
+
+    return value;
+  };
+
+  const getResourceCategoryLabel = (category) => {
+    const categoryKeyMap = {
+      All: "resources_tab_all",
+      Webinars: "resources_tab_webinars",
+      "Technical Guides": "resources_tab_technical_guides",
+      "Marketing Materials": "resources_tab_marketing_materials",
+      Posters: "resources_tab_posters",
+      PPTs: "resources_tab_ppts",
+    };
+
+    return t(categoryKeyMap[category] || "", category);
+  };
+
+  const getMarketingTypeLabel = (materialType) => {
+    const materialKeyMap = {
+      All: "resources_tab_all",
+      Banners: "resources_material_banners",
+      Brochures: "resources_material_brochures",
+      Flyers: "resources_material_flyers",
+      Standees: "resources_material_standees",
+      Other: "resources_material_other",
+    };
+
+    return t(materialKeyMap[materialType] || "", materialType);
   };
 
   const getEmbedUrl = (url) => {
@@ -177,15 +237,36 @@ export default function Resources() {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       list = list.filter(
-        (r) =>
-          r.title?.toLowerCase().includes(q) ||
-          r.description?.toLowerCase().includes(q) ||
-          r.detailed_description?.toLowerCase().includes(q)
+        (r) => {
+          const localizedTitle = getSafeResourceText(r, "title", r.title || "");
+          const localizedDescription = getSafeResourceText(
+            r,
+            "description",
+            r.description || ""
+          );
+          const localizedDetailedDescription = getSafeResourceText(
+            r,
+            "detailed_description",
+            r.detailed_description || ""
+          );
+          const localizedCategory = getResourceCategoryLabel(r.category || "");
+          const localizedMaterialType = getMarketingTypeLabel(
+            r.material_type || ""
+          );
+
+          return (
+            localizedTitle.toLowerCase().includes(q) ||
+            localizedDescription.toLowerCase().includes(q) ||
+            localizedDetailedDescription.toLowerCase().includes(q) ||
+            localizedCategory.toLowerCase().includes(q) ||
+            localizedMaterialType.toLowerCase().includes(q)
+          );
+        }
       );
     }
 
     return list;
-  }, [resources, selectedType, selectedMarketingType, searchQuery]);
+  }, [resources, selectedType, selectedMarketingType, searchQuery, language, td, t]);
 
   /* ---------------- MOBILE AUTO SCROLL ---------------- */
 
@@ -218,7 +299,7 @@ export default function Resources() {
   if (loading) {
     return (
       <div className="flex justify-center py-20 text-slate-500">
-        Loading resources…
+        {t("resources_loading", "Loading resources...")}
       </div>
     );
   }
@@ -265,51 +346,23 @@ export default function Resources() {
 
         {/* HEADER */}
         <div className="mb-10">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-
-            {/* Title + Subtitle */}
-            <div className="flex-1 text-center">
-              <h1 className="text-4xl font-black text-[#6B412E]">
-                Resources
-              </h1>
-              <p className="text-slate-600 mt-2">
-                Webinars, guides, marketing materials & knowledge assets
-              </p>
-            </div>
-
-            {/* Language Selector */}
-            <div className="flex justify-end md:justify-end">
-              <div className="flex flex-col items-end gap-1">
-                <span className="text-xs font-semibold text-slate-500">
-                  Select Language
-                </span>
-                <select
-                  value={selectedLanguage}
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
-                  className="
-            px-4 py-2 rounded-xl border
-            text-sm font-semibold
-            bg-white text-[#6B412E]
-            shadow-sm
-            cursor-pointer
-          "
-                >
-                  {LANGUAGES.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
+          <div className="text-center">
+            <h1 className="text-4xl font-black text-[#6B412E]">
+              {t("resources_heading", "Resources")}
+            </h1>
+            <p className="text-slate-600 mt-2">
+              {t(
+                "resources_subtitle",
+                "Webinars, guides, marketing materials & knowledge assets"
+              )}
+            </p>
           </div>
         </div>
 
         {/* SEARCH */}
         <div className="flex justify-center mb-10">
           <input
-            placeholder="Search resources..."
+            placeholder={t("resources_search_placeholder", "Search resources...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full max-w-xl px-5 py-3 rounded-xl border focus:ring-2 focus:ring-[#6B412E]/30 outline-none"
@@ -341,7 +394,7 @@ export default function Resources() {
                     : "bg-white text-[#6B412E] border-[#E5CFC2]"
                   }`}
               >
-                {t} ({categoryCounts[t] || 0})
+                {getResourceCategoryLabel(t)} ({categoryCounts[t] || 0})
               </button>
             ))}
           </div>
@@ -352,7 +405,9 @@ export default function Resources() {
                 onClick={() => setMobileTabsExpanded(!mobileTabsExpanded)}
                 className="text-sm font-semibold text-[#6B412E]"
               >
-                {mobileTabsExpanded ? "− View Less" : "+ View More"}
+                    {mobileTabsExpanded
+                      ? t("common_view_less", "View Less")
+                      : t("common_view_more", "View More")}
               </button>
             </div>
           )}
@@ -374,7 +429,7 @@ export default function Resources() {
                     : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
                   }`}
               >
-                {t}
+                {getResourceCategoryLabel(t)}
                 <span className="text-xs bg-white/20 px-2 rounded-full">
                   {categoryCounts[t] || 0}
                 </span>
@@ -401,7 +456,7 @@ export default function Resources() {
                         : "bg-white text-[#6B412E] border-[#E5CFC2]"
                       }`}
                   >
-                    {m} ({marketingCounts[m] || 0})
+                    {getMarketingTypeLabel(m)} ({marketingCounts[m] || 0})
                   </button>
                 ))}
               </div>
@@ -412,7 +467,9 @@ export default function Resources() {
                     onClick={() => setMobileMarketingExpanded(!mobileMarketingExpanded)}
                     className="text-sm font-semibold text-[#6B412E]"
                   >
-                    {mobileMarketingExpanded ? "− View Less" : "+ View More"}
+                    {mobileMarketingExpanded
+                      ? t("common_view_less", "View Less")
+                      : t("common_view_more", "View More")}
                   </button>
                 </div>
               )}
@@ -431,7 +488,7 @@ export default function Resources() {
                         : "bg-white text-[#6B412E] border-slate-200 hover:border-[#6B412E]"
                       }`}
                   >
-                    {m} ({marketingCounts[m] || 0})
+                    {getMarketingTypeLabel(m)} ({marketingCounts[m] || 0})
                   </button>
                 ))}
               </div>
@@ -443,7 +500,8 @@ export default function Resources() {
         {/* GRID */}
         {filteredResources.length === 0 ? (
           <div className="text-center py-20 text-slate-500">
-            No resources found in {selectedType}
+            {t("resources_empty_prefix", "No resources found in")}{" "}
+            {getResourceCategoryLabel(selectedType)}
           </div>
         ) : selectedType === "Posters" ? (
 
@@ -462,7 +520,7 @@ export default function Resources() {
                   <div className="flex items-center justify-center m-6 mb-4 h-48 rounded-xl bg-white">
                     <img
                       src={langImage || "/placeholder.png"}
-                      alt={img.title}
+                      alt={localizeResourceField(img, "title", img.title)}
                       className="max-h-40 max-w-40 w-full cursor-zoom-in object-contain"
                       onClick={() =>
                         langImage &&
@@ -476,7 +534,9 @@ export default function Resources() {
 
                   {/* FOOTER */}
                   <div className="px-6 pb-6 mt-auto flex items-center justify-between">
-                    <div className="text-sm font-semibold truncate">{img.title}</div>
+                    <div className="text-sm font-semibold truncate">
+                      {localizeResourceField(img, "title", img.title)}
+                    </div>
 
                     {langImage && (
                       <button
@@ -553,7 +613,7 @@ export default function Resources() {
                         <>
                           <img
                             src={langImage || "/placeholder.png"}
-                            alt={item.title}
+                            alt={localizeResourceField(item, "title", item.title)}
                             onClick={() =>
                               langImage &&
                               setSelectedImage({
@@ -589,20 +649,27 @@ export default function Resources() {
                   {/* CONTENT */}
                   <div className="p-6 flex flex-col gap-3 flex-grow">
                     <span className="text-xs font-bold bg-slate-100 px-3 py-1 rounded-full w-fit">
-                      {item.category}
-                      {item.material_type && ` • ${item.material_type}`}
+                      {getResourceCategoryLabel(item.category)}
+                      {item.material_type &&
+                        ` • ${getMarketingTypeLabel(item.material_type)}`}
                     </span>
 
-                    <h3 className="text-lg font-bold">{item.title}</h3>
+                    <h3 className="text-lg font-bold">
+                      {getSafeResourceText(item, "title", item.title)}
+                    </h3>
 
                     <p className="text-slate-600 text-sm">
-                      {item.description}
+                      {getSafeResourceText(item, "description", "")}
                     </p>
 
                     {/* EXPAND DETAILS */}
                     {(isMarketing || isTechnical) && isExpanded && (
                       <p className="text-slate-700 text-sm leading-relaxed">
-                        {item.detailed_description}
+                        {localizeResourceField(
+                          item,
+                          "detailed_description",
+                          item.detailed_description
+                        )}
                       </p>
                     )}
 
@@ -613,7 +680,7 @@ export default function Resources() {
                           onClick={() => setPlayingVideoId(item.id)}
                           className="text-[#6B412E] font-semibold flex items-center gap-2"
                         >
-                          Watch Now <FiArrowRight />
+                          {t("resources_watch_now", "Watch Now")} <FiArrowRight />
                         </button>
                       ) : !isPPT ? (
                         <button
@@ -622,12 +689,14 @@ export default function Resources() {
                           }
                           className="text-[#6B412E] font-semibold flex items-center gap-2"
                         >
-                          {isExpanded ? "Hide Details" : "Read More"}
+                          {isExpanded
+                            ? t("resources_hide_details", "Hide Details")
+                            : t("resources_read_more", "Read More")}
                           <FiArrowRight />
                         </button>
                       ) : (
                         <span className="text-sm text-slate-500 font-semibold">
-                          PPT File
+                          {t("resources_ppt_file", "PPT File")}
                         </span>
                       )}
 
@@ -706,18 +775,26 @@ export default function Resources() {
             </button>
 
             <h2 className="text-2xl font-black mb-2">
-              {readMoreItem.title}
+              {getSafeResourceText(
+                readMoreItem,
+                "title",
+                readMoreItem.title
+              )}
             </h2>
 
             <p className="text-sm text-slate-500 mb-4">
-              {readMoreItem.category}
+              {getResourceCategoryLabel(readMoreItem.category)}
               {readMoreItem.material_type &&
-                ` • ${readMoreItem.material_type}`}
+                ` • ${getMarketingTypeLabel(readMoreItem.material_type)}`}
             </p>
 
             <p className="text-slate-700 leading-relaxed mb-6">
-              {readMoreItem.detailed_description ||
-                readMoreItem.description}
+              {getSafeResourceText(
+                readMoreItem,
+                "detailed_description",
+                readMoreItem.detailed_description ||
+                  readMoreItem.description
+              )}
             </p>
 
             {readMoreItem.file_url && (
@@ -726,7 +803,7 @@ export default function Resources() {
                 download
                 className="inline-flex items-center gap-2 bg-[#6B412E] text-white px-5 py-2 rounded-xl font-semibold"
               >
-                <FiDownload />Download
+                <FiDownload />{t("common_download", "Download")}
               </a>
             )}
           </div>

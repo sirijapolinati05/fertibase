@@ -11,8 +11,10 @@ import {
   Package,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "../i18n/useTranslation";
 
 export default function ProductModal({ isOpen, onClose, productData }) {
+  const { t, td } = useTranslation();
   const [activeTab, setActiveTab] = useState("overview");
 
   /* 🔒 Disable background scroll */
@@ -24,6 +26,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
   if (!isOpen || !productData) return null;
 
   const {
+    id,
     name,
     category,
     sub_category,
@@ -38,11 +41,36 @@ export default function ProductModal({ isOpen, onClose, productData }) {
     image_url,
   } = productData;
 
+  const getCategoryLabel = (categoryName) => {
+    const categoryKeyMap = {
+      All: "products_filter_all",
+      Biofertilizer: "products_category_biofertilizer",
+      "Organic Biofertilizer": "products_category_organic_biofertilizer",
+      "Liquid Fertilizer": "products_category_liquid_fertilizer",
+      "Straight Micronutrient": "products_category_straight_micronutrient",
+      "Beneficial Element Fertilizer":
+        "products_category_beneficial_element_fertilizer",
+    };
+
+    return t(categoryKeyMap[categoryName] || "", categoryName);
+  };
+
+  const localizedName = td("product", id, "name", name);
+  const localizedCategory = td(
+    "product",
+    id,
+    "category",
+    getCategoryLabel(category)
+  );
+  const localizedSubCategory = sub_category
+    ? td("product", id, "sub_category", sub_category)
+    : "";
+
   const tabs = [
-    { id: "overview", label: "Overview", icon: "📋" },
-    { id: "benefits", label: "Benefits", icon: "🌟" },
-    { id: "usage", label: "Usage", icon: "🌱" },
-    { id: "crops", label: "Crops", icon: "🌾" },
+    { id: "overview", label: t("product_modal_tab_overview", "Overview"), icon: "📋" },
+    { id: "benefits", label: t("product_modal_tab_benefits", "Benefits"), icon: "🌟" },
+    { id: "usage", label: t("product_modal_tab_usage", "Usage"), icon: "🌱" },
+    { id: "crops", label: t("product_modal_tab_crops", "Crops"), icon: "🌾" },
   ];
 
   /* ---------------- TAB CONTENT ---------------- */
@@ -80,10 +108,10 @@ export default function ProductModal({ isOpen, onClose, productData }) {
           <div className="space-y-6">
             <Card>
               <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                <Leaf className="text-[#6B412E]" /> Product Description
+                <Leaf className="text-[#6B412E]" /> {t("product_modal_description", "Product Description")}
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                {description || "No description available."}
+                {description || t("product_modal_no_description", "No description available.")}
               </p>
             </Card>
 
@@ -94,7 +122,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
                     <Calendar size={18} />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Application Stage</p>
+                    <p className="text-sm text-gray-500">{t("product_modal_application_stage", "Application Stage")}</p>
                     <p className="font-semibold text-[#6B412E]">
                       {application_timing}
                     </p>
@@ -105,7 +133,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
 
             {key_highlights.length > 0 && (
               <div>
-                <h3 className="text-xl font-bold mb-4">Key Highlights</h3>
+                <h3 className="text-xl font-bold mb-4">{t("product_modal_key_highlights", "Key Highlights")}</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {key_highlights.map((item, i) => (
                     <Card key={i}>
@@ -126,7 +154,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
     crop_benefits.length === 0 &&
     product_advantages.length === 0
   ) {
-    return <EmptyState text="No benefits available for this product." />;
+    return <EmptyState text={t("product_modal_no_benefits", "No benefits available for this product.")} />;
   }
 
   return (
@@ -134,7 +162,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
       {crop_benefits.length > 0 && (
         <Card>
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Sprout className="text-[#6B412E]" /> Crop Benefits
+            <Sprout className="text-[#6B412E]" /> {t("product_modal_crop_benefits", "Crop Benefits")}
           </h3>
           <ul className="space-y-3">
             {crop_benefits.map((b, i) => (
@@ -162,7 +190,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
 
   case "usage":
   if (!recommended_dosage && !application_details) {
-    return <EmptyState text="Usage information is not available yet." />;
+    return <EmptyState text={t("product_modal_no_usage", "Usage information is not available yet.")} />;
   }
 
   return (
@@ -170,7 +198,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
       {recommended_dosage && (
         <Card>
           <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-            <Droplet className="text-[#6B412E]" /> Recommended Dosage
+            <Droplet className="text-[#6B412E]" /> {t("product_modal_recommended_dosage", "Recommended Dosage")}
           </h3>
           <p>{recommended_dosage}</p>
         </Card>
@@ -179,7 +207,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
       {application_details && (
         <Card>
           <h3 className="text-xl font-bold mb-3">
-            Application Details
+            {t("product_modal_application_details", "Application Details")}
           </h3>
           <div className="flex gap-3">
             <ArrowRight className="text-[#6B412E]" />
@@ -192,7 +220,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
 
   case "crops":
   if (recommended_crops.length === 0 && !application_timing) {
-    return <EmptyState text="No crop recommendations available." />;
+    return <EmptyState text={t("product_modal_no_crops", "No crop recommendations available.")} />;
   }
 
   return (
@@ -214,7 +242,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
               <Calendar size={20} />
             </div>
             <div>
-              <p className="font-semibold">Best Application Stage</p>
+              <p className="font-semibold">{t("product_modal_best_application_stage", "Best Application Stage")}</p>
               <p className="text-[#6B412E] font-bold">
                 {application_timing}
               </p>
@@ -259,10 +287,12 @@ export default function ProductModal({ isOpen, onClose, productData }) {
               <div className="bg-[#6B412E] text-white px-8 py-6 flex justify-between sticky top-0 z-10">
                 <div>
                   <div className="flex items-center gap-2 text-sm mb-2">
-                    <Package size={14} /> {category}
+                    <Package size={14} /> {localizedCategory}
                   </div>
-                  <h2 className="text-3xl font-bold">{name}</h2>
-                  {sub_category && <p className="text-white/80">{sub_category}</p>}
+                  <h2 className="text-3xl font-bold">{localizedName}</h2>
+                  {localizedSubCategory && (
+                    <p className="text-white/80">{localizedSubCategory}</p>
+                  )}
                 </div>
                 <button onClick={onClose}>
                   <X size={28} />
@@ -284,7 +314,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
   >
     <img
       src={image_url}
-      alt={name}
+      alt={localizedName}
       className="
         max-h-64 object-contain
         transition-all duration-700 ease-out
@@ -317,10 +347,10 @@ export default function ProductModal({ isOpen, onClose, productData }) {
       </div>
 
       <div className="relative">
-        <p className="text-sm font-semibold text-gray-900">Category</p>
-        <p className="text-[#6B412E] font-bold">{category}</p>
-        {sub_category && (
-          <p className="text-sm text-gray-600">{sub_category}</p>
+        <p className="text-sm font-semibold text-gray-900">{t("product_modal_category", "Category")}</p>
+        <p className="text-[#6B412E] font-bold">{localizedCategory}</p>
+        {localizedSubCategory && (
+          <p className="text-sm text-gray-600">{localizedSubCategory}</p>
         )}
       </div>
     </div>
@@ -349,7 +379,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
 
       <div className="relative">
         <p className="text-sm font-semibold text-gray-900">
-          Application Stage
+          {t("product_modal_application_stage", "Application Stage")}
         </p>
         <p className="text-[#6B412E] font-bold">
           {application_timing}
@@ -392,7 +422,7 @@ export default function ProductModal({ isOpen, onClose, productData }) {
                              text-gray-700 font-semibold
                              hover:bg-gray-100 transition"
                 >
-                  Close
+                  {t("common_close", "Close")}
                 </button>
               </div>
             </div>

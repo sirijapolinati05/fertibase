@@ -16,7 +16,7 @@ const filterOptions = [
 ];
 
 export default function FarmerStories() {
-  const { t } = useTranslation();
+  const { language, t, td } = useTranslation();
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedState, setSelectedState] = useState("All");
@@ -53,15 +53,25 @@ export default function FarmerStories() {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const { data, error } = await supabase
-          .from("testimonials")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+        const response = await fetch(`${apiUrl}/testimonials`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
         setTestimonials(data || []);
       } catch (error) {
-        console.error("Failed to load testimonials:", error);
+        console.warn("API failed, falling back to Supabase:", error);
+        try {
+          const { data, error: supabaseError } = await supabase
+            .from("testimonials")
+            .select("*")
+            .order("created_at", { ascending: false });
+          if (supabaseError) throw supabaseError;
+          setTestimonials(data || []);
+        } catch (supabaseErr) {
+          console.error("Supabase fallback failed:", supabaseErr);
+        }
       } finally {
         setLoading(false);
       }
@@ -70,17 +80,65 @@ export default function FarmerStories() {
     fetchTestimonials();
   }, []);
 
+// Real‑time subscription to Testimonials table
+useEffect(() => {
+  const channel = supabase
+    .channel('public:testimonials')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'testimonials' },
+      (payload) => {
+        const { eventType, new: newRow, old } = payload;
+        setTestimonials((prev) => {
+          if (eventType === 'INSERT') {
+            return [newRow, ...prev];
+          }
+          if (eventType === 'UPDATE') {
+            return prev.map((t) => (t.id === newRow.id ? newRow : t));
+          }
+          if (eventType === 'DELETE') {
+            return prev.filter((t) => t.id !== old.id);
+          }
+          return prev;
+        });
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, []);
+
   useEffect(() => {
     setPlayingId(null);
   }, [selectedState]);
+
+  const getLocalizedField = (testimonial, field, fallback = "") => {
+    const directLocalizedValue =
+      testimonial?.[`${field}_${language}`] ||
+      testimonial?.[`${field}${language.toUpperCase()}`];
+
+    if (directLocalizedValue) {
+      return directLocalizedValue;
+    }
+
+    return td(
+      "testimonial",
+      testimonial.id,
+      field,
+      testimonial?.[field] || fallback
+    );
+  };
 
   const filteredTestimonials = useMemo(() => {
     if (selectedState === "All") return testimonials;
 
     return testimonials.filter((testimonial) => {
-      if (!testimonial.state) return false;
+      const stateValue = testimonial.state || testimonial.area || "";
+      if (!stateValue) return false;
 
-      const dbState = normalize(testimonial.state);
+      const dbState = normalize(stateValue);
       const selected = normalize(selectedState);
 
       if (selected === "andhra pradesh") {
@@ -96,16 +154,7 @@ export default function FarmerStories() {
   }, [selectedState, testimonials]);
 
   const displayedTestimonials = useMemo(() => {
-    if (filteredTestimonials.length === 0) return [];
-
-    if (filteredTestimonials.length === 1) {
-      return [
-        { ...filteredTestimonials[0], renderKey: `${filteredTestimonials[0].id}-primary` },
-        { ...filteredTestimonials[0], renderKey: `${filteredTestimonials[0].id}-duplicate` },
-      ];
-    }
-
-    return filteredTestimonials.slice(0, 2).map((testimonial, index) => ({
+    return filteredTestimonials.map((testimonial, index) => ({
       ...testimonial,
       renderKey: `${testimonial.id}-${index}`,
     }));
@@ -179,20 +228,31 @@ export default function FarmerStories() {
               </p>
             </div>
 
-            <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-10 md:overflow-visible md:pb-0">
+            <div className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 md:gap-10 no-scrollbar">
               {displayedTestimonials.map((testimonial) => {
                 const embedUrl = getYoutubeEmbed(testimonial.video_url);
-                const title = testimonial.title || "copious NPK";
-                const description =
-                  testimonial.description ||
-                  '"This is the most commonly used product"';
+                const title = getLocalizedField(
+                  testimonial,
+                  "title",
+                  ""
+                );
+                const description = getLocalizedField(
+                  testimonial,
+                  "description",
+                  testimonial.story || testimonial.season || ""
+                );
+                const farmerName = getLocalizedField(
+                  testimonial,
+                  "name",
+                  title
+                );
 
                 return (
                   <motion.article
                     key={testimonial.renderKey}
                     whileHover={{ y: -6 }}
                     transition={{ duration: 0.35, ease: "easeOut" }}
-                    className="group w-full min-w-full shrink-0 snap-center px-4 md:w-auto md:min-w-0 md:px-0"
+                    className="group w-[85vw] min-w-[85vw] shrink-0 snap-center md:w-[45vw] md:min-w-[45vw] lg:w-[500px] lg:min-w-[500px]"
                   >
                     <div
                       className="relative aspect-[1.1/1] cursor-pointer overflow-hidden border border-[#b58d78] bg-[#d8d0c8] sm:aspect-[1.25/1] md:aspect-[1.48/1]"
@@ -214,20 +274,18 @@ export default function FarmerStories() {
                       ) : (
                         <>
                           <img
-                            src={FarmerImage}
-                            alt={testimonial.name || title}
+                            src={testimonial.image_url || testimonial.image_src || testimonial.image || FarmerImage}
+                            alt={farmerName}
                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                           />
 
                           <div className="absolute inset-0 bg-black/20" />
 
-                          {testimonial.video_url && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="flex h-12 w-12 items-center justify-center border-2 border-white/95 bg-black/20 backdrop-blur-[2px]">
-                                <PlayCircle className="h-8 w-8 text-white" />
-                              </div>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="flex h-12 w-12 items-center justify-center border-2 border-white/95 bg-black/20 backdrop-blur-[2px]">
+                              <PlayCircle className="h-8 w-8 text-white" />
                             </div>
-                          )}
+                          </div>
 
                           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/38 to-transparent px-4 pb-4 pt-16 text-white sm:px-6 sm:pb-5 sm:pt-20">
                             <h3 className="text-[20px] font-bold leading-none md:text-[24px]">

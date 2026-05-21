@@ -1,4 +1,4 @@
-export const bundledTranslations = {
+﻿export const bundledTranslations = {
   te: {
     latest_update: "తాజా నవీకరణ",
     website_releasing_soon: "ఈ వెబ్‌సైట్ త్వరలో ప్రారంభం అవుతుంది.",
@@ -34,6 +34,89 @@ export const bundledTranslations = {
     about_card_sustainable_title: "స్థిరమైన మరియు పర్యావరణానుకూల పరిష్కారాలు",
     about_card_sustainable_desc:
       "అన్ని వ్యవసాయ వాతావరణ పరిస్థితులకు సరిపోయే రైతు కేంద్రిత ఆవిష్కరణలు",
+    about_hero_line_1: "రైతులను శక్తివంతం చేస్తూ,",
+    about_hero_line_2: "భవిష్యత్తును పెంచుతూ",
+    about_hero_subtitle:
+      "శాస్త్రం, సాంకేతికత, భాగస్వామ్యంతో వ్యవసాయ ఆవిష్కరణలకు నాయకత్వం",
+    about_heading_prefix: "ఫెర్టిబేస్ గురించి",
+    about_partnership_heading: "భాగస్వామ్యంతో అభివృద్ధి",
+    about_partnership_copy:
+      "నిజమైన అభివృద్ధి భాగస్వామ్యంలోనే ఉందని మేము నమ్ముతున్నాము. మా బలమైన నెట్‌వర్క్ ద్వారా రైతులతో కలిసి పని చేసి మెరుగైన మార్గదర్శకం, అధిక దిగుబడి, లాభదాయక వ్యవసాయం అందిస్తాము.",
+    about_impact_heading_prefix: "మా",
+    about_impact_heading_suffix: "ప్రభావం",
+    about_impact_subtitle:
+      "కొలిచగల ఫలితాలతో ప్రాంతాలపై వ్యవసాయ మార్పు తీసుకువస్తున్నాము",
+    about_values_heading_prefix: "మా మూల",
+    about_values_heading_suffix: "విలువలు",
+    about_vision_heading: "మా దృష్టి",
+    about_vision_copy:
+      "నిరంతర పరిశోధన, ఫీల్డ్‌లో నిర్ధారిత సాంకేతికతలు, డేటా ఆధారిత పరిష్కారాల ద్వారా మట్టి శాస్త్రం, మొక్కల పోషణ, జీవ ఆవిష్కరణలను ముందుకు తీసుకువెళ్తూ భారతదేశంలో అగ్రగామి పరిశోధనాధారిత వ్యవసాయ బ్రాండ్‌గా నిలవడం మా దృష్టి.",
+    about_mission_heading: "మా లక్ష్యం",
+    about_mission_copy:
+      "నిరంతర వ్యవసాయ పరిశోధన, ఖచ్చితత్వ ఆధారిత ఫార్ములేషన్లు, ఫీల్డ్‌లో నిర్ధారిత సాంకేతికతల ద్వారా రైతుల ఉత్పాదకత, లాభదాయకత పెంచి స్థిరమైన, వాతావరణ సహన వ్యవసాయ వ్యవస్థలను ప్రోత్సహించడం మా లక్ష్యం.",
+    about_intro_card_1_title: "అగ్రగామి ఆవిష్కరణ",
+    about_intro_card_1_desc:
+      "ఉన్నత పంట పోషణ పరిష్కారాలు మరియు ఆధునిక వ్యవసాయ సాంకేతికతలతో రైతులను శక్తివంతం చేసే అగ్రశ్రేణి వ్యవసాయ ఆవిష్కరణ సంస్థ.",
+    about_intro_card_2_title: "సుస్థిర దృష్టి",
+    about_intro_card_2_desc:
+      "శాస్త్రీయంగా రూపొందించిన బయోఫెర్టిలైజర్లు, జీవ ఉత్పత్తులు, మట్టిని బలోపేతం చేసే ఇన్‌పుట్లను అందించే సుస్థిర వ్యవసాయ నిబద్ధత.",
+    about_intro_card_3_title: "పరిశోధన ఆధారితం",
+    about_intro_card_3_desc:
+      "నమ్మదగిన, పరిశోధన ఆధారిత, ఫలితాలపై దృష్టి ఉన్న ఉత్పత్తులతో స్థిరమైన పనితీరు మరియు ఫీల్డ్ సపోర్ట్ అందిస్తూ వ్యవసాయాన్ని మార్చడం.",
+    about_partner_card_1_title: "డీలర్ నెట్‌వర్క్",
+    about_partner_card_1_desc: "నమ్మకమైన డీలర్ల బలమైన నెట్‌వర్క్",
+    about_partner_card_2_title: "ఫీల్డ్ బృందాలు",
+    about_partner_card_2_desc: "అంకితమైన ఫీల్డ్ సపోర్ట్ బృందాలు",
+    about_partner_card_3_title: "అగ్రోనమిస్టులు",
+    about_partner_card_3_desc: "నిపుణుల వ్యవసాయ మార్గదర్శకం",
+    about_partner_card_4_title: "డిజిటల్ అగ్రి యాప్",
+    about_partner_card_4_desc: "డిజిటల్ వ్యవసాయ పరిష్కారాలు",
+    about_impact_stat_1_label: "జిల్లాలు",
+    about_impact_stat_1_desc: "అనేక రాష్ట్రాల్లో కార్యకలాపాలు",
+    about_impact_stat_2_label: "డీలర్లు",
+    about_impact_stat_2_desc: "బలమైన పంపిణీ నెట్‌వర్క్",
+    about_impact_stat_3_label: "ఎకరాలు",
+    about_impact_stat_3_desc: "మార్పు చెందిన వ్యవసాయ భూమి",
+    about_value_card_1_icon: "నాణ్యత",
+    about_value_card_1_title: "నాణ్యత హామీ",
+    about_value_card_1_desc:
+      "వాస్తవ వ్యవసాయ పరిస్థితుల్లో పరీక్షించబడి నిరూపితమైన ప్రీమియం ఉత్పత్తులు",
+    about_value_card_2_icon: "రైతు",
+    about_value_card_2_title: "రైతు-ముందు దృక్పథం",
+    about_value_card_2_desc:
+      "రైతుల అవసరాలను ప్రత్యక్ష సహాయం మరియు ఫీల్డ్ శిక్షణతో ముందుపెట్టడం",
+    about_value_card_3_icon: "ఆర్&డి",
+    about_value_card_3_title: "ఆవిష్కరణ & పరిశోధన",
+    about_value_card_3_desc:
+      "అధునాతన జీవ పరిష్కారాల నిరంతర అభివృద్ధి",
+    about_value_card_4_icon: "నమ్మకం",
+    about_value_card_4_title: "నిజాయితీ & నమ్మకం",
+    about_value_card_4_desc:
+      "పారదర్శక వ్యాపార విధానాలు మరియు దీర్ఘకాల సంబంధాలు",
+    resources_loading: "వనరులు లోడ్ అవుతున్నాయి...",
+    resources_heading: "వనరులు",
+    resources_subtitle:
+      "వెబినార్లు, మార్గదర్శకాలు, మార్కెటింగ్ మెటీరియల్స్ మరియు జ్ఞాన వనరులు",
+    resources_select_language: "భాషను ఎంచుకోండి",
+    resources_search_placeholder: "వనరులను వెతకండి...",
+    resources_empty_prefix: "లో వనరులు కనబడలేదు",
+    resources_tab_all: "అన్ని",
+    resources_tab_webinars: "వెబినార్లు",
+    resources_tab_technical_guides: "సాంకేతిక మార్గదర్శకాలు",
+    resources_tab_marketing_materials: "మార్కెటింగ్ మెటీరియల్స్",
+    resources_tab_posters: "పోస్టర్లు",
+    resources_tab_ppts: "పిపిటిలు",
+    resources_material_banners: "బ్యానర్లు",
+    resources_material_brochures: "బ్రోచర్లు",
+    resources_material_flyers: "ఫ్లయర్లు",
+    resources_material_standees: "స్టాండీలు",
+    resources_material_other: "ఇతర",
+    resources_watch_now: "ఇప్పుడే చూడండి",
+    resources_hide_details: "వివరాలను దాచు",
+    resources_read_more: "ఇంకా చదవండి",
+    resources_ppt_file: "పిపిటి ఫైల్",
+    "product.CORBOMIN-S.name": "కార్బోమిన్-ఎస్",
+    "product.CORBOMIN-S.category": "ఆర్గానిక్ బయోఫెర్టిలైజర్",
     footer_tagline_line_1:
       "ఒక్కో సూక్ష్మజీవంతో నేలలో మళ్లీ జీవం నింపుతున్నాం.",
     footer_tagline_line_2:
@@ -54,6 +137,7 @@ export const bundledTranslations = {
     premium_heading_line_2: "శ్రేణి",
     premium_subtitle:
       "ఆధునిక వ్యవసాయం కోసం రూపొందించిన విశ్వసనీయ సూక్ష్మజీవ మరియు పోషక పరిష్కారాలు.",
+    premium_visual_alt: "ప్రీమియం ఉత్పత్తుల శ్రేణి",
     premium_explore_products: "మా ఉత్పత్తులను చూడండి",
     premium_category_beneficial_1: "ఉపయోగకర",
     premium_category_beneficial_2: "మూలకం",
@@ -106,6 +190,19 @@ export const bundledTranslations = {
     products_page_search_placeholder: "ఉత్పత్తులను వెతకండి...",
     products_page_no_results:
       "మీ శోధనకు సరిపోయే ఉత్పత్తులు కనబడలేదు.",
+    products_listing_heading: "మా ఉత్పత్తులు",
+    products_listing_subtitle:
+      "ఆధునిక వ్యవసాయం కోసం అత్యుత్తమ నాణ్యత పరిష్కారాలు",
+    products_listing_search_placeholder: "ఉత్పత్తులను వెతకండి...",
+    products_filter_all: "అన్ని",
+    products_category_biofertilizer: "బయోఫెర్టిలైజర్",
+    products_category_organic_biofertilizer: "ఆర్గానిక్ బయోఫెర్టిలైజర్",
+    products_category_liquid_fertilizer: "ద్రవ ఎరువు",
+    products_category_straight_micronutrient: "స్ట్రైట్ మైక్రోన్యూట్రియంట్",
+    products_category_beneficial_element_fertilizer:
+      "ప్రయోజనకర మూలక ఎరువు",
+    products_view_details: "వివరాలు చూడండి",
+    products_empty_prefix: "ఈ విభాగంలో ఉత్పత్తులు అందుబాటులో లేవు",
     product_details_loading_product: "ఉత్పత్తి లోడ్ అవుతోంది...",
     product_details_not_found: "ఉత్పత్తి కనబడలేదు",
     product_details_back_to_products: "ఉత్పత్తుల వద్దకు తిరిగి వెళ్ళండి",
@@ -176,6 +273,89 @@ export const bundledTranslations = {
     about_card_sustainable_title: "टिकाऊ और पर्यावरण-अनुकूल समाधान",
     about_card_sustainable_desc:
       "किसान-केंद्रित नवाचार जो सभी कृषि-जलवायु परिस्थितियों के लिए डिज़ाइन किए गए हैं",
+    about_hero_line_1: "किसानों को सशक्त बनाते हुए,",
+    about_hero_line_2: "भविष्य को बढ़ाते हुए",
+    about_hero_subtitle:
+      "विज्ञान, तकनीक और साझेदारी के माध्यम से कृषि नवाचार का नेतृत्व",
+    about_heading_prefix: "फर्टिबेस के बारे में",
+    about_partnership_heading: "साझेदारी के साथ विकास",
+    about_partnership_copy:
+      "हम मानते हैं कि सच्ची वृद्धि साझेदारी में निहित है। अपने मजबूत नेटवर्क के माध्यम से हम किसानों के साथ मिलकर बेहतर मार्गदर्शन, बेहतर उपज और लाभकारी खेती सुनिश्चित करते हैं।",
+    about_impact_heading_prefix: "हमारा",
+    about_impact_heading_suffix: "प्रभाव",
+    about_impact_subtitle:
+      "मापने योग्य परिणामों के साथ क्षेत्रों में कृषि परिवर्तन ला रहे हैं",
+    about_values_heading_prefix: "हमारे मूल",
+    about_values_heading_suffix: "मूल्य",
+    about_vision_heading: "हमारी दृष्टि",
+    about_vision_copy:
+      "निरंतर अनुसंधान, फील्ड-मान्य तकनीकों और डेटा-आधारित समाधानों के माध्यम से मृदा विज्ञान, पौध पोषण और जैविक नवाचार को आगे बढ़ाते हुए भारत का अग्रणी अनुसंधान-आधारित कृषि ब्रांड बनना हमारी दृष्टि है।",
+    about_mission_heading: "हमारा मिशन",
+    about_mission_copy:
+      "निरंतर कृषि अनुसंधान, सटीक फॉर्मूलेशन और फील्ड-मान्य तकनीकों के माध्यम से किसानों की उत्पादकता और लाभप्रदता बढ़ाना तथा टिकाऊ, जलवायु-सहिष्णु खेती प्रणालियों को बढ़ावा देना हमारा मिशन है।",
+    about_intro_card_1_title: "अग्रणी नवाचार",
+    about_intro_card_1_desc:
+      "उच्च गुणवत्ता वाली फसल पोषण समाधानों और उन्नत खेती तकनीकों के साथ किसानों को सशक्त बनाने वाली अग्रणी कृषि नवाचार कंपनी।",
+    about_intro_card_2_title: "सतत फोकस",
+    about_intro_card_2_desc:
+      "वैज्ञानिक रूप से तैयार बायोफर्टिलाइज़र, जैविक उत्पाद और मिट्टी को बेहतर बनाने वाले इनपुट प्रदान करने की मजबूत प्रतिबद्धता।",
+    about_intro_card_3_title: "अनुसंधान-आधारित",
+    about_intro_card_3_desc:
+      "विश्वसनीय, अनुसंधान-आधारित और परिणामोन्मुख उत्पादों के माध्यम से कृषि पद्धतियों में बदलाव, लगातार प्रदर्शन और मजबूत फील्ड सपोर्ट के साथ।",
+    about_partner_card_1_title: "डीलर नेटवर्क",
+    about_partner_card_1_desc: "विश्वसनीय डीलरों का मजबूत नेटवर्क",
+    about_partner_card_2_title: "फील्ड टीमें",
+    about_partner_card_2_desc: "समर्पित फील्ड सपोर्ट टीमें",
+    about_partner_card_3_title: "एग्रोनोमिस्ट",
+    about_partner_card_3_desc: "विशेषज्ञ कृषि मार्गदर्शन",
+    about_partner_card_4_title: "डिजिटल एग्री ऐप",
+    about_partner_card_4_desc: "डिजिटल खेती समाधान",
+    about_impact_stat_1_label: "जिले",
+    about_impact_stat_1_desc: "कई राज्यों में संचालन",
+    about_impact_stat_2_label: "डीलर",
+    about_impact_stat_2_desc: "मजबूत वितरण नेटवर्क",
+    about_impact_stat_3_label: "एकड़",
+    about_impact_stat_3_desc: "परिवर्तित कृषि भूमि",
+    about_value_card_1_icon: "गुणवत्ता",
+    about_value_card_1_title: "गुणवत्ता आश्वासन",
+    about_value_card_1_desc:
+      "वास्तविक खेती की परिस्थितियों में परखे और सिद्ध प्रीमियम उत्पाद",
+    about_value_card_2_icon: "किसान",
+    about_value_card_2_title: "किसान-प्रथम दृष्टिकोण",
+    about_value_card_2_desc:
+      "प्रत्यक्ष सहायता और फील्ड प्रशिक्षण के साथ किसानों की जरूरतों को प्राथमिकता देना",
+    about_value_card_3_icon: "आर एंड डी",
+    about_value_card_3_title: "नवाचार और अनुसंधान",
+    about_value_card_3_desc:
+      "उन्नत जैविक समाधानों का निरंतर विकास",
+    about_value_card_4_icon: "विश्वास",
+    about_value_card_4_title: "ईमानदारी और विश्वास",
+    about_value_card_4_desc:
+      "पारदर्शी व्यावसायिक प्रक्रियाएँ और दीर्घकालिक संबंध",
+    resources_loading: "संसाधन लोड हो रहे हैं...",
+    resources_heading: "संसाधन",
+    resources_subtitle:
+      "वेबिनार, गाइड, मार्केटिंग सामग्री और ज्ञान संसाधन",
+    resources_select_language: "भाषा चुनें",
+    resources_search_placeholder: "संसाधन खोजें...",
+    resources_empty_prefix: "में कोई संसाधन नहीं मिला",
+    resources_tab_all: "सभी",
+    resources_tab_webinars: "वेबिनार",
+    resources_tab_technical_guides: "तकनीकी गाइड",
+    resources_tab_marketing_materials: "मार्केटिंग सामग्री",
+    resources_tab_posters: "पोस्टर",
+    resources_tab_ppts: "पीपीटी",
+    resources_material_banners: "बैनर",
+    resources_material_brochures: "ब्रोशर",
+    resources_material_flyers: "फ्लायर्स",
+    resources_material_standees: "स्टैंडीज़",
+    resources_material_other: "अन्य",
+    resources_watch_now: "अभी देखें",
+    resources_hide_details: "विवरण छुपाएँ",
+    resources_read_more: "और पढ़ें",
+    resources_ppt_file: "पीपीटी फ़ाइल",
+    "product.CORBOMIN-S.name": "कॉर्बोमिन-एस",
+    "product.CORBOMIN-S.category": "ऑर्गेनिक बायोफर्टिलाइज़र",
     footer_tagline_line_1:
       "एक-एक सूक्ष्मजीव के साथ मिट्टी में फिर से जीवन ला रहे हैं।",
     footer_tagline_line_2:
@@ -196,6 +376,7 @@ export const bundledTranslations = {
     premium_heading_line_2: "श्रेणी",
     premium_subtitle:
       "आधुनिक कृषि के लिए डिज़ाइन किए गए भरोसेमंद सूक्ष्मजीवीय और पोषक समाधान।",
+    premium_visual_alt: "प्रीमियम उत्पाद श्रेणी",
     premium_explore_products: "हमारे उत्पाद देखें",
     premium_category_beneficial_1: "लाभकारी",
     premium_category_beneficial_2: "तत्व",
@@ -248,6 +429,19 @@ export const bundledTranslations = {
     products_page_search_placeholder: "उत्पाद खोजें...",
     products_page_no_results:
       "आपकी खोज से मेल खाने वाले उत्पाद नहीं मिले।",
+    products_listing_heading: "हमारे उत्पाद",
+    products_listing_subtitle:
+      "आधुनिक कृषि के लिए उच्च-गुणवत्ता वाले समाधान",
+    products_listing_search_placeholder: "उत्पाद खोजें...",
+    products_filter_all: "सभी",
+    products_category_biofertilizer: "बायोफर्टिलाइज़र",
+    products_category_organic_biofertilizer: "ऑर्गेनिक बायोफर्टिलाइज़र",
+    products_category_liquid_fertilizer: "लिक्विड उर्वरक",
+    products_category_straight_micronutrient: "स्ट्रेट माइक्रोन्यूट्रिएंट",
+    products_category_beneficial_element_fertilizer:
+      "लाभकारी तत्व उर्वरक",
+    products_view_details: "विवरण देखें",
+    products_empty_prefix: "इस श्रेणी में कोई उत्पाद उपलब्ध नहीं है",
     product_details_loading_product: "उत्पाद लोड हो रहा है...",
     product_details_not_found: "उत्पाद नहीं मिला",
     product_details_back_to_products: "उत्पादों पर वापस जाएँ",
@@ -319,6 +513,89 @@ export const bundledTranslations = {
     about_card_sustainable_title: "शाश्वत आणि पर्यावरणपूरक उपाय",
     about_card_sustainable_desc:
       "सर्व कृषी-हवामान परिस्थितीसाठी तयार केलेली शेतकरी-केंद्रित नावीन्ये",
+    about_hero_line_1: "शेतकऱ्यांना सक्षम करत,",
+    about_hero_line_2: "भविष्य घडवत",
+    about_hero_subtitle:
+      "विज्ञान, तंत्रज्ञान आणि भागीदारीद्वारे कृषी नवकल्पनांचे नेतृत्व",
+    about_heading_prefix: "फर्टिबेस बद्दल",
+    about_partnership_heading: "भागीदारीतून वाढ",
+    about_partnership_copy:
+      "खरी वाढ भागीदारीतच असते असा आमचा विश्वास आहे. आमच्या मजबूत नेटवर्कद्वारे आम्ही शेतकऱ्यांसोबत जवळून काम करून उत्तम मार्गदर्शन, वाढीव उत्पन्न आणि नफ्याची शेती सुनिश्चित करतो.",
+    about_impact_heading_prefix: "आमचा",
+    about_impact_heading_suffix: "प्रभाव",
+    about_impact_subtitle:
+      "मोजता येणाऱ्या परिणामांसह विविध प्रदेशांत शेतीत बदल घडवून आणत आहोत",
+    about_values_heading_prefix: "आमची मूलभूत",
+    about_values_heading_suffix: "मूल्ये",
+    about_vision_heading: "आमची दृष्टी",
+    about_vision_copy:
+      "सतत संशोधन, क्षेत्रात पडताळलेल्या तंत्रज्ञान आणि डेटा-आधारित उपायांच्या मदतीने मृदा विज्ञान, वनस्पती पोषण आणि जैविक नवकल्पना पुढे नेत भारतातील आघाडीचा संशोधनाधारित कृषी ब्रँड बनणे ही आमची दृष्टी आहे.",
+    about_mission_heading: "आमचे ध्येय",
+    about_mission_copy:
+      "सतत कृषी संशोधन, अचूक फॉर्म्युलेशन्स आणि क्षेत्रात पडताळलेल्या तंत्रज्ञानाद्वारे शेतकऱ्यांची उत्पादकता व नफा वाढवणे आणि शाश्वत, हवामान-सहनशील शेती प्रणालींना चालना देणे हे आमचे ध्येय आहे.",
+    about_intro_card_1_title: "आघाडीची नवकल्पना",
+    about_intro_card_1_desc:
+      "उच्च दर्जाच्या पीक पोषण उपाययोजना आणि आधुनिक शेती तंत्रज्ञानाद्वारे शेतकऱ्यांना सक्षम करणारी आघाडीची कृषी नवकल्पना कंपनी.",
+    about_intro_card_2_title: "शाश्वततेवर भर",
+    about_intro_card_2_desc:
+      "वैज्ञानिकदृष्ट्या विकसित जैवखते, जैविक उत्पादने आणि मातीस बळ देणारे इनपुट्स देण्याची मजबूत बांधिलकी.",
+    about_intro_card_3_title: "संशोधनाधारित",
+    about_intro_card_3_desc:
+      "विश्वासार्ह, संशोधनाधारित आणि परिणामकेंद्रित उत्पादनांद्वारे सातत्यपूर्ण कामगिरी व उत्कृष्ट फील्ड सपोर्टसह शेती पद्धतीत बदल घडवणे.",
+    about_partner_card_1_title: "डीलर नेटवर्क",
+    about_partner_card_1_desc: "विश्वासार्ह डीलर्सचे मजबूत जाळे",
+    about_partner_card_2_title: "फील्ड टीम्स",
+    about_partner_card_2_desc: "समर्पित फील्ड सपोर्ट टीम्स",
+    about_partner_card_3_title: "अॅग्रोनॉमिस्ट्स",
+    about_partner_card_3_desc: "तज्ज्ञ कृषी मार्गदर्शन",
+    about_partner_card_4_title: "डिजिटल अॅग्री अॅप",
+    about_partner_card_4_desc: "डिजिटल शेती उपाय",
+    about_impact_stat_1_label: "जिल्हे",
+    about_impact_stat_1_desc: "अनेक राज्यांमध्ये कार्यरत",
+    about_impact_stat_2_label: "डीलर्स",
+    about_impact_stat_2_desc: "मजबूत वितरण जाळे",
+    about_impact_stat_3_label: "एकर",
+    about_impact_stat_3_desc: "परिवर्तित शेती जमीन",
+    about_value_card_1_icon: "गुणवत्ता",
+    about_value_card_1_title: "गुणवत्ता हमी",
+    about_value_card_1_desc:
+      "प्रत्यक्ष शेती परिस्थितीत तपासलेली आणि सिद्ध प्रीमियम उत्पादने",
+    about_value_card_2_icon: "शेतकरी",
+    about_value_card_2_title: "शेतकरी-प्रथम दृष्टीकोन",
+    about_value_card_2_desc:
+      "थेट मदत आणि फील्ड प्रशिक्षणासह शेतकऱ्यांच्या गरजांना प्राधान्य",
+    about_value_card_3_icon: "आर अँड डी",
+    about_value_card_3_title: "नवकल्पना आणि संशोधन",
+    about_value_card_3_desc:
+      "उन्नत जैविक उपाययोजनांचा सतत विकास",
+    about_value_card_4_icon: "विश्वास",
+    about_value_card_4_title: "प्रामाणिकपणा आणि विश्वास",
+    about_value_card_4_desc:
+      "पारदर्शक व्यावसायिक प्रक्रिया आणि दीर्घकालीन संबंध",
+    resources_loading: "संसाधने लोड होत आहेत...",
+    resources_heading: "संसाधने",
+    resources_subtitle:
+      "वेबिनार्स, मार्गदर्शिका, मार्केटिंग साहित्य आणि ज्ञान संसाधने",
+    resources_select_language: "भाषा निवडा",
+    resources_search_placeholder: "संसाधने शोधा...",
+    resources_empty_prefix: "मध्ये कोणतीही संसाधने सापडली नाहीत",
+    resources_tab_all: "सर्व",
+    resources_tab_webinars: "वेबिनार्स",
+    resources_tab_technical_guides: "तांत्रिक मार्गदर्शिका",
+    resources_tab_marketing_materials: "मार्केटिंग साहित्य",
+    resources_tab_posters: "पोस्टर्स",
+    resources_tab_ppts: "पीपीटी",
+    resources_material_banners: "बॅनर्स",
+    resources_material_brochures: "ब्रॉशर्स",
+    resources_material_flyers: "फ्लायर्स",
+    resources_material_standees: "स्टँडीज",
+    resources_material_other: "इतर",
+    resources_watch_now: "आता पहा",
+    resources_hide_details: "तपशील लपवा",
+    resources_read_more: "आणखी वाचा",
+    resources_ppt_file: "पीपीटी फाइल",
+    "product.CORBOMIN-S.name": "कॉर्बोमिन-एस",
+    "product.CORBOMIN-S.category": "सेंद्रिय जैवखत",
     footer_tagline_line_1:
       "एकेका सूक्ष्मजीवातून मातीमध्ये पुन्हा जीवन आणत आहोत.",
     footer_tagline_line_2:
@@ -339,6 +616,7 @@ export const bundledTranslations = {
     premium_heading_line_2: "श्रेणी",
     premium_subtitle:
       "आधुनिक शेतीसाठी तयार केलेले विश्वासार्ह सूक्ष्मजीव आणि पोषक उपाय.",
+    premium_visual_alt: "प्रीमियम उत्पादनांची श्रेणी",
     premium_explore_products: "आमची उत्पादने पाहा",
     premium_category_beneficial_1: "लाभदायक",
     premium_category_beneficial_2: "घटक",
@@ -391,6 +669,19 @@ export const bundledTranslations = {
     products_page_search_placeholder: "उत्पादने शोधा...",
     products_page_no_results:
       "तुमच्या शोधाशी जुळणारी उत्पादने सापडली नाहीत.",
+    products_listing_heading: "आमची उत्पादने",
+    products_listing_subtitle:
+      "आधुनिक शेतीसाठी उच्च-गुणवत्तेची उपाययोजना",
+    products_listing_search_placeholder: "उत्पादने शोधा...",
+    products_filter_all: "सर्व",
+    products_category_biofertilizer: "जैवखत",
+    products_category_organic_biofertilizer: "सेंद्रिय जैवखत",
+    products_category_liquid_fertilizer: "द्रव खत",
+    products_category_straight_micronutrient: "सरळ सूक्ष्मपोषक",
+    products_category_beneficial_element_fertilizer:
+      "लाभदायक घटक खत",
+    products_view_details: "तपशील पहा",
+    products_empty_prefix: "या विभागात कोणतीही उत्पादने उपलब्ध नाहीत",
     product_details_loading_product: "उत्पादन लोड होत आहे...",
     product_details_not_found: "उत्पादन सापडले नाही",
     product_details_back_to_products: "उत्पादनांकडे परत जा",

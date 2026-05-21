@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import indiaMapImage from "../assets/indiamap.png";
 import circle1Image from "../assets/circle1.png";
 import circle2Image from "../assets/circle2.png";
@@ -71,7 +72,7 @@ function StatCircle({ stat }) {
       variants={circleVariants}
       whileHover={{ y: -6, scale: 1.03 }}
       whileTap={{ y: -6, scale: 1.03 }}
-      className={`group relative overflow-hidden rounded-full ${stat.className}`}
+      className={`group relative overflow-hidden rounded-full lg:absolute ${stat.className}`}
     >
       <img
         src={stat.image}
@@ -92,26 +93,34 @@ function StatCircle({ stat }) {
 }
 
 export default function IndiaMap() {
-  const { t } = useTranslation();
-  const localizedStats = stats.map((stat) => ({
-    ...stat,
-    label:
-      stat.label === "Farmer Network"
-        ? t("india_stat_farmer_network", stat.label)
-        : stat.label === "Dealer Network"
-          ? t("india_stat_dealer_network", stat.label)
-          : t("india_stat_states", stat.label),
-  }));
+  const { language, t } = useTranslation();
 
-  const mobileStats = [...stats]
-    .sort((a, b) => {
-      const getSize = (cls) => {
-        const match = cls.match(/h-\[(\d+)/);
-        return match ? Number(match[1]) : 0;
-      };
+  const localizedStats = useMemo(
+    () =>
+      stats.map((stat) => ({
+        ...stat,
+        label:
+          stat.label === "Farmer Network"
+            ? t("india_stat_farmer_network", stat.label)
+            : stat.label === "Dealer Network"
+              ? t("india_stat_dealer_network", stat.label)
+              : t("india_stat_states", stat.label),
+      })),
+    [t]
+  );
 
-      return getSize(a.className) - getSize(b.className);
-    });
+  const mobileStats = useMemo(
+    () =>
+      [...localizedStats].sort((a, b) => {
+        const getSize = (cls) => {
+          const match = cls.match(/h-\[(\d+)/);
+          return match ? Number(match[1]) : 0;
+        };
+
+        return getSize(a.className) - getSize(b.className);
+      }),
+    [localizedStats]
+  );
 
   return (
     <section className="overflow-hidden bg-[#fff3eb] py-8 sm:py-6">
@@ -140,23 +149,14 @@ export default function IndiaMap() {
 
             {/* MOBILE STATS */}
             <motion.div
+              key={`mobile-stats-${language}`}
               variants={revealVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={sectionViewport}
+              animate="visible"
               className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden"
             >
-              {localizedStats
-                .sort((a, b) => {
-                  const getSize = (cls) => {
-                    const match = cls.match(/h-\[(\d+)/);
-                    return match ? Number(match[1]) : 0;
-                  };
-
-                  return getSize(a.className) - getSize(b.className);
-                })
-                .map((stat) => (
-                <div key={stat.label} className="flex justify-center">
+              {mobileStats.map((stat) => (
+                <div key={stat.value} className="flex justify-center">
                   <StatCircle
                     stat={{
                       ...stat,
@@ -169,20 +169,19 @@ export default function IndiaMap() {
 
             {/* DESKTOP STATS */}
             <motion.div
+              key={`desktop-stats-${language}`}
               variants={revealVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={sectionViewport}
+              animate="visible"
               className="relative mt-10 hidden h-[660px] lg:block"
             >
               {localizedStats.map((stat) => (
-                <div key={stat.label} className="absolute">
+                <div key={stat.value} className="absolute">
                   <StatCircle stat={stat} />
                 </div>
               ))}
             </motion.div>
           </motion.div>
-
           {/* RIGHT */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}

@@ -151,7 +151,7 @@ export default function Navbar() {
           className="
             hidden
             items-center
-            space-x-4
+            space-x-7
             md:flex
           "
         >
@@ -171,7 +171,7 @@ export default function Navbar() {
                 className={`
                   relative
 
-                  px-2
+                  px-3
                   py-1
 
                   text-[15px]

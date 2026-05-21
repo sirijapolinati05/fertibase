@@ -45,8 +45,6 @@ const productCategories = [
 
 const premiumCards = Array.from({ length: 3 }, (_, index) => ({
   id: index,
-  title: "CORBOMIN Organic Fertilizer",
-  subtitle: "Liquid Fermented Formula",
   rating: 4.8,
   reviews: 240,
   tags: ["Organic", "Liquid", "All Crops"],
@@ -97,6 +95,12 @@ export default function PremiumProductSection() {
     },
   ];
 
+  const localizedPremiumCards = premiumCards.map((card) => ({
+    ...card,
+    title: t("premium_card_title", "CORBOMIN Organic Fertilizer"),
+    subtitle: t("premium_card_subtitle", "Liquid Fermented Formula"),
+  }));
+
   return (
     <section className="bg-[#fff3eb] px-4 pb-10 pt-2 sm:px-5 md:px-8">
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
@@ -143,7 +147,7 @@ export default function PremiumProductSection() {
           <div className="absolute left-1/2 top-[90px] z-10 h-[336.95px] w-[336.95px] -translate-x-1/2 overflow-hidden rounded-full">
             <img
               src={PremiumProductImage}
-              alt="Premium product range"
+              alt={t("premium_visual_alt", "Premium product range")}
               className="h-full w-full object-cover"
             />
           </div>
@@ -182,7 +186,7 @@ export default function PremiumProductSection() {
 
           <img
             src={PremiumProductImage}
-            alt="Premium product range"
+            alt={t("premium_visual_alt", "Premium product range")}
             className="h-[220px] w-[220px] rounded-full border-4 border-white/70 object-cover shadow-[0_18px_36px_rgba(74,46,32,0.12)] sm:h-[240px] sm:w-[240px]"
           />
 
@@ -222,7 +226,7 @@ export default function PremiumProductSection() {
 
         <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 xl:grid-cols-3">
 
-          {premiumCards.map((card, index) => (
+          {localizedPremiumCards.map((card, index) => (
             <motion.article
               key={card.id}
               initial={{ opacity: 0, y: 24 }}
@@ -256,14 +260,11 @@ export default function PremiumProductSection() {
                 <div className="relative mt-5">
 
                   <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
-                    {t("premium_card_title", card.title)}
+                    {card.title}
                   </h3>
 
                   <p className="mt-1 text-[14px] text-[#3f312a] sm:text-[15px]">
-                    {t(
-                      "premium_card_subtitle",
-                      card.subtitle
-                    )}
+                    {card.subtitle}
                   </p>
 
                   <div className="mt-3 flex items-center gap-2 text-[15px] text-[#666666]">

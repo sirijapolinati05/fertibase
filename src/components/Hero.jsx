@@ -58,11 +58,20 @@ export default function Hero() {
           className="relative z-10 flex min-h-[100svh] items-start justify-center px-4 pt-36 text-center sm:px-6 sm:pt-32 md:pt-36"
         >
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 py-8 sm:px-8 md:px-10">
-            <h1 className="max-w-[13ch] text-[38px] font-semibold leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.28)] sm:text-[52px] sm:leading-[1.06] md:text-[64px]">
-              <span className="block">
+            <h1
+              className="max-w-[16ch] text-[34px] font-semibold leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.28)] sm:text-[52px] sm:leading-[1.06] md:text-[64px]"
+              style={{ fontFamily: "Lora, Georgia, 'Times New Roman', serif" }}
+            >
+              <span
+                className="block whitespace-nowrap"
+                style={{ fontFamily: "Lora, Georgia, 'Times New Roman', serif" }}
+              >
                 {t("hero_title_line_1", "The Foundation of")}
               </span>
-              <span className="mt-2 block">
+              <span
+                className="mt-2 block whitespace-nowrap"
+                style={{ fontFamily: "Lora, Georgia, 'Times New Roman', serif" }}
+              >
                 {t("hero_title_line_2", "Fertile Fields")}
               </span>
             </h1>

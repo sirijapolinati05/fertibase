@@ -3,8 +3,94 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock, Calendar } from "lucide-react";
 import supabase from "../lib/supabaseClient";
+import { useTranslation } from "../i18n/useTranslation";
+
+const CONTACT_UI_COPY = {
+  te: {
+    contact_heading_full: "FertiBase ను సంప్రదించండి",
+    contact_subtitle:
+      "మీ ఎదుగుదలకు మేము తోడుంటాం. ఉత్పత్తి వివరాలు, భాగస్వామ్యాలు లేదా సహకారాల కోసం ఎప్పుడైనా మమ్మల్ని సంప్రదించండి.",
+    contact_phone: "ఫోన్",
+    contact_email: "ఇమెయిల్",
+    contact_head_office: "ప్రధాన కార్యాలయం",
+    contact_head_office_address: "సై. నం. 81, సుల్తాన్పూర్, హైదరాబాద్, భారతదేశం",
+    contact_working_hours: "పని వేళలు",
+    contact_working_hours_value: "సోమ - శని, ఉదయం 9:00 - సాయంత్రం 6:00",
+    contact_send_message: "మాకు సందేశం పంపండి",
+    contact_form_full_name: "పూర్తి పేరు",
+    contact_form_full_name_placeholder: "మీ పూర్తి పేరు",
+    contact_form_email: "ఇమెయిల్ చిరునామా",
+    contact_form_phone: "ఫోన్ నంబర్",
+    contact_form_phone_placeholder: "10 అంకెల మొబైల్ నంబర్",
+    contact_form_phone_title: "సరైన 10 అంకెల ఫోన్ నంబర్ నమోదు చేయండి",
+    contact_form_message: "సందేశం",
+    contact_form_message_placeholder: "మీ సందేశాన్ని ఇక్కడ రాయండి...",
+    contact_form_sending: "పంపుతోంది...",
+    contact_form_submit: "సందేశం పంపండి",
+    contact_form_error: "సందేశం పంపడంలో విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    contact_schedule_heading: "ఒక సమావేశం షెడ్యూల్ చేయండి",
+    contact_schedule_subtitle:
+      "మీకు అనుకూలమైన సమయాన్ని బుక్ చేసుకోండి. మా వ్యవసాయ నిపుణులు మీకు సహాయం చేయడానికి సిద్ధంగా ఉన్నారు.",
+    contact_schedule_cta: "ఇప్పుడే సమావేశం బుక్ చేయండి",
+  },
+  hi: {
+    contact_heading_full: "FertiBase से संपर्क करें",
+    contact_subtitle:
+      "हम आपकी बेहतर वृद्धि में मदद के लिए यहां हैं। उत्पाद जानकारी, सहयोग या साझेदारी के लिए कभी भी हमसे संपर्क करें।",
+    contact_phone: "फ़ोन",
+    contact_email: "ईमेल",
+    contact_head_office: "मुख्य कार्यालय",
+    contact_head_office_address: "सर्वे नं. 81, सुल्तानपुर, हैदराबाद, भारत",
+    contact_working_hours: "कार्य समय",
+    contact_working_hours_value: "सोम - शनि, सुबह 9:00 - शाम 6:00",
+    contact_send_message: "हमें संदेश भेजें",
+    contact_form_full_name: "पूरा नाम",
+    contact_form_full_name_placeholder: "अपना पूरा नाम",
+    contact_form_email: "ईमेल पता",
+    contact_form_phone: "फोन नंबर",
+    contact_form_phone_placeholder: "10 अंकों का मोबाइल नंबर",
+    contact_form_phone_title: "मान्य 10 अंकों का फोन नंबर दर्ज करें",
+    contact_form_message: "संदेश",
+    contact_form_message_placeholder: "अपना संदेश यहां लिखें...",
+    contact_form_sending: "भेजा जा रहा है...",
+    contact_form_submit: "संदेश भेजें",
+    contact_form_error: "संदेश भेजा नहीं जा सका। कृपया फिर से प्रयास करें।",
+    contact_schedule_heading: "एक मीटिंग शेड्यूल करें",
+    contact_schedule_subtitle:
+      "अपने लिए सबसे उपयुक्त समय बुक करें। हमारे कृषि विशेषज्ञ आपकी मदद के लिए तैयार हैं।",
+    contact_schedule_cta: "अभी मीटिंग बुक करें",
+  },
+  mr: {
+    contact_heading_full: "FertiBase शी संपर्क साधा",
+    contact_subtitle:
+      "तुमच्या चांगल्या वाढीसाठी आम्ही मदतीला आहोत. उत्पादन चौकशी, सहकार्य किंवा भागीदारीसाठी कधीही आमच्याशी संपर्क साधा.",
+    contact_phone: "फोन",
+    contact_email: "ईमेल",
+    contact_head_office: "मुख्य कार्यालय",
+    contact_head_office_address: "सर्वे क्र. 81, सुलतानपूर, हैदराबाद, भारत",
+    contact_working_hours: "कामाचे तास",
+    contact_working_hours_value: "सोम - शनि, सकाळी 9:00 - संध्याकाळी 6:00",
+    contact_send_message: "आम्हाला संदेश पाठवा",
+    contact_form_full_name: "पूर्ण नाव",
+    contact_form_full_name_placeholder: "तुमचे पूर्ण नाव",
+    contact_form_email: "ईमेल पत्ता",
+    contact_form_phone: "फोन नंबर",
+    contact_form_phone_placeholder: "10 अंकी मोबाईल नंबर",
+    contact_form_phone_title: "वैध 10 अंकी फोन नंबर टाका",
+    contact_form_message: "संदेश",
+    contact_form_message_placeholder: "तुमचा संदेश येथे लिहा...",
+    contact_form_sending: "पाठवत आहे...",
+    contact_form_submit: "संदेश पाठवा",
+    contact_form_error: "संदेश पाठवता आला नाही. कृपया पुन्हा प्रयत्न करा.",
+    contact_schedule_heading: "एक बैठक शेड्यूल करा",
+    contact_schedule_subtitle:
+      "तुमच्यासाठी योग्य वेळ बुक करा. आमचे कृषी तज्ज्ञ मदतीसाठी तयार आहेत.",
+    contact_schedule_cta: "आत्ताच बैठक बुक करा",
+  },
+};
 
 export default function Contact() {
+  const { language, t } = useTranslation();
   const [showScheduling, setShowScheduling] = useState(false);
   const [formData, setFormData] = useState({
   full_name: "",
@@ -13,6 +99,14 @@ export default function Contact() {
   message: "",
 });
 const [submitting, setSubmitting] = useState(false);
+
+const contactText = (key, fallback = "") =>
+  CONTACT_UI_COPY[language]?.[key] || t(key, fallback);
+
+const contactHeadingText =
+  language === "en"
+    ? null
+    : contactText("contact_heading_full", "Contact FertiBase");
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -58,8 +152,13 @@ const handleSubmit = async (e) => {
     // 4. Open Schedule Meeting (Calendly)
     setShowScheduling(true);
   } catch (err) {
-    console.error(err);
-    alert("Failed to send message. Please try again.");
+      console.error(err);
+      alert(
+      contactText(
+        "contact_form_error",
+        "Failed to send message. Please try again."
+      )
+    );
   } finally {
     setSubmitting(false);
   }
@@ -76,11 +175,20 @@ const handleSubmit = async (e) => {
         className="text-center mb-16"
       >
         <h1 className="text-5xl md:text-6xl font-extrabold text-[#6B412E]">
-          Contact <span className="text-primary-600">FertiBase</span>
+          {language === "en" ? (
+            <>
+              {t("contact_heading_prefix", "Contact")}{" "}
+              <span className="text-primary-600">FertiBase</span>
+            </>
+          ) : (
+            contactHeadingText
+          )}
         </h1>
         <p className="text-lg text-text-base mt-4 max-w-2xl mx-auto font-medium">
-          We're here to help you grow better — reach out to us anytime for product
-          inquiries, collaborations, or partnerships.
+          {contactText(
+            "contact_subtitle",
+            "We're here to help you grow better - reach out to us anytime for product inquiries, collaborations, or partnerships."
+          )}
         </p>
       </motion.div>
 
@@ -126,7 +234,7 @@ const handleSubmit = async (e) => {
                 <Phone size={22} />
               </div>
               <div>
-                <h4 className="font-semibold">Phone</h4>
+                <h4 className="font-semibold">{contactText("contact_phone", "Phone")}</h4>
                 <p>8977729535</p>
               </div>
             </li>
@@ -146,7 +254,7 @@ const handleSubmit = async (e) => {
                 <Mail size={22} />
               </div>
               <div>
-                <h4 className="font-semibold">Email</h4>
+                <h4 className="font-semibold">{contactText("contact_email", "Email")}</h4>
                 <p>info@fertibase.in , sales@fertibase.in</p>
               </div>
             </li>
@@ -166,8 +274,15 @@ const handleSubmit = async (e) => {
                 <MapPin size={22} />
               </div>
               <div>
-                <h4 className="font-semibold">Head Office</h4>
-                <p>Sy No. 81, Sultanpur, Hyderabad, India</p>
+                <h4 className="font-semibold">
+                  {contactText("contact_head_office", "Head Office")}
+                </h4>
+                <p>
+                  {contactText(
+                    "contact_head_office_address",
+                    "Sy No. 81, Sultanpur, Hyderabad, India"
+                  )}
+                </p>
               </div>
             </li>
             <li className="
@@ -186,8 +301,15 @@ const handleSubmit = async (e) => {
                 <Clock size={22} />
               </div>
               <div>
-                <h4 className="font-semibold">Working Hours</h4>
-                <p>Mon – Sat, 9:00 AM – 6:00 PM</p>
+                <h4 className="font-semibold">
+                  {contactText("contact_working_hours", "Working Hours")}
+                </h4>
+                <p>
+                  {contactText(
+                    "contact_working_hours_value",
+                    "Mon - Sat, 9:00 AM - 6:00 PM"
+                  )}
+                </p>
               </div>
             </li>
           </ul>
@@ -232,18 +354,18 @@ const handleSubmit = async (e) => {
   pointer-events-none
 " />
           <h2 className="text-2xl font-bold text-primary-700 mb-8">
-            Send Us a Message
+            {contactText("contact_send_message", "Send Us a Message")}
           </h2>
 
           <div className="space-y-6">
   {/* Full Name */}
 <div>
   <label className="block text-sm font-medium text-text-base mb-2">
-    Full Name
+    {contactText("contact_form_full_name", "Full Name")}
   </label>
   <input
     type="text"
-    placeholder="John Doe"
+    placeholder={contactText("contact_form_full_name_placeholder", "John Doe")}
     required
     value={formData.full_name}
     onChange={(e) =>
@@ -265,11 +387,11 @@ const handleSubmit = async (e) => {
 {/* Email */}
 <div>
   <label className="block text-sm font-medium text-text-base mb-2">
-    Email Address
+    {contactText("contact_form_email", "Email Address")}
   </label>
   <input
     type="email"
-    placeholder="john@example.com"
+    placeholder={t("contact_form_email_placeholder", "john@example.com")}
     required
     value={formData.email}
     onChange={(e) =>
@@ -291,15 +413,21 @@ const handleSubmit = async (e) => {
 {/* Phone Number */}
 <div>
   <label className="block text-sm font-medium text-text-base mb-2">
-    Phone Number
+    {contactText("contact_form_phone", "Phone Number")}
   </label>
   <input
     type="tel"
-    placeholder="10-digit mobile number"
+    placeholder={contactText(
+      "contact_form_phone_placeholder",
+      "10-digit mobile number"
+    )}
     required
     inputMode="numeric"
     pattern="[0-9]{10}"
-    title="Enter a valid 10-digit phone number"
+    title={contactText(
+      "contact_form_phone_title",
+      "Enter a valid 10-digit phone number"
+    )}
     value={formData.phone}
     onChange={(e) =>
       setFormData({ ...formData, phone: e.target.value })
@@ -320,11 +448,14 @@ const handleSubmit = async (e) => {
 {/* Message */}
 <div>
   <label className="block text-sm font-medium text-text-base mb-2">
-    Message
+    {contactText("contact_form_message", "Message")}
   </label>
   <textarea
     rows="5"
-    placeholder="Write your message here..."
+    placeholder={contactText(
+      "contact_form_message_placeholder",
+      "Write your message here..."
+    )}
     required
     value={formData.message}
     onChange={(e) =>
@@ -352,7 +483,9 @@ const handleSubmit = async (e) => {
   active:scale-[0.98]
 "
 >
-  {submitting ? "Sending..." : "Send Message"}
+  {submitting
+    ? contactText("contact_form_sending", "Sending...")
+    : contactText("contact_form_submit", "Send Message")}
 </motion.button>
 </div>
         </motion.form>
@@ -377,11 +510,14 @@ const handleSubmit = async (e) => {
 "
     >
       <h2 className="text-3xl md:text-4xl font-extrabold text-[#6B412E] mb-4">
-        Schedule a Meeting
+        {contactText("contact_schedule_heading", "Schedule a Meeting")}
       </h2>
 
       <p className="text-black text-lg font-medium mb-8 max-w-2xl mx-auto">
-        Book a time that works best for you. Our agricultural experts are ready to help.
+        {contactText(
+          "contact_schedule_subtitle",
+          "Book a time that works best for you. Our agricultural experts are ready to help."
+        )}
       </p>
 
       <div className="flex justify-center">
@@ -400,7 +536,7 @@ const handleSubmit = async (e) => {
           "
         >
           <Calendar className="h-6 w-6" />
-          Schedule Meeting Now
+          {contactText("contact_schedule_cta", "Schedule Meeting Now")}
         </button>
       </div>
     </motion.div>
