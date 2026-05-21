@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Loader2 } from "lucide-react";
@@ -11,24 +11,23 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const { t, td } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const data = await productService.getAllProducts();
+        const data = await productService.getProducts();
         if (data && data.length > 0) {
           setProducts(data);
         } else {
-          // Use fallback data if API returns empty
-          setProducts(fallbackProducts);
+        setProducts([]);
         }
         setError(null);
       } catch (err) {
         console.error("Failed to fetch products:", err);
-        // Use fallback data on error
-        setProducts(fallbackProducts);
+        setProducts([]);
         setError(null);
       } finally {
         setLoading(false);
@@ -38,10 +37,20 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const categories = useMemo(() => {
+    const set = new Set(products.map(p => (p.category || "").trim()));
+    return Array.from(set).filter(Boolean);
+  }, [products]);
+
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.category?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" ||
+      (product.category || "").toLowerCase().includes(selectedCategory.toLowerCase());
+    return matchesSearch && matchesCategory;
+  });
 
   if (loading) {
     return (
@@ -67,10 +76,7 @@ export default function ProductsPage() {
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-primary-700 mb-4">
-            {t("products_page_heading_our", "Our")}{" "}
-            <span className="text-primary-600">
-              {t("products_page_heading_products", "Products")}
-            </span>
+            {t("products_page_heading_our", "Our")} <span className="text-primary-600">{t("products_page_heading_products", "Products")}</span>
           </h1>
           <p className="text-xl text-text-base max-w-3xl mx-auto font-medium">
             {t(
@@ -91,15 +97,28 @@ export default function ProductsPage() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-primary-500" size={20} />
             <input
               type="text"
-              placeholder={t(
-                "products_page_search_placeholder",
-                "Search products..."
-              )}
+              placeholder={t("products_page_search_placeholder", "Search products...")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-primary-200 shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-600 outline-none bg-white text-text-base placeholder:text-primary-600 hover:border-primary-300 transition-colors"
             />
           </div>
+        </motion.div>
+
+        {/* Category Filter */}
+        <motion.div className="mb-4 flex justify-center">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-4 py-2 rounded border border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          >
+            <option value="All">All Categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
         </motion.div>
 
         {/* Products Grid */}
@@ -126,24 +145,16 @@ export default function ProductsPage() {
                     {td("product", product.id, "name", product.name)}
                   </h3>
                   <p className="text-sm text-primary-600 mb-3 font-medium">
-                    {td(
-                      "product",
-                      product.id,
-                      "category",
-                      product.category
-                    )}
+                    {td("product", product.id, "category", product.category)}
                   </p>
                   <p className="text-text-base text-sm line-clamp-3 font-medium">
                     {td(
                       "product",
                       product.id,
                       "description",
-                      product.desc ||
-                        product.overview ||
-                        product.description
+                      product.desc || product.overview || product.description
                     )}
                   </p>
-
                 </div>
               </Link>
             </motion.div>
@@ -153,10 +164,7 @@ export default function ProductsPage() {
         {filteredProducts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-text-base text-lg font-semibold">
-              {t(
-                "products_page_no_results",
-                "No products found matching your search."
-              )}
+              {t("products_page_no_results", "No products found matching your search.")}
             </p>
           </div>
         )}
@@ -164,4 +172,3 @@ export default function ProductsPage() {
     </div>
   );
 }
-
