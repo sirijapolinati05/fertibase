@@ -3,6 +3,11 @@ import { ArrowRight, CalendarDays, Leaf, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import PremiumProductImage from "../assets/Premium-Product.png";
 import CorbominImage from "../assets/Corbomin.png";
+import Circle1 from "../assets/circle-1.png";
+import Circle2 from "../assets/circle-2.png";
+import Circle3 from "../assets/circle-3.png";
+import Circle4 from "../assets/circle-4.png";
+import Circle5 from "../assets/circle-5.png";
 import { useTranslation } from "../i18n/useTranslation";
 
 const productCategories = [
@@ -12,6 +17,7 @@ const productCategories = [
     label: ["Beneficial", "Element", "Fertilizer"],
     className: "left-[0px] top-[220px]",
     routeCategory: "Beneficial Element Fertilizer",
+    image: null, // filled in component with Circle1
   },
 
   // RIGHT TOP CIRCLE
@@ -19,6 +25,7 @@ const productCategories = [
     label: ["Biofertilizers"],
     className: "right-[0px] top-[220px]",
     routeCategory: "Biofertilizer",
+    image: null,
   },
 
   // LOWER LEFT
@@ -26,22 +33,27 @@ const productCategories = [
     label: ["Straight", "Micronutrient"],
     className: "left-[85px] top-[380px]",
     routeCategory: "Straight Micronutrient",
+    image: null,
   },
 
   // LOWER RIGHT
   {
-    label: ["Organic", "Biofertilizers"],
+    label: ["Liquid", "Fertilizer"],
     className: "right-[85px] top-[380px]",
-    routeCategory: "Organic Biofertilizer",
+    routeCategory: "Liquid Fertilizer",
+    image: null,
   },
 
   // BOTTOM CENTER
   {
-    label: ["Liquid", "Fertilizer"],
+    label: ["Organic", "Biofertilizers"],
     className: "left-1/2 top-[450px] -translate-x-1/2",
-    routeCategory: "Liquid Fertilizer",
+    routeCategory: "Organic Biofertilizer",
+    image: null,
   },
 ];
+
+const circleImages = [Circle1, Circle2, Circle3, Circle4, Circle5];
 
 const premiumCards = Array.from({ length: 3 }, (_, index) => ({
   id: index,
@@ -67,10 +79,12 @@ export default function PremiumProductSection() {
         t("premium_category_beneficial_2", "Element"),
         t("premium_category_beneficial_3", "Fertilizer"),
       ],
+      image: circleImages[0],
     },
     {
       ...productCategories[1],
       label: [t("premium_category_bio_1", "Biofertilizers")],
+      image: circleImages[1],
     },
     {
       ...productCategories[2],
@@ -78,20 +92,23 @@ export default function PremiumProductSection() {
         t("premium_category_straight_1", "Straight"),
         t("premium_category_straight_2", "Micronutrient"),
       ],
+      image: circleImages[2],
     },
     {
       ...productCategories[3],
       label: [
-        t("premium_category_organic_1", "Organic"),
-        t("premium_category_organic_2", "Biofertilizers"),
+        t("premium_category_liquid_1", "Liquid"),
+        t("premium_category_liquid_2", "Fertilizer"),
       ],
+      image: circleImages[3],
     },
     {
       ...productCategories[4],
       label: [
-        t("premium_category_liquid_1", "Liquid"),
-        t("premium_category_liquid_2", "Fertilizer"),
+        t("premium_category_organic_1", "Organic"),
+        t("premium_category_organic_2", "Biofertilizers"),
       ],
+      image: circleImages[4],
     },
   ];
 
@@ -167,9 +184,16 @@ export default function PremiumProductSection() {
             >
               <Link
                 to={`/product?category=${encodeURIComponent(item.routeCategory)}`}
-                className="flex h-[153.31px] w-[153.31px] items-center justify-center rounded-full bg-[#c7eec5] px-3 text-center text-[14px] font-normal leading-[1.1] text-black transition-transform duration-300 hover:scale-[1.03]"
+                className="relative flex h-[153.31px] w-[153.31px] overflow-hidden rounded-full transition-transform duration-300 hover:scale-[1.03] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
               >
-                <div className="flex max-w-[92px] flex-col items-center justify-center">
+                {/* Photo fills the circle */}
+                <img
+                  src={item.image}
+                  alt={item.label.join(" ")}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                {/* Green label overlay at the bottom */}
+                <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-[#c7eec5]/90 px-2 py-[10px] text-center text-[13px] font-normal leading-[1.15] text-[#1a1a1a]">
                   {item.label.map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -195,11 +219,16 @@ export default function PremiumProductSection() {
               <Link
                 key={item.label.join("-")}
                 to={`/product?category=${encodeURIComponent(item.routeCategory)}`}
-                className={`flex h-[148px] w-[148px] items-center justify-center rounded-full border border-white/60 bg-[linear-gradient(135deg,#d4f3c8_0%,#c0ecbc_100%)] px-4 text-center text-[15px] font-medium leading-[1.2] text-[#1d241d] shadow-[0_14px_30px_rgba(115,165,99,0.16)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(115,165,99,0.22)] ${
+                className={`relative h-[148px] w-[148px] overflow-hidden rounded-full shadow-[0_14px_30px_rgba(115,165,99,0.18)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(115,165,99,0.26)] ${
                   index === productCategories.length - 1 ? "col-span-2" : ""
                 }`}
               >
-                <div className="flex max-w-[9ch] flex-col items-center justify-center">
+                <img
+                  src={item.image}
+                  alt={item.label.join(" ")}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-[#c7eec5]/90 px-2 py-[9px] text-center text-[13px] font-medium leading-[1.15] text-[#1a1a1a]">
                   {item.label.map((line) => (
                     <span key={line} className="block">
                       {line}

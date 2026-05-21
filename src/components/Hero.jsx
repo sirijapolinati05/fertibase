@@ -8,7 +8,7 @@ import { LatestUpdateBar } from "./LatestUpdateBar";
 import Hero1 from "../assets/Hero1.jpeg";
 import Hero2 from "../assets/Hero2.jpeg";
 import Hero3 from "../assets/Hero3.png";
-import BannerImage from "../assets/Banner.jpeg";
+
 import { useTranslation } from "../i18n/useTranslation";
 
 export default function Hero() {
@@ -105,15 +105,7 @@ export default function Hero() {
       <div className="relative z-30 w-full bg-soil-light">
         <About />
         <PremiumProductSection />
-        <section className="bg-[#fff3eb] pb-8 md:pb-12">
-          <div className="overflow-hidden">
-            <img
-              src={BannerImage}
-              alt="Fertibase banner"
-              className="h-auto w-full object-cover"
-            />
-          </div>
-        </section>
+        
         <IndiaMap />
         <FarmerStories />
       </div>
