@@ -69,6 +69,7 @@ export default function ApplyForm({ close, jobId, job }) {
       setOtpCooldown((prev) => prev - 1);
     }, 1000);
 
+  
     return () => window.clearTimeout(timer);
   }, [otpCooldown]);
 
@@ -81,6 +82,17 @@ export default function ApplyForm({ close, jobId, job }) {
       setOtp("");
     }
   };
+
+  // Helper to localize job fields
+  const localizeJobField = (field, fallback = "") =>
+    getLocalizedEntityField({
+      item: job,
+      field,
+      language,
+      td,
+      namespace: "career",
+      fallback,
+    });
 
   const showToast = (message, type = "error") => {
     setToast({ message, type });
@@ -591,6 +603,8 @@ function Label({ children, required = false }) {
   );
 }
 
+
+  
 function Input({ label, required = false, ...props }) {
   return (
     <div>
@@ -598,17 +612,9 @@ function Input({ label, required = false, ...props }) {
       <input
         {...props}
         required={required}
-        className="w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-lg text-[#1c2537] outline-none transition placeholder:text-[#94a3b8] focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
+        className="w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-lg text-[#1c2537] outline-none placeholder:text-[#94a3b8] focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
       />
     </div>
   );
 }
-  const localizeJobField = (field, fallback = "") =>
-    getLocalizedEntityField({
-      item: job,
-      field,
-      language,
-      td,
-      namespace: "career",
-      fallback,
-    });
+

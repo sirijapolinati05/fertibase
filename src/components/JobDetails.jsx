@@ -20,6 +20,26 @@ export default function JobDetails() {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
+  // Localization helpers scoped to JobDetails component
+  const localizeJobField = (field, fallback = "") =>
+    getLocalizedEntityField({
+      item: job,
+      field,
+      language,
+      td,
+      namespace: "career",
+      fallback,
+    });
+
+  const localizeJobList = (field, fallback = []) =>
+    getLocalizedEntityList({
+      item: job,
+      field,
+      language,
+      td,
+      namespace: "career",
+      fallback,
+    });
   useEffect(() => {
     const fetchJob = async () => {
       try {
@@ -253,22 +273,4 @@ function TagList({ items }) {
     </div>
   );
 }
-  const localizeJobField = (field, fallback = "") =>
-    getLocalizedEntityField({
-      item: job,
-      field,
-      language,
-      td,
-      namespace: "career",
-      fallback,
-    });
 
-  const localizeJobList = (field, fallback = []) =>
-    getLocalizedEntityList({
-      item: job,
-      field,
-      language,
-      td,
-      namespace: "career",
-      fallback,
-    });
