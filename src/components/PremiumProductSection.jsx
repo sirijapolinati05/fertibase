@@ -192,8 +192,8 @@ export default function PremiumProductSection() {
                   alt={item.label.join(" ")}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-                {/* Green label overlay at the bottom */}
-                <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-[#c7eec5]/90 px-2 py-[10px] text-center text-[13px] font-normal leading-[1.15] text-[#1a1a1a]">
+                {/* Glassy label overlay at the bottom */}
+                <div className="absolute bottom-0 left-0 right-0 flex h-[64px] flex-col items-center justify-center border-t border-white/20 bg-transparent px-2 text-center text-[13px] font-light leading-[1.15] text-white backdrop-blur-md">
                   {item.label.map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -228,7 +228,7 @@ export default function PremiumProductSection() {
                   alt={item.label.join(" ")}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-                <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center bg-[#c7eec5]/90 px-2 py-[9px] text-center text-[13px] font-medium leading-[1.15] text-[#1a1a1a]">
+                <div className="absolute bottom-0 left-0 right-0 flex h-[64px] flex-col items-center justify-center border-t border-white/20 bg-transparent px-2 text-center text-[13px] font-light leading-[1.15] text-white backdrop-blur-md">
                   {item.label.map((line) => (
                     <span key={line} className="block">
                       {line}
