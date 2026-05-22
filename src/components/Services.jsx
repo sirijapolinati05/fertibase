@@ -91,7 +91,10 @@ export default function Services() {
             <p className="text-lg max-w-2xl mx-auto mb-8">
               Join us in redefining agriculture with innovation and sustainability. Together, we can grow a greener future.
             </p>
-            <Link to="/contactus" className="inline-block bg-white text-primary-700 font-semibold px-8 py-3 rounded-full shadow-md hover:shadow-lg hover:bg-primary-50 transition-all duration-300">
+            <Link
+              to="/contactus"
+              className="inline-block rounded-full bg-white px-8 py-3 font-semibold text-primary-700 shadow-md transition-all duration-300 hover:bg-white hover:text-primary-700 hover:shadow-lg"
+            >
               Get In Touch
             </Link>
           </div>

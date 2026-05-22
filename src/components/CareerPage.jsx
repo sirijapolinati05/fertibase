@@ -236,6 +236,8 @@ export default function CareerPage() {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [bgIndex, setBgIndex] = useState(0);
+  const [activeProcessStep, setActiveProcessStep] = useState(0);
+  const [activeBenefit, setActiveBenefit] = useState(null);
 
   const careerText = (key, fallback = "") =>
     CAREER_UI_COPY[language]?.[key] || t(key, fallback);
@@ -536,6 +538,7 @@ export default function CareerPage() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {BENEFITS.map((benefit, index) => {
               const Icon = benefit.icon;
+              const isActive = activeBenefit === index;
               return (
                 <motion.div
                   key={benefit.title}
@@ -543,15 +546,51 @@ export default function CareerPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="rounded-xl border border-primary-100 bg-white p-8 shadow-lg transition-shadow hover:shadow-xl"
+                  onClick={() => setActiveBenefit(index)}
+                  className={`group relative cursor-pointer overflow-hidden rounded-xl border p-8 shadow-lg transition-all duration-300 hover:shadow-xl ${
+                    isActive
+                      ? "border-[#8b6c5c] bg-white"
+                      : "border-primary-100 bg-white hover:border-[#8b6c5c]"
+                  }`}
                 >
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100">
-                    <Icon className="h-7 w-7 text-primary-600" />
+                  <div
+                    className={`pointer-events-none absolute left-7 top-7 h-14 w-14 rounded-full bg-[#8b6c5c] transition-all duration-700 ease-out ${
+                      isActive
+                        ? "scale-[22] opacity-100"
+                        : "scale-0 opacity-0 group-hover:scale-[22] group-hover:opacity-100"
+                    }`}
+                  />
+                  <div
+                    className={`relative z-10 mb-4 flex h-14 w-14 items-center justify-center rounded-full transition-colors duration-300 ${
+                      isActive
+                        ? "bg-white/20"
+                        : "bg-primary-100 group-hover:bg-white/20"
+                    }`}
+                  >
+                    <Icon
+                      className={`h-7 w-7 transition-colors duration-300 ${
+                        isActive
+                          ? "text-white"
+                          : "text-primary-600 group-hover:text-white"
+                      }`}
+                    />
                   </div>
-                  <h3 className="mb-3 text-2xl font-bold text-text-base">
+                  <h3
+                    className={`relative z-10 mb-3 text-2xl font-bold transition-colors duration-300 ${
+                      isActive
+                        ? "text-white"
+                        : "text-text-base group-hover:text-white"
+                    }`}
+                  >
                     {careerText(`career_benefit_title_${index}`, benefit.title)}
                   </h3>
-                  <p className="leading-relaxed text-text-light">
+                  <p
+                    className={`relative z-10 leading-relaxed transition-colors duration-300 ${
+                      isActive
+                        ? "text-[#f8eee8]"
+                        : "text-text-light group-hover:text-[#f8eee8]"
+                    }`}
+                  >
                     {careerText(`career_benefit_description_${index}`, benefit.description)}
                   </p>
                 </motion.div>
@@ -738,7 +777,7 @@ export default function CareerPage() {
         </div>
       </section>
 
-      <section className="bg-soil-light py-20">
+      <section className="overflow-hidden bg-[linear-gradient(180deg,#fbf6f0_0%,#fffdfa_48%,#f8efe4_100%)] py-24">
         <div className="mx-auto max-w-7xl px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -747,42 +786,72 @@ export default function CareerPage() {
             viewport={{ once: true }}
             className="mb-12 text-center"
           >
-            <h2 className="mb-4 text-4xl font-bold text-[#6B412E] md:text-5xl">
+            <h2 className="mb-5 text-4xl font-bold text-[#6B412E] md:text-5xl">
               {processHeadingText}
             </h2>
-            <p className="mx-auto max-w-3xl text-xl text-text-light">
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[#7b6658] md:text-xl">
               {careerText("career_process_subtitle", "Simple steps to join the FertiBase team")}
             </p>
           </motion.div>
 
-          <div className="relative grid grid-cols-1 gap-8 md:grid-cols-4">
-            {APPLICATION_STEPS.map((item, index) => (
-              <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="relative text-center"
-              >
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary-100">
-                  <span className="text-2xl font-bold text-primary-600">{item.step}</span>
-                </div>
+          <div className="relative rounded-[2rem] border border-[#ead8c8] bg-white/75 px-6 py-10 shadow-[0_30px_80px_rgba(107,65,46,0.08)] backdrop-blur-sm md:px-10 md:py-14">
+            <div className="absolute left-[12.5%] right-[12.5%] top-[5.25rem] hidden h-0.5 bg-[#ead8c8] xl:block" />
+            <div
+              className="absolute left-[12.5%] top-[5.25rem] hidden h-0.5 bg-[#8a5a3b] transition-all duration-500 xl:block"
+              style={{ width: `${activeProcessStep * 25}%` }}
+            />
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4 xl:gap-0">
+            {APPLICATION_STEPS.map((item, index) => {
+              const isActive = activeProcessStep === index;
+              const isCompleted = index < activeProcessStep;
 
-                <h3 className="mb-2 text-xl font-bold text-text-base">
-                  {careerText(`career_process_title_${index}`, item.title)}
-                </h3>
-                <p className="text-text-light">
-                  {careerText(`career_process_desc_${index}`, item.desc)}
-                </p>
+              return (
+                <motion.div
+                  key={item.step}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="relative text-center xl:px-3"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActiveProcessStep(index)}
+                    className="group mx-auto block"
+                    aria-pressed={isActive}
+                  >
+                    <div
+                      className={`relative mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border text-xl font-bold tracking-[0.06em] transition-all duration-300 ${
+                        isActive
+                          ? "scale-110 border-[#8a5a3b] bg-[#8a5a3b] text-[#fffaf5] shadow-[0_18px_40px_rgba(138,90,59,0.32)]"
+                          : isCompleted
+                            ? "border-[#b88b6e] bg-[#d7b49c] text-white shadow-[0_12px_28px_rgba(184,139,110,0.22)]"
+                            : "border-[#d9c0ae] bg-white text-[#8a5a3b] shadow-[0_10px_24px_rgba(107,65,46,0.10)] group-hover:border-[#b88b6e] group-hover:bg-[#fff7f0]"
+                      }`}
+                    >
+                      <span>{item.step}</span>
+                    </div>
+                  </button>
 
-                {index < APPLICATION_STEPS.length - 1 && (
-                  <div className="absolute top-10 -right-6 hidden items-center justify-center md:flex">
-                    <ArrowRight className="h-8 w-8 text-primary-400" />
-                  </div>
-                )}
-              </motion.div>
-            ))}
+                  <h3
+                    className={`mb-3 text-2xl font-bold transition-colors duration-300 ${
+                      isActive ? "text-[#6B412E]" : "text-[#2f241c]"
+                    }`}
+                  >
+                    {careerText(`career_process_title_${index}`, item.title)}
+                  </h3>
+                  <p
+                    className={`mx-auto max-w-xs text-base leading-8 transition-colors duration-300 ${
+                      isActive ? "text-[#4f3a2e]" : "text-[#6f6156]"
+                    }`}
+                  >
+                    {careerText(`career_process_desc_${index}`, item.desc)}
+                  </p>
+                </motion.div>
+              );
+            })}
+            </div>
+
           </div>
         </div>
       </section>
