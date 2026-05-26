@@ -246,16 +246,24 @@ export default function PremiumProductSection() {
       <div className="mx-auto mt-12 max-w-7xl overflow-hidden md:mt-14">
         <div className="mb-4 flex items-center justify-between px-1 md:hidden">
           <p className="text-sm font-medium text-[#7b4a33]">
+<<<<<<< HEAD
             {t(
               "premium_swipe_more",
               "Swipe to explore more products"
             )}
+=======
+            Swipe to explore more products
+>>>>>>> second-main
           </p>
         </div>
 
         <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 xl:grid-cols-3">
 
+<<<<<<< HEAD
           {localizedPremiumCards.map((card, index) => (
+=======
+          {premiumCards.map((card, index) => (
+>>>>>>> second-main
             <motion.article
               key={card.id}
               initial={{ opacity: 0, y: 24 }}
@@ -274,7 +282,11 @@ export default function PremiumProductSection() {
                 <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
 
                   <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
+<<<<<<< HEAD
                     {t("premium_badge_new", "New")}
+=======
+                    New
+>>>>>>> second-main
                   </span>
 
                   <div className="mx-auto aspect-square w-full overflow-hidden rounded-[14px]">
@@ -313,10 +325,14 @@ export default function PremiumProductSection() {
 
                     <span>|</span>
 
+<<<<<<< HEAD
                     <span>
                       ({card.reviews}{" "}
                       {t("premium_reviews_suffix", "reviews")})
                     </span>
+=======
+                    <span>({card.reviews} reviews)</span>
+>>>>>>> second-main
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -326,6 +342,7 @@ export default function PremiumProductSection() {
                         className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs text-white ${tagStyles[tag]}`}
                       >
                         <Leaf className="h-3 w-3" />
+<<<<<<< HEAD
                         {tag === "Organic"
                           ? t("premium_tag_organic", "Organic")
                           : tag === "Liquid"
@@ -334,6 +351,9 @@ export default function PremiumProductSection() {
                                 "premium_tag_all_crops",
                                 "All Crops"
                               )}
+=======
+                        {tag}
+>>>>>>> second-main
                       </span>
                     ))}
                   </div>
@@ -346,6 +366,7 @@ export default function PremiumProductSection() {
 
                     <div>
                       <p className="text-[11px] leading-none text-[#8f8f8f]">
+<<<<<<< HEAD
                         {t(
                           "premium_application_stage",
                           "Application Stage"
@@ -354,6 +375,13 @@ export default function PremiumProductSection() {
 
                       <p className="mt-1 text-[16px] leading-none text-[#444444]">
                         {t("premium_all_stages", "All Stages")}
+=======
+                        Application Stage
+                      </p>
+
+                      <p className="mt-1 text-[16px] leading-none text-[#444444]">
+                        All Stages
+>>>>>>> second-main
                       </p>
                     </div>
                   </div>
@@ -362,9 +390,13 @@ export default function PremiumProductSection() {
                     to="/product?category=All"
                     className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
                   >
+<<<<<<< HEAD
                     <span>
                       {t("premium_view_details", "View Details")}
                     </span>
+=======
+                    <span>View Details</span>
+>>>>>>> second-main
 
                     <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>

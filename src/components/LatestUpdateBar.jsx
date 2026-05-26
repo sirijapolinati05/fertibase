@@ -23,10 +23,14 @@ export function LatestUpdateBar() {
       : [
           {
             title: "",
+<<<<<<< HEAD
             message: t(
               "website_releasing_soon",
               "This website is releasing soon."
             ),
+=======
+            message: "This website is releasing soon.",
+>>>>>>> second-main
           },
         ];
 
@@ -116,22 +120,30 @@ export function LatestUpdateBar() {
                           text-[#8b3a2a]
                         "
                       >
+<<<<<<< HEAD
                         {td(
                           "latest_update",
                           update.id || idx,
                           "title",
                           update.title
                         )}
+=======
+                        {update.title}
+>>>>>>> second-main
                       </span>
                     )}
 
                     <span className="text-sm sm:text-[15px] font-medium">
+<<<<<<< HEAD
                       {td(
                         "latest_update",
                         update.id || idx,
                         "message",
                         update.message
                       )}
+=======
+                      {update.message}
+>>>>>>> second-main
                     </span>
                   </a>
                 ) : (
@@ -150,22 +162,30 @@ export function LatestUpdateBar() {
                           text-[#8b3a2a]
                         "
                       >
+<<<<<<< HEAD
                         {td(
                           "latest_update",
                           update.id || idx,
                           "title",
                           update.title
                         )}
+=======
+                        {update.title}
+>>>>>>> second-main
                       </span>
                     )}
 
                     <span className="text-sm sm:text-[15px] font-medium">
+<<<<<<< HEAD
                       {td(
                         "latest_update",
                         update.id || idx,
                         "message",
                         update.message
                       )}
+=======
+                      {update.message}
+>>>>>>> second-main
                     </span>
                   </>
                 )}
@@ -187,12 +207,16 @@ export function LatestUpdateBar() {
                         hover:bg-[#643926]
                       "
                     >
+<<<<<<< HEAD
                       {td(
                         "latest_update",
                         update.id || idx,
                         "action_text",
                         update.action_text
                       )}
+=======
+                      {update.action_text}
+>>>>>>> second-main
                     </a>
                   )}
               </div>

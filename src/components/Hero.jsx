@@ -8,13 +8,20 @@ import { LatestUpdateBar } from "./LatestUpdateBar";
 import Hero1 from "../assets/Hero1.jpeg";
 import Hero2 from "../assets/Hero2.jpeg";
 import Hero3 from "../assets/Hero3.png";
+<<<<<<< HEAD
 
 import { useTranslation } from "../i18n/useTranslation";
+=======
+import BannerImage from "../assets/Banner.jpeg";
+>>>>>>> second-main
 
 export default function Hero() {
   const heroImages = [Hero1, Hero2, Hero3];
   const [currentImage, setCurrentImage] = useState(0);
+<<<<<<< HEAD
   const { t } = useTranslation();
+=======
+>>>>>>> second-main
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,6 +65,7 @@ export default function Hero() {
           className="relative z-10 flex min-h-[100svh] items-start justify-center px-4 pt-36 text-center sm:px-6 sm:pt-32 md:pt-36"
         >
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 py-8 sm:px-8 md:px-10">
+<<<<<<< HEAD
             <h1
               className="max-w-[16ch] text-[34px] font-semibold leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.28)] sm:text-[52px] sm:leading-[1.06] md:text-[64px]"
               style={{ fontFamily: "Lora, Georgia, 'Times New Roman', serif" }}
@@ -81,6 +89,15 @@ export default function Hero() {
                 "hero_subtitle_line_1",
                 "Bringing life back to the soil, one microbe at a time."
               )}
+=======
+            <h1 className="max-w-[13ch] text-[38px] font-semibold leading-[1.02] tracking-[-0.03em] text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.28)] sm:text-[52px] sm:leading-[1.06] md:text-[64px]">
+              <span className="block">The Foundation of</span>
+              <span className="mt-2 block">Fertile Fields</span>
+            </h1>
+
+            <p className="mt-5 max-w-[22rem] text-[16px] font-normal leading-[1.5] text-white/95 drop-shadow-[0_8px_24px_rgba(0,0,0,0.24)] sm:mt-6 sm:max-w-3xl sm:text-[20px] sm:leading-[1.4] md:text-[24px] md:leading-[1.35]">
+              Bringing life back to the soil, one microbe at a time.
+>>>>>>> second-main
               <br className="hidden sm:block" />
               {t(
                 "hero_subtitle_line_2",

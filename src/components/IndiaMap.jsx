@@ -40,6 +40,40 @@ const mapVariants = {
   },
 };
 
+const sectionViewport = { once: true, amount: 0.25 };
+
+const revealVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const circleVariants = {
+  hidden: { opacity: 0, scale: 0.88, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const mapVariants = {
+  hidden: { opacity: 0, scale: 0.88, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut", delay: 0.18 },
+  },
+};
+
 const stats = [
   {
     value: "50,000+",
@@ -72,7 +106,11 @@ function StatCircle({ stat }) {
       variants={circleVariants}
       whileHover={{ y: -6, scale: 1.03 }}
       whileTap={{ y: -6, scale: 1.03 }}
+<<<<<<< HEAD
       className={`group relative overflow-hidden rounded-full lg:absolute ${stat.className}`}
+=======
+      className={`group relative overflow-hidden rounded-full ${stat.className}`}
+>>>>>>> second-main
     >
       <img
         src={stat.image}
@@ -93,6 +131,7 @@ function StatCircle({ stat }) {
 }
 
 export default function IndiaMap() {
+<<<<<<< HEAD
   const { language, t } = useTranslation();
 
   const localizedStats = useMemo(
@@ -121,6 +160,17 @@ export default function IndiaMap() {
       }),
     [localizedStats]
   );
+=======
+  const mobileStats = [...stats]
+    .sort((a, b) => {
+      const getSize = (cls) => {
+        const match = cls.match(/h-\[(\d+)/);
+        return match ? Number(match[1]) : 0;
+      };
+
+      return getSize(a.className) - getSize(b.className);
+    });
+>>>>>>> second-main
 
   return (
     <section className="overflow-hidden bg-[#fff3eb] py-8 sm:py-6">
@@ -149,6 +199,7 @@ export default function IndiaMap() {
 
             {/* MOBILE STATS */}
             <motion.div
+<<<<<<< HEAD
               key={`mobile-stats-${language}`}
               variants={revealVariants}
               initial="hidden"
@@ -157,6 +208,16 @@ export default function IndiaMap() {
             >
               {mobileStats.map((stat) => (
                 <div key={stat.value} className="flex justify-center">
+=======
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={sectionViewport}
+              className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden"
+            >
+              {mobileStats.map((stat) => (
+                <div key={stat.label} className="flex justify-center">
+>>>>>>> second-main
                   <StatCircle
                     stat={{
                       ...stat,
@@ -169,6 +230,7 @@ export default function IndiaMap() {
 
             {/* DESKTOP STATS */}
             <motion.div
+<<<<<<< HEAD
               key={`desktop-stats-${language}`}
               variants={revealVariants}
               initial="hidden"
@@ -177,6 +239,16 @@ export default function IndiaMap() {
             >
               {localizedStats.map((stat) => (
                 <div key={stat.value} className="absolute">
+=======
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={sectionViewport}
+              className="relative mt-10 hidden h-[660px] lg:block"
+            >
+              {stats.map((stat) => (
+                <div key={stat.label} className="absolute">
+>>>>>>> second-main
                   <StatCircle stat={stat} />
                 </div>
               ))}

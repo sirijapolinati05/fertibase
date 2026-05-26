@@ -7,8 +7,11 @@ import { useTranslation } from "../i18n/useTranslation";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+<<<<<<< HEAD
   const { language, setLanguage, supportedLanguages, t } =
     useTranslation();
+=======
+>>>>>>> second-main
 
   const location = useLocation();
 
@@ -151,7 +154,11 @@ export default function Navbar() {
           className="
             hidden
             items-center
+<<<<<<< HEAD
             space-x-7
+=======
+            space-x-8
+>>>>>>> second-main
             md:flex
           "
         >
@@ -171,7 +178,11 @@ export default function Navbar() {
                 className={`
                   relative
 
+<<<<<<< HEAD
                   px-3
+=======
+                  px-2
+>>>>>>> second-main
                   py-1
 
                   text-[15px]
@@ -190,7 +201,11 @@ export default function Navbar() {
                 `}
               >
 
+<<<<<<< HEAD
                 {t(link.key)}
+=======
+                {link.name}
+>>>>>>> second-main
 
                 {isActive && (
                   <span
@@ -213,6 +228,7 @@ export default function Navbar() {
             );
           })}
 
+<<<<<<< HEAD
           <label className="sr-only" htmlFor="language-switcher">
             {t("nav_language", "Language")}
           </label>
@@ -230,6 +246,8 @@ export default function Navbar() {
             ))}
           </select>
 
+=======
+>>>>>>> second-main
         </div>
 
         {/* MOBILE */}
@@ -241,7 +259,11 @@ export default function Navbar() {
             text-[#333]
             md:hidden
           "
+<<<<<<< HEAD
           aria-label={t("nav_menu", "Menu")}
+=======
+          aria-label="Toggle Menu"
+>>>>>>> second-main
         >
 
           {isOpen ? (
@@ -311,12 +333,17 @@ export default function Navbar() {
                   `}
                 >
 
+<<<<<<< HEAD
                   {t(link.key)}
+=======
+                  {link.name}
+>>>>>>> second-main
 
                 </Link>
               );
             })}
 
+<<<<<<< HEAD
             <div className="pt-2">
               <label
                 htmlFor="mobile-language-switcher"
@@ -338,6 +365,8 @@ export default function Navbar() {
               </select>
             </div>
 
+=======
+>>>>>>> second-main
           </div>
 
         </div>

@@ -8,6 +8,7 @@
   font-display: swap;
 }
 
+<<<<<<< HEAD
 @font-face {
   font-family: 'Lora';
   src: url('./assets/Lora/Lora-Italic-VariableFont_wght.ttf') format('truetype');
@@ -32,6 +33,8 @@
   font-display: swap;
 }
 
+=======
+>>>>>>> second-main
 /* Global Font Family */ 
 * {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
