@@ -168,112 +168,119 @@ export default function PremiumProductSection() {
       </div>
 
       {/* PRODUCT CARDS */}
-      <div className="mx-auto mt-12 grid max-w-7xl gap-6 md:mt-14 md:grid-cols-2 md:gap-8 xl:grid-cols-3">
+      <div className="mx-auto mt-12 max-w-7xl overflow-hidden md:mt-14">
+        <div className="mb-4 flex items-center justify-between px-1 md:hidden">
+          <p className="text-sm font-medium text-[#7b4a33]">
+            Swipe to explore more products
+          </p>
+        </div>
 
-        {premiumCards.map((card, index) => (
-          <motion.article
-            key={card.id}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.5,
-              delay: index * 0.08,
-            }}
-            viewport={{ once: true }}
-            className="group"
-          >
-            <div className="relative overflow-hidden rounded-[24px] bg-[#fff3eb] p-4 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)] sm:rounded-[30px] sm:p-5">
+        <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 xl:grid-cols-3">
 
-              <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)]" />
+          {premiumCards.map((card, index) => (
+            <motion.article
+              key={card.id}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.08,
+              }}
+              viewport={{ once: true }}
+              className="group w-full min-w-full shrink-0 snap-center px-4 md:w-auto md:min-w-0 md:px-0"
+            >
+              <div className="relative overflow-hidden rounded-[24px] bg-[#fff3eb] p-4 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)] sm:rounded-[30px] sm:p-5">
 
-              <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
+                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)]" />
 
-                <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
-                  New
-                </span>
+                <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
 
-                <div className="mx-auto aspect-square w-full overflow-hidden rounded-[14px]">
-                  <img
-                    src={CorbominImage}
-                    alt={card.title}
-                    className="h-full w-full object-cover object-center transition-all duration-500 ease-out group-hover:scale-[1.04]"
-                  />
+                  <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
+                    New
+                  </span>
+
+                  <div className="mx-auto aspect-square w-full overflow-hidden rounded-[14px]">
+                    <img
+                      src={CorbominImage}
+                      alt={card.title}
+                      className="h-full w-full object-cover object-center transition-all duration-500 ease-out group-hover:scale-[1.04]"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="relative mt-5">
+                <div className="relative mt-5">
 
-                <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
-                  {card.title}
-                </h3>
+                  <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
+                    {card.title}
+                  </h3>
 
-                <p className="mt-1 text-[14px] text-[#3f312a] sm:text-[15px]">
-                  {card.subtitle}
-                </p>
+                  <p className="mt-1 text-[14px] text-[#3f312a] sm:text-[15px]">
+                    {card.subtitle}
+                  </p>
 
-                <div className="mt-3 flex items-center gap-2 text-[15px] text-[#666666]">
+                  <div className="mt-3 flex items-center gap-2 text-[15px] text-[#666666]">
 
-                  <div className="flex items-center gap-0.5 text-[#ffb400]">
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <Star
-                        key={starIndex}
-                        className="h-4 w-4 fill-current"
-                      />
+                    <div className="flex items-center gap-0.5 text-[#ffb400]">
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <Star
+                          key={starIndex}
+                          className="h-4 w-4 fill-current"
+                        />
+                      ))}
+                    </div>
+
+                    <span className="font-semibold text-[#3d3028]">
+                      {card.rating}
+                    </span>
+
+                    <span>|</span>
+
+                    <span>({card.reviews} reviews)</span>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {card.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs text-white ${tagStyles[tag]}`}
+                      >
+                        <Leaf className="h-3 w-3" />
+                        {tag}
+                      </span>
                     ))}
                   </div>
 
-                  <span className="font-semibold text-[#3d3028]">
-                    {card.rating}
-                  </span>
+                  <div className="mt-4 inline-flex items-start gap-3 rounded-[12px] border border-[#f0e4da] bg-[#fff8f3] px-3 py-2 shadow-sm">
 
-                  <span>|</span>
+                    <div className="rounded-[10px] border border-[#eadbd0] bg-[#fffdf9] p-2">
+                      <CalendarDays className="h-4 w-4 text-[#7b4a33]" />
+                    </div>
 
-                  <span>({card.reviews} reviews)</span>
-                </div>
+                    <div>
+                      <p className="text-[11px] leading-none text-[#8f8f8f]">
+                        Application Stage
+                      </p>
 
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {card.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs text-white ${tagStyles[tag]}`}
-                    >
-                      <Leaf className="h-3 w-3" />
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-4 inline-flex items-start gap-3 rounded-[12px] border border-[#f0e4da] bg-[#fff8f3] px-3 py-2 shadow-sm">
-
-                  <div className="rounded-[10px] border border-[#eadbd0] bg-[#fffdf9] p-2">
-                    <CalendarDays className="h-4 w-4 text-[#7b4a33]" />
+                      <p className="mt-1 text-[16px] leading-none text-[#444444]">
+                        All Stages
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-[11px] leading-none text-[#8f8f8f]">
-                      Application Stage
-                    </p>
+                  <Link
+                    to="/product?category=All"
+                    className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
+                  >
+                    <span>View Details</span>
 
-                    <p className="mt-1 text-[16px] leading-none text-[#444444]">
-                      All Stages
-                    </p>
-                  </div>
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+
                 </div>
-
-                <Link
-                  to="/product?category=All"
-                  className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
-                >
-                  <span>View Details</span>
-
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-
               </div>
-            </div>
-          </motion.article>
-        ))}
-
+            </motion.article>
+          ))}
+        </div>
       </div>
     </section>
   );

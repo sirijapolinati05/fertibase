@@ -4,6 +4,40 @@ import circle1Image from "../assets/circle1.png";
 import circle2Image from "../assets/circle2.png";
 import circle3Image from "../assets/circle3.png";
 
+const sectionViewport = { once: true, amount: 0.25 };
+
+const revealVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const circleVariants = {
+  hidden: { opacity: 0, scale: 0.88, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const mapVariants = {
+  hidden: { opacity: 0, scale: 0.88, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut", delay: 0.18 },
+  },
+};
+
 const stats = [
   {
     value: "50,000+",
@@ -30,14 +64,12 @@ const stats = [
   },
 ];
 
-function StatCircle({ stat, index }) {
+function StatCircle({ stat }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.88, y: 20 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.15 + index * 0.1 }}
-      viewport={{ once: true }}
+      variants={circleVariants}
       whileHover={{ y: -6, scale: 1.03 }}
+      whileTap={{ y: -6, scale: 1.03 }}
       className={`group relative overflow-hidden rounded-full ${stat.className}`}
     >
       <img
@@ -45,11 +77,30 @@ function StatCircle({ stat, index }) {
         alt={stat.label}
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
+        <p className="text-[30px] font-bold leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.35)] sm:text-[34px] lg:text-[52px]">
+          {stat.value}
+        </p>
+        <p className="mt-1 text-[11px] font-medium leading-tight text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] sm:text-[12px] lg:text-[20px]">
+          {stat.label}
+        </p>
+      </div>
     </motion.div>
   );
 }
 
 export default function IndiaMap() {
+  const mobileStats = [...stats]
+    .sort((a, b) => {
+      const getSize = (cls) => {
+        const match = cls.match(/h-\[(\d+)/);
+        return match ? Number(match[1]) : 0;
+      };
+
+      return getSize(a.className) - getSize(b.className);
+    });
+
   return (
     <section className="overflow-hidden bg-[#fff3eb] py-8 sm:py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -74,28 +125,39 @@ export default function IndiaMap() {
             </p>
 
             {/* MOBILE STATS */}
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden">
-              {stats.map((stat, index) => (
+            <motion.div
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={sectionViewport}
+              className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden"
+            >
+              {mobileStats.map((stat) => (
                 <div key={stat.label} className="flex justify-center">
                   <StatCircle
                     stat={{
                       ...stat,
                       className: stat.className.split(" lg:")[0],
                     }}
-                    index={index}
                   />
                 </div>
               ))}
-            </div>
+            </motion.div>
 
             {/* DESKTOP STATS */}
-            <div className="relative mt-10 hidden h-[660px] lg:block">
-              {stats.map((stat, index) => (
+            <motion.div
+              variants={revealVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={sectionViewport}
+              className="relative mt-10 hidden h-[660px] lg:block"
+            >
+              {stats.map((stat) => (
                 <div key={stat.label} className="absolute">
-                  <StatCircle stat={stat} index={index} />
+                  <StatCircle stat={stat} />
                 </div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* RIGHT */}
@@ -130,27 +192,40 @@ export default function IndiaMap() {
                   </div>
                 </div>
 
-                <img
-                  src={indiaMapImage}
-                  alt="India active states map"
-                  loading="lazy"
-                  className="
-                    mx-auto
-                    w-full
-                    max-w-[760px]
-                    object-contain
-                    rounded-[1.5rem]
-                    -mt-12
-                    -mb-12
-                    sm:-mt-8
-                    sm:-mb-8
-                    lg:h-[920px]
-                    lg:w-[860px]
-                    lg:mt-0
-                    lg:mb-0
-                    lg:-ml-[55px]
-                  "
-                />
+                <motion.div
+                  variants={mapVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={sectionViewport}
+                  whileHover={{ y: -6, scale: 1.03 }}
+                  whileTap={{ y: -6, scale: 1.03 }}
+                  className="group mx-auto w-fit"
+                >
+                  <img
+                    src={indiaMapImage}
+                    alt="India active states map"
+                    loading="lazy"
+                    className="
+                      mx-auto
+                      w-full
+                      max-w-[760px]
+                      object-contain
+                      rounded-[1.5rem]
+                      transition-transform
+                      duration-500
+                      group-hover:scale-105
+                      -mt-12
+                      -mb-12
+                      sm:-mt-8
+                      sm:-mb-8
+                      lg:h-[920px]
+                      lg:w-[860px]
+                      lg:mt-0
+                      lg:mb-0
+                      lg:-ml-[55px]
+                    "
+                  />
+                </motion.div>
 
                 <div className="mx-auto mt-4 w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:hidden">
                   <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
