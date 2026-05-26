@@ -11,40 +11,30 @@ import Circle5 from "../assets/circle-5.png";
 import { useTranslation } from "../i18n/useTranslation";
 
 const productCategories = [
-
-  // LEFT TOP CIRCLE
   {
     label: ["Beneficial", "Element", "Fertilizer"],
     className: "left-[0px] top-[220px]",
     routeCategory: "Beneficial Element Fertilizer",
-    image: null, // filled in component with Circle1
+    image: null,
   },
-
-  // RIGHT TOP CIRCLE
   {
     label: ["Biofertilizers"],
     className: "right-[0px] top-[220px]",
     routeCategory: "Biofertilizer",
     image: null,
   },
-
-  // LOWER LEFT
   {
     label: ["Straight", "Micronutrient"],
     className: "left-[85px] top-[380px]",
     routeCategory: "Straight Micronutrient",
     image: null,
   },
-
-  // LOWER RIGHT
   {
     label: ["Liquid", "Fertilizer"],
     className: "right-[85px] top-[380px]",
     routeCategory: "Liquid Fertilizer",
     image: null,
   },
-
-  // BOTTOM CENTER
   {
     label: ["Organic", "Biofertilizers"],
     className: "left-1/2 top-[450px] -translate-x-1/2",
@@ -121,8 +111,6 @@ export default function PremiumProductSection() {
   return (
     <section className="bg-[#fff3eb] px-4 pb-10 pt-2 sm:px-5 md:px-8">
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
-
-        {/* LEFT CONTENT */}
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -151,7 +139,6 @@ export default function PremiumProductSection() {
           </Link>
         </motion.div>
 
-        {/* RIGHT VISUAL */}
         <motion.div
           initial={{ opacity: 0, x: 24 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -159,8 +146,6 @@ export default function PremiumProductSection() {
           viewport={{ once: true }}
           className="relative mx-auto hidden h-[620px] w-full max-w-[680px] md:block"
         >
-
-          {/* CENTER IMAGE */}
           <div className="absolute left-1/2 top-[90px] z-10 h-[336.95px] w-[336.95px] -translate-x-1/2 overflow-hidden rounded-full">
             <img
               src={PremiumProductImage}
@@ -169,7 +154,6 @@ export default function PremiumProductSection() {
             />
           </div>
 
-          {/* CATEGORY CIRCLES */}
           {localizedCategories.map((item, index) => (
             <motion.div
               key={item.label.join("-")}
@@ -184,15 +168,13 @@ export default function PremiumProductSection() {
             >
               <Link
                 to={`/product?category=${encodeURIComponent(item.routeCategory)}`}
-                className="relative flex h-[153.31px] w-[153.31px] overflow-hidden rounded-full transition-transform duration-300 hover:scale-[1.03] shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+                className="relative flex h-[153.31px] w-[153.31px] overflow-hidden rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-transform duration-300 hover:scale-[1.03]"
               >
-                {/* Photo fills the circle */}
                 <img
                   src={item.image}
                   alt={item.label.join(" ")}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-                {/* Glassy label overlay at the bottom */}
                 <div className="absolute bottom-0 left-0 right-0 flex h-[64px] flex-col items-center justify-center border-t border-white/20 bg-transparent px-2 text-center text-[13px] font-light leading-[1.15] text-white backdrop-blur-md">
                   {item.label.map((line) => (
                     <span key={line} className="block">
@@ -205,9 +187,7 @@ export default function PremiumProductSection() {
           ))}
         </motion.div>
 
-        {/* MOBILE VERSION */}
         <div className="mx-auto flex w-full max-w-[360px] flex-col items-center gap-6 md:hidden">
-
           <img
             src={PremiumProductImage}
             alt={t("premium_visual_alt", "Premium product range")}
@@ -239,31 +219,17 @@ export default function PremiumProductSection() {
             ))}
           </div>
         </div>
-
       </div>
 
-      {/* PRODUCT CARDS */}
       <div className="mx-auto mt-12 max-w-7xl overflow-hidden md:mt-14">
         <div className="mb-4 flex items-center justify-between px-1 md:hidden">
           <p className="text-sm font-medium text-[#7b4a33]">
-<<<<<<< HEAD
-            {t(
-              "premium_swipe_more",
-              "Swipe to explore more products"
-            )}
-=======
-            Swipe to explore more products
->>>>>>> second-main
+            {t("premium_swipe_more", "Swipe to explore more products")}
           </p>
         </div>
 
         <div className="flex snap-x snap-mandatory overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 xl:grid-cols-3">
-
-<<<<<<< HEAD
           {localizedPremiumCards.map((card, index) => (
-=======
-          {premiumCards.map((card, index) => (
->>>>>>> second-main
             <motion.article
               key={card.id}
               initial={{ opacity: 0, y: 24 }}
@@ -276,17 +242,11 @@ export default function PremiumProductSection() {
               className="group w-full min-w-full shrink-0 snap-center px-4 md:w-auto md:min-w-0 md:px-0"
             >
               <div className="relative overflow-hidden rounded-[24px] bg-[#fff3eb] p-4 transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-2 hover:bg-white hover:shadow-[0_24px_50px_-24px_rgba(107,65,46,0.18)] sm:rounded-[30px] sm:p-5">
-
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)]" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.82),transparent_35%),radial-gradient(circle_at_80%_100%,rgba(123,74,51,0.10),transparent_30%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
                 <div className="relative rounded-[18px] border-[3px] border-[#d5d8d9] bg-[#fffdfa] shadow-[inset_0_0_28px_rgba(0,0,0,0.06)]">
-
                   <span className="absolute left-3 top-3 z-10 inline-flex rounded-full bg-[#0b9d42] px-4 py-1 text-xs font-medium text-white sm:px-5 sm:text-sm">
-<<<<<<< HEAD
                     {t("premium_badge_new", "New")}
-=======
-                    New
->>>>>>> second-main
                   </span>
 
                   <div className="mx-auto aspect-square w-full overflow-hidden rounded-[14px]">
@@ -299,7 +259,6 @@ export default function PremiumProductSection() {
                 </div>
 
                 <div className="relative mt-5">
-
                   <h3 className="text-[17px] font-semibold leading-snug text-[#7b4a33] sm:text-[18px]">
                     {card.title}
                   </h3>
@@ -309,7 +268,6 @@ export default function PremiumProductSection() {
                   </p>
 
                   <div className="mt-3 flex items-center gap-2 text-[15px] text-[#666666]">
-
                     <div className="flex items-center gap-0.5 text-[#ffb400]">
                       {Array.from({ length: 5 }).map((_, starIndex) => (
                         <Star
@@ -325,14 +283,9 @@ export default function PremiumProductSection() {
 
                     <span>|</span>
 
-<<<<<<< HEAD
                     <span>
-                      ({card.reviews}{" "}
-                      {t("premium_reviews_suffix", "reviews")})
+                      ({card.reviews} {t("premium_reviews_suffix", "reviews")})
                     </span>
-=======
-                    <span>({card.reviews} reviews)</span>
->>>>>>> second-main
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -342,46 +295,27 @@ export default function PremiumProductSection() {
                         className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs text-white ${tagStyles[tag]}`}
                       >
                         <Leaf className="h-3 w-3" />
-<<<<<<< HEAD
                         {tag === "Organic"
                           ? t("premium_tag_organic", "Organic")
                           : tag === "Liquid"
                             ? t("premium_tag_liquid", "Liquid")
-                            : t(
-                                "premium_tag_all_crops",
-                                "All Crops"
-                              )}
-=======
-                        {tag}
->>>>>>> second-main
+                            : t("premium_tag_all_crops", "All Crops")}
                       </span>
                     ))}
                   </div>
 
                   <div className="mt-4 inline-flex items-start gap-3 rounded-[12px] border border-[#f0e4da] bg-[#fff8f3] px-3 py-2 shadow-sm">
-
                     <div className="rounded-[10px] border border-[#eadbd0] bg-[#fffdf9] p-2">
                       <CalendarDays className="h-4 w-4 text-[#7b4a33]" />
                     </div>
 
                     <div>
                       <p className="text-[11px] leading-none text-[#8f8f8f]">
-<<<<<<< HEAD
-                        {t(
-                          "premium_application_stage",
-                          "Application Stage"
-                        )}
+                        {t("premium_application_stage", "Application Stage")}
                       </p>
 
                       <p className="mt-1 text-[16px] leading-none text-[#444444]">
                         {t("premium_all_stages", "All Stages")}
-=======
-                        Application Stage
-                      </p>
-
-                      <p className="mt-1 text-[16px] leading-none text-[#444444]">
-                        All Stages
->>>>>>> second-main
                       </p>
                     </div>
                   </div>
@@ -390,17 +324,9 @@ export default function PremiumProductSection() {
                     to="/product?category=All"
                     className="mt-5 inline-flex h-[46px] w-full items-center justify-center gap-2 rounded-full bg-[#7b4a33] text-[16px] font-medium text-white shadow-[0_10px_18px_rgba(123,74,51,0.28)] transition-all duration-300 group-hover:bg-[#6b412e] sm:text-[18px]"
                   >
-<<<<<<< HEAD
-                    <span>
-                      {t("premium_view_details", "View Details")}
-                    </span>
-=======
-                    <span>View Details</span>
->>>>>>> second-main
-
+                    <span>{t("premium_view_details", "View Details")}</span>
                     <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
-
                 </div>
               </div>
             </motion.article>

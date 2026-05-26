@@ -40,40 +40,6 @@ const mapVariants = {
   },
 };
 
-const sectionViewport = { once: true, amount: 0.25 };
-
-const revealVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const circleVariants = {
-  hidden: { opacity: 0, scale: 0.88, y: 20 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
-
-const mapVariants = {
-  hidden: { opacity: 0, scale: 0.88, y: 20 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut", delay: 0.18 },
-  },
-};
-
 const stats = [
   {
     value: "50,000+",
@@ -82,7 +48,6 @@ const stats = [
     className:
       "h-[210px] w-[210px] sm:h-[240px] sm:w-[240px] lg:h-[373.18px] lg:w-[371.72px] lg:left-[-90px] lg:top-[180px]",
   },
-
   {
     value: "1000+",
     label: "Dealer Network",
@@ -90,7 +55,6 @@ const stats = [
     className:
       "h-[150px] w-[150px] sm:h-[180px] sm:w-[180px] lg:h-[284px] lg:w-[282.89px] lg:left-[190px] lg:top-[-40px]",
   },
-
   {
     value: "5",
     label: "States",
@@ -106,11 +70,7 @@ function StatCircle({ stat }) {
       variants={circleVariants}
       whileHover={{ y: -6, scale: 1.03 }}
       whileTap={{ y: -6, scale: 1.03 }}
-<<<<<<< HEAD
       className={`group relative overflow-hidden rounded-full lg:absolute ${stat.className}`}
-=======
-      className={`group relative overflow-hidden rounded-full ${stat.className}`}
->>>>>>> second-main
     >
       <img
         src={stat.image}
@@ -131,7 +91,6 @@ function StatCircle({ stat }) {
 }
 
 export default function IndiaMap() {
-<<<<<<< HEAD
   const { language, t } = useTranslation();
 
   const localizedStats = useMemo(
@@ -151,8 +110,8 @@ export default function IndiaMap() {
   const mobileStats = useMemo(
     () =>
       [...localizedStats].sort((a, b) => {
-        const getSize = (cls) => {
-          const match = cls.match(/h-\[(\d+)/);
+        const getSize = (className) => {
+          const match = className.match(/h-\[(\d+)/);
           return match ? Number(match[1]) : 0;
         };
 
@@ -160,23 +119,11 @@ export default function IndiaMap() {
       }),
     [localizedStats]
   );
-=======
-  const mobileStats = [...stats]
-    .sort((a, b) => {
-      const getSize = (cls) => {
-        const match = cls.match(/h-\[(\d+)/);
-        return match ? Number(match[1]) : 0;
-      };
-
-      return getSize(a.className) - getSize(b.className);
-    });
->>>>>>> second-main
 
   return (
     <section className="overflow-hidden bg-[#fff3eb] py-8 sm:py-6">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          {/* LEFT */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -197,9 +144,7 @@ export default function IndiaMap() {
               )}
             </p>
 
-            {/* MOBILE STATS */}
             <motion.div
-<<<<<<< HEAD
               key={`mobile-stats-${language}`}
               variants={revealVariants}
               initial="hidden"
@@ -208,16 +153,6 @@ export default function IndiaMap() {
             >
               {mobileStats.map((stat) => (
                 <div key={stat.value} className="flex justify-center">
-=======
-              variants={revealVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={sectionViewport}
-              className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:hidden"
-            >
-              {mobileStats.map((stat) => (
-                <div key={stat.label} className="flex justify-center">
->>>>>>> second-main
                   <StatCircle
                     stat={{
                       ...stat,
@@ -228,9 +163,7 @@ export default function IndiaMap() {
               ))}
             </motion.div>
 
-            {/* DESKTOP STATS */}
             <motion.div
-<<<<<<< HEAD
               key={`desktop-stats-${language}`}
               variants={revealVariants}
               initial="hidden"
@@ -239,22 +172,12 @@ export default function IndiaMap() {
             >
               {localizedStats.map((stat) => (
                 <div key={stat.value} className="absolute">
-=======
-              variants={revealVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={sectionViewport}
-              className="relative mt-10 hidden h-[660px] lg:block"
-            >
-              {stats.map((stat) => (
-                <div key={stat.label} className="absolute">
->>>>>>> second-main
                   <StatCircle stat={stat} />
                 </div>
               ))}
             </motion.div>
           </motion.div>
-          {/* RIGHT */}
+
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -263,7 +186,6 @@ export default function IndiaMap() {
             className="mx-auto w-full max-w-[1100px]"
           >
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-              {/* MAP */}
               <div className="flex-1 -mt-3 lg:mt-0 lg:pt-[100px]">
                 <div className="mx-auto mb-4 flex w-full max-w-[320px] flex-col gap-4 lg:hidden">
                   <div className="w-full text-center">
@@ -271,7 +193,6 @@ export default function IndiaMap() {
                       <span className="block">
                         {t("india_presence_line_1", "OUR PRESENCE")}
                       </span>
-
                       <span className="block">
                         {t("india_presence_line_2", "ACROSS INDIA")}
                       </span>
@@ -309,8 +230,8 @@ export default function IndiaMap() {
                       mx-auto
                       w-full
                       max-w-[760px]
-                      object-contain
                       rounded-[1.5rem]
+                      object-contain
                       transition-transform
                       duration-500
                       group-hover:scale-105
@@ -318,21 +239,18 @@ export default function IndiaMap() {
                       -mb-12
                       sm:-mt-8
                       sm:-mb-8
-                      lg:h-[920px]
-                      lg:w-[860px]
                       lg:mt-0
                       lg:mb-0
                       lg:-ml-[55px]
+                      lg:h-[920px]
+                      lg:w-[860px]
                     "
                   />
                 </motion.div>
 
                 <div className="mx-auto mt-4 w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:hidden">
                   <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
-                    {t(
-                      "india_legend_title",
-                      "India - Active States"
-                    )}
+                    {t("india_legend_title", "India - Active States")}
                   </p>
 
                   <div className="mt-4 space-y-3 text-sm text-[#3b312b]">
@@ -348,18 +266,12 @@ export default function IndiaMap() {
                   </div>
                 </div>
 
-                {/* LEGEND */}
                 <div className="relative z-10 mx-auto mt-4 hidden w-full max-w-[320px] rounded-[18px] bg-white/90 px-5 py-4 shadow-lg lg:ml-[360px] lg:mt-[-320px] lg:block lg:w-fit lg:max-w-none lg:px-6">
-
                   <p className="text-[16px] font-bold uppercase tracking-[0.06em] text-[#764734]">
-                    {t(
-                      "india_legend_title",
-                      "India - Active States"
-                    )}
+                    {t("india_legend_title", "India - Active States")}
                   </p>
 
                   <div className="mt-4 space-y-3 text-sm text-[#3b312b]">
-
                     <div className="flex items-center gap-2">
                       <span className="h-4 w-4 rounded-[4px] bg-[#764734]" />
                       <span>{t("india_legend_active", "Active States")}</span>
@@ -369,20 +281,15 @@ export default function IndiaMap() {
                       <span className="h-4 w-4 rounded-[4px] border border-[#764734] bg-[#f3e5dc]" />
                       <span>{t("india_legend_other", "Other States")}</span>
                     </div>
-
                   </div>
-
                 </div>
               </div>
 
-              {/* TEXT */}
               <div className="hidden w-full max-w-[320px] text-center lg:-ml-[360px] lg:block lg:max-w-[260px] lg:pt-[220px] lg:text-left">
-
                 <h3 className="text-[24px] font-black uppercase leading-[0.95] text-[#764734] sm:text-[28px] lg:text-[32px]">
                   <span className="block">
                     {t("india_presence_line_1", "OUR PRESENCE")}
                   </span>
-
                   <span className="block">
                     {t("india_presence_line_2", "ACROSS INDIA")}
                   </span>

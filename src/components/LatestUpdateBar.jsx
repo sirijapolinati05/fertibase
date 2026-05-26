@@ -23,14 +23,10 @@ export function LatestUpdateBar() {
       : [
           {
             title: "",
-<<<<<<< HEAD
             message: t(
               "website_releasing_soon",
               "This website is releasing soon."
             ),
-=======
-            message: "This website is releasing soon.",
->>>>>>> second-main
           },
         ];
 
@@ -44,15 +40,12 @@ export function LatestUpdateBar() {
       "
     >
       <div className="flex w-full flex-col sm:flex-row">
-
-        {/* LEFT LABEL */}
         <div
           className="
-            flex shrink-0 items-center justify-center
+            flex h-[58px] shrink-0 items-center justify-center
             border-b border-[#d9c0b3]
             bg-[#fff2e8]
             px-5
-            h-[58px]
             sm:min-w-[240px]
             sm:border-b-0
             sm:border-r
@@ -63,23 +56,10 @@ export function LatestUpdateBar() {
           </span>
         </div>
 
-        {/* MARQUEE AREA */}
-        <div
-          className="
-            relative
-            flex-1
-            overflow-hidden
-            h-[58px]
-            flex
-            items-center
-          "
-        >
-          {/* fade */}
+        <div className="relative flex h-[58px] flex-1 items-center overflow-hidden">
           <div className="absolute left-0 top-0 bottom-0 z-10 w-10 bg-gradient-to-r from-[#fffaf6] to-transparent" />
-
           <div className="absolute right-0 top-0 bottom-0 z-10 w-10 bg-gradient-to-l from-[#fffaf6] to-transparent" />
 
-          {/* scrolling */}
           <div
             className="
               inline-flex
@@ -91,13 +71,7 @@ export function LatestUpdateBar() {
             {normalizedUpdates.map((update, idx) => (
               <div
                 key={idx}
-                className="
-                  flex
-                  items-center
-                  gap-4
-                  px-8
-                  text-[#34231b]
-                "
+                className="flex items-center gap-4 px-8 text-[#34231b]"
               >
                 {update.action_link ? (
                   <a
@@ -120,30 +94,22 @@ export function LatestUpdateBar() {
                           text-[#8b3a2a]
                         "
                       >
-<<<<<<< HEAD
                         {td(
                           "latest_update",
                           update.id || idx,
                           "title",
                           update.title
                         )}
-=======
-                        {update.title}
->>>>>>> second-main
                       </span>
                     )}
 
-                    <span className="text-sm sm:text-[15px] font-medium">
-<<<<<<< HEAD
+                    <span className="text-sm font-medium sm:text-[15px]">
                       {td(
                         "latest_update",
                         update.id || idx,
                         "message",
                         update.message
                       )}
-=======
-                      {update.message}
->>>>>>> second-main
                     </span>
                   </a>
                 ) : (
@@ -162,63 +128,50 @@ export function LatestUpdateBar() {
                           text-[#8b3a2a]
                         "
                       >
-<<<<<<< HEAD
                         {td(
                           "latest_update",
                           update.id || idx,
                           "title",
                           update.title
                         )}
-=======
-                        {update.title}
->>>>>>> second-main
                       </span>
                     )}
 
-                    <span className="text-sm sm:text-[15px] font-medium">
-<<<<<<< HEAD
+                    <span className="text-sm font-medium sm:text-[15px]">
                       {td(
                         "latest_update",
                         update.id || idx,
                         "message",
                         update.message
                       )}
-=======
-                      {update.message}
->>>>>>> second-main
                     </span>
                   </>
                 )}
 
-                {update.action_text &&
-                  update.action_link && (
-                    <a
-                      href={update.action_link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="
-                        rounded-full
-                        bg-[#7b4a33]
-                        px-4
-                        py-1.5
-                        text-xs
-                        font-semibold
-                        text-white
-                        hover:bg-[#643926]
-                      "
-                    >
-<<<<<<< HEAD
-                      {td(
-                        "latest_update",
-                        update.id || idx,
-                        "action_text",
-                        update.action_text
-                      )}
-=======
-                      {update.action_text}
->>>>>>> second-main
-                    </a>
-                  )}
+                {update.action_text && update.action_link && (
+                  <a
+                    href={update.action_link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="
+                      rounded-full
+                      bg-[#7b4a33]
+                      px-4
+                      py-1.5
+                      text-xs
+                      font-semibold
+                      text-white
+                      hover:bg-[#643926]
+                    "
+                  >
+                    {td(
+                      "latest_update",
+                      update.id || idx,
+                      "action_text",
+                      update.action_text
+                    )}
+                  </a>
+                )}
               </div>
             ))}
           </div>

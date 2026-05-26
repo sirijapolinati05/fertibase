@@ -1,51 +1,73 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'Lora';
-  src: url('./assets/Lora/Lora-VariableFont_wght.ttf') format('truetype');
+  font-family: "Lora";
+  src: url("./assets/Lora/Lora-VariableFont_wght.ttf") format("truetype");
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
 }
 
-<<<<<<< HEAD
 @font-face {
-  font-family: 'Lora';
-  src: url('./assets/Lora/Lora-Italic-VariableFont_wght.ttf') format('truetype');
+  font-family: "Lora";
+  src: url("./assets/Lora/Lora-Italic-VariableFont_wght.ttf") format("truetype");
   font-style: italic;
   font-weight: 400 700;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DM Sans';
-  src: url('./assets/DM_Sans/DMSans-VariableFont_opsz,wght.ttf') format('truetype');
+  font-family: "DM Sans";
+  src: url("./assets/DM_Sans/DMSans-VariableFont_opsz,wght.ttf")
+    format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DM Sans';
-  src: url('./assets/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  font-family: "DM Sans";
+  src: url("./assets/DM_Sans/DMSans-Italic-VariableFont_opsz,wght.ttf")
+    format("truetype");
   font-style: italic;
   font-weight: 100 900;
   font-display: swap;
 }
 
-=======
->>>>>>> second-main
-/* Global Font Family */ 
 * {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 body {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #F5F1ED; /* Off-white background */
-  color: #1A0F08; /* Red Soil brighter dark brown text */
+  background-color: #f5f1ed;
+  color: #1a0f08;
   cursor: default;
   caret-color: transparent;
 }
@@ -56,11 +78,23 @@ html[data-language="en"] h3,
 html[data-language="en"] h4,
 html[data-language="en"] h5,
 html[data-language="en"] h6 {
-  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
 }
 
 p {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    "DM Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 a,
@@ -79,69 +113,32 @@ select,
   caret-color: auto;
 }
 
-/* Red Soil Theme Variables - Updated with Brighter Colors */
 :root {
-  --color-primary: #C85A3D;
-  --color-primary-dark: #A8422F;
-  --color-primary-darker: #8B3524;
-  --color-bg-light: #F5F1ED;
-  --color-bg-dark: #EDE5DC;
-  --color-text-base: #1A0F08;   /* Red Soil brighter deep dark brown */
-  --color-text-light: #3D2415;  /* Red Soil brighter medium brown */
-  --color-text-muted: #6B4226;  /* Red Soil brighter muted brown */
+  --color-primary: #c85a3d;
+  --color-primary-dark: #a8422f;
+  --color-primary-darker: #8b3524;
+  --color-bg-light: #f5f1ed;
+  --color-bg-dark: #ede5dc;
+  --color-text-base: #1a0f08;
+  --color-text-light: #3d2415;
+  --color-text-muted: #6b4226;
 }
 
 @keyframes floating {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-floating {
-  animation: floating 6s ease-in-out infinite;
-}
-/* Add to your global CSS or component style tag */
-.radial-chart-container {
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-
-a,
-button,
-[role="button"],
-summary,
-label[for] {
-  cursor: pointer;
-}
-
-input,
-textarea,
-select,
-[contenteditable="true"] {
-  cursor: text;
-  caret-color: auto;
-}
-
-/* Red Soil Theme Variables - Updated with Brighter Colors */
-:root {
-  --color-primary: #C85A3D;
-  --color-primary-dark: #A8422F;
-  --color-primary-darker: #8B3524;
-  --color-bg-light: #F5F1ED;
-  --color-bg-dark: #EDE5DC;
-  --color-text-base: #1A0F08;   /* Red Soil brighter deep dark brown */
-  --color-text-light: #3D2415;  /* Red Soil brighter medium brown */
-  --color-text-muted: #6B4226;  /* Red Soil brighter muted brown */
-}
-
-@keyframes floating {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 @keyframes processRingBlink {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
     transform: scale(0.88);
   }
@@ -158,30 +155,28 @@ select,
 .animate-floating {
   animation: floating 6s ease-in-out infinite;
 }
-/* Add to your global CSS or component style tag */
+
 .radial-chart-container {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbar utility */
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Custom scrollbar for the panel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .panel-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #CBD5E1 #F1F5F9;
+  scrollbar-color: #cbd5e1 #f1f5f9;
 }
 
 .panel-scroll::-webkit-scrollbar {
@@ -189,15 +184,15 @@ html {
 }
 
 .panel-scroll::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #f1f5f9;
   border-radius: 3px;
 }
 
 .panel-scroll::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 
 .panel-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #94a3b8;
 }
