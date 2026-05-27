@@ -396,21 +396,29 @@ export default function CareerPage() {
   }, []);
 
   useEffect(() => {
-    const fetchCareers = async () => {
+    const fetchCareers = async (isInitial = true) => {
       try {
-        setLoading(true);
+        if (isInitial) setLoading(true);
         const data = await careerService.getCareers();
         setJobs(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
         console.error(err);
-        setError(t("career_error_load_jobs", "Failed to load jobs"));
+        if (isInitial) setError(t("career_error_load_jobs", "Failed to load jobs"));
       } finally {
-        setLoading(false);
+        if (isInitial) setLoading(false);
       }
     };
 
-    fetchCareers();
+    // Initial fetch
+    fetchCareers(true);
+
+    // Poll every 3 seconds
+    const interval = setInterval(() => {
+      fetchCareers(false);
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const filteredJobs = jobs.filter((job) => {
