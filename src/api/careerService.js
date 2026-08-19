@@ -1,8 +1,3 @@
-import { supabase } from './supabaseClient';
-
-/**
- * 🔁 Map Supabase job → UI job format
- */
 const transformJob = (job) => ({
   id: job.id,
 
@@ -19,16 +14,16 @@ const transformJob = (job) => ({
   about: job.description || '',
   description: job.description || '',
 
-  responsibilities: job.responsibilities || [],
-  requirements: job.requirements || [],
-  skills: job.skills || [],
-  tools: job.tools || [],
-  niceToHave: job.nice_to_have || [],
+  responsibilities: typeof job.responsibilities === 'string' ? job.responsibilities.split('\n') : (job.responsibilities || []),
+  requirements: typeof job.requirements === 'string' ? job.requirements.split('\n') : (job.requirements || []),
+  skills: typeof job.skills === 'string' ? job.skills.split('\n') : (job.skills || []),
+  tools: typeof job.tools === 'string' ? job.tools.split('\n') : (job.tools || []),
+  niceToHave: typeof job.nice_to_have === 'string' ? job.nice_to_have.split('\n') : (job.nice_to_have || []),
   application_note: job.application_note || '',
 
   daysLeft: job.days_left ?? 30,
-  salary: job.salary_range || null,
-  salary_range: job.salary_range || null,
+  salary: job.salary_range || job.salary || null,
+  salary_range: job.salary_range || job.salary || null,
   positions: job.positions ?? 1,
 
   role: job.role || 'Open',
@@ -36,35 +31,30 @@ const transformJob = (job) => ({
 });
 
 const careerService = {
-  // 🔹 Get all jobs
   async getCareers() {
-    const { data, error } = await supabase
-      .from('jobs')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Supabase error:', error);
+    try {
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/jobs`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      return data.map(transformJob);
+    } catch (error) {
+      console.error('API jobs error:', error);
       throw error;
     }
-
-    return data.map(transformJob);
   },
 
-  // 🔹 Get single job
   async getJobById(id) {
-    const { data, error } = await supabase
-      .from('jobs')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      console.error('Supabase error:', error);
+    try {
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/jobs/${id}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      return transformJob(data);
+    } catch (error) {
+      console.error('API job error:', error);
       throw error;
     }
-
-    return transformJob(data);
   },
 };
 

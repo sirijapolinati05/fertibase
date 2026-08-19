@@ -2,10 +2,17 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ArrowRight, Loader2, Search } from "lucide-react";
-import supabase from "../lib/supabaseClient";
 import ProductModal from "../components/ProductModal";
 import { useTranslation } from "../i18n/useTranslation";
 import { getLocalizedEntityField } from "../i18n/entityTranslations";
+
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api").replace(/\/api$/, "");
+
+const getImageUrl = (url) => {
+  if (!url) return "/placeholder.png";
+  if (url.startsWith("http")) return url;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 /* ---------------- CONSTANTS ---------------- */
 
@@ -84,13 +91,18 @@ const sectionRef = useRef(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (!error) setProducts(data || []);
-      setLoading(false);
+      try {
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+        const response = await fetch(`${apiUrl}/products`);
+        if (!response.ok) throw new Error("Failed to fetch products");
+        const data = await response.json();
+        setProducts(data || []);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchProducts();
@@ -403,7 +415,7 @@ if (loading) {
             "
           >
             <img
-              src={product.image_url || "/placeholder.png"}
+              src={getImageUrl(product.image_url)}
               alt={product.name}
               className="
                 h-full w-full scale-[1.08] object-cover object-center

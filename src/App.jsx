@@ -15,7 +15,6 @@ import Product from "./components/Product";
 // import ProductAutoDetails from "./components/ProductAutoDetails";
 import Resources from "./components/Resources";
 import ScrollToTop from "./components/ScrollToTop";
-import AuthCallback from "./components/AuthCallback";
 import { useTranslation } from "./i18n/useTranslation";
 
 
@@ -41,7 +40,6 @@ function App() {
     <>
     <ScrollToTop />
     <Routes>
-      <Route path="/auth/callback" element={<AuthCallback />} />
       {/* Main layout with Navbar + Footer */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Hero />} />

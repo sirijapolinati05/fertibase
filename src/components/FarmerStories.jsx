@@ -1,9 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, PlayCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import supabase from "../lib/supabaseClient";
 import FarmerImage from "../assets/Farmer.png";
 import { useTranslation } from "../i18n/useTranslation";
+
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api").replace(/\/api$/, "");
+
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith("http")) return url;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 const filterOptions = [
   { value: "All", label: "All" },
@@ -62,53 +69,13 @@ export default function FarmerStories() {
         const data = await response.json();
         setTestimonials(data || []);
       } catch (error) {
-        console.warn("API failed, falling back to Supabase:", error);
-        try {
-          const { data, error: supabaseError } = await supabase
-            .from("testimonials")
-            .select("*")
-            .order("created_at", { ascending: false });
-
-          if (supabaseError) throw supabaseError;
-          setTestimonials(data || []);
-        } catch (supabaseErr) {
-          console.error("Supabase fallback failed:", supabaseErr);
-        }
+        console.warn("API failed to fetch testimonials", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTestimonials();
-  }, []);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("public:testimonials")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "testimonials" },
-        (payload) => {
-          const { eventType, new: newRow, old } = payload;
-          setTestimonials((prev) => {
-            if (eventType === "INSERT") {
-              return [newRow, ...prev];
-            }
-            if (eventType === "UPDATE") {
-              return prev.map((item) => (item.id === newRow.id ? newRow : item));
-            }
-            if (eventType === "DELETE") {
-              return prev.filter((item) => item.id !== old.id);
-            }
-            return prev;
-          });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   useEffect(() => {
@@ -271,9 +238,9 @@ export default function FarmerStories() {
                         <>
                           <img
                             src={
-                              testimonial.image_url ||
-                              testimonial.image_src ||
-                              testimonial.image ||
+                              getImageUrl(testimonial.image_url) ||
+                              getImageUrl(testimonial.image_src) ||
+                              getImageUrl(testimonial.image) ||
                               FarmerImage
                             }
                             alt={farmerName}

@@ -6,13 +6,20 @@ import {
   FiPlay,
   FiShare2,
 } from "react-icons/fi";
-import supabase from "../lib/supabaseClient";
 import { useTranslation } from "../i18n/useTranslation";
 import { getLocalizedEntityField } from "../i18n/entityTranslations";
 
 /* ----------------------------- HELPERS ----------------------------- */
 
 const normalize = (v) => (v ?? "").toLowerCase().replace(/\s|_/g, "");
+
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api").replace(/\/api$/, "");
+
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith("http")) return url;
+  return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+};
 
 /* ----------------------------- COMPONENT ----------------------------- */
 
@@ -44,25 +51,27 @@ export default function Resources() {
   const selectedLanguage = "Marathi";
 
   const getLanguageImage = (item) => {
+    let url = null;
     switch (selectedLanguage) {
       case "Telugu":
-        return item.image_url_telugu || item.image_url_te || item.image_url;
+        url = item.image_url_telugu || item.image_url_te || item.image_url; break;
       case "Marathi":
-        return item.image_url_marathi || item.image_url_mr || item.image_url_telugu || item.image_url;
+        url = item.image_url_marathi || item.image_url_mr || item.image_url_telugu || item.image_url; break;
       case "Kannada":
-        return item.image_url_kannada || item.image_url_kn || item.image_url_telugu || item.image_url;
+        url = item.image_url_kannada || item.image_url_kn || item.image_url_telugu || item.image_url; break;
       case "Gujarati":
-        return item.image_url_gujarati || item.image_url_gu || item.image_url_telugu || item.image_url;
+        url = item.image_url_gujarati || item.image_url_gu || item.image_url_telugu || item.image_url; break;
       case "en":
-        return item.image_url_english || item.image_url || item.image_url_telugu;
+        url = item.image_url_english || item.image_url || item.image_url_telugu; break;
       case "hi":
-        return item.image_url_hindi || item.image_url_hi || item.image_url_telugu;
+        url = item.image_url_hindi || item.image_url_hi || item.image_url_telugu; break;
       case "mr":
-        return item.image_url_marathi || item.image_url_mr || item.image_url_telugu;
+        url = item.image_url_marathi || item.image_url_mr || item.image_url_telugu; break;
       case "te":
       default:
-        return item.image_url_telugu || item.image_url_te || item.image_url;
+        url = item.image_url_telugu || item.image_url_te || item.image_url; break;
     }
+    return getImageUrl(url);
   };
 
   const localizeResourceField = (item, field, fallback = "") =>
@@ -159,14 +168,17 @@ export default function Resources() {
 
   useEffect(() => {
     const fetchResources = async () => {
-      const { data, error } = await supabase
-        .from("resources")
-        .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false });
-
-      if (!error) setResources(data || []);
-      setLoading(false);
+      try {
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+        const response = await fetch(`${apiUrl}/resources`);
+        if (!response.ok) throw new Error("Failed to fetch resources");
+        const data = await response.json();
+        setResources(data || []);
+      } catch (err) {
+        console.error("Resources fetch failed:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchResources();

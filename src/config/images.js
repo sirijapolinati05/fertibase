@@ -32,8 +32,7 @@ import corbcen from "../assets/corbcen.png";
 
 // `CARBOMINBOOSTER.png` is not present in src/assets, so keep a safe fallback
 // until the real Booster asset or DB URL is available.
-const carbominFA =
-  "https://ekseutpxbtlbcbjxalna.supabase.co/storage/v1/object/public/products/products/CARBOMINFA.png";
+const carbominFA = "/placeholder.png";
 const carbominBooster = carbominFA;
 const carboMin = carbominFA;
 

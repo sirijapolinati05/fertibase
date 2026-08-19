@@ -8,7 +8,6 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import supabase from "../lib/supabaseClient";
 import { useTranslation } from "../i18n/useTranslation";
 import { getLocalizedEntityField } from "../i18n/entityTranslations";
 
@@ -50,37 +49,21 @@ export default function ApplyForm({ close, jobId, job }) {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
   const [resume, setResume] = useState(null);
-  const [otp, setOtp] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [emailLoading, setEmailLoading] = useState(false);
-  const [verifyLoading, setVerifyLoading] = useState(false);
-  const [emailVerified, setEmailVerified] = useState(false);
-  const [showOtpInput, setShowOtpInput] = useState(false);
-  const [toast, setToast] = useState({ message: "", type: "" });
-  const [otpCooldown, setOtpCooldown] = useState(0);
-  const toastTimeoutRef = useRef(null);
-
-  useEffect(() => {
-    if (otpCooldown <= 0) {
-      return undefined;
-    }
-
-    const timer = window.setTimeout(() => {
-      setOtpCooldown((prev) => prev - 1);
-    }, 1000);
-
   
-    return () => window.clearTimeout(timer);
-  }, [otpCooldown]);
+  // Email verification state
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({ message: "", type: "" });
+  const toastTimeoutRef = useRef(null);
 
   const setField = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "email") {
-      setEmailVerified(false);
-      setShowOtpInput(false);
-      setOtp("");
-    }
   };
 
   // Helper to localize job fields
@@ -103,136 +86,91 @@ export default function ApplyForm({ close, jobId, job }) {
   };
 
   const handleSendOtp = async () => {
-    const normalizedEmail = form.email.trim().toLowerCase();
-
-    if (!normalizedEmail) {
-      showToast(t("apply_email_first", "Please enter your email first."));
+    if (!form.email || !form.email.includes("@")) {
+      showToast("Please enter a valid email address.", "error");
       return;
     }
-
-    if (otpCooldown > 0) {
-      showToast(
-        t(
-          "apply_otp_wait",
-          `Please wait ${otpCooldown}s before requesting another OTP.`
-        )
-      );
-      return;
-    }
-
+    
+    setOtpError("");
+    setIsVerifyingEmail(true);
     try {
-      setEmailLoading(true);
-      const { error } = await supabase.auth.signInWithOtp({
-        email: normalizedEmail,
-        options: {
-          shouldCreateUser: true,
-        },
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/auth/send-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email.trim().toLowerCase() }),
       });
-
-      if (error) {
-        throw error;
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to send OTP");
       }
-
-      setForm((prev) => ({ ...prev, email: normalizedEmail }));
-      setShowOtpInput(true);
-      setOtpCooldown(60);
-      showToast(t("apply_otp_sent", "OTP sent to your email!"), "success");
+      
+      setOtpSent(true);
+      showToast("Verification code sent to your email.", "success");
     } catch (err) {
-      console.error(err);
-      const errorMessage =
-        err.message?.toLowerCase().includes("rate limit")
-          ? "Email rate limit exceeded. Please wait a minute and try again."
-          : err.message || "Failed to send OTP. Please try again.";
-      setOtpCooldown(60);
-      showToast(errorMessage);
+      showToast(err.message, "error");
     } finally {
-      setEmailLoading(false);
+      setIsVerifyingEmail(false);
     }
   };
 
   const handleVerifyOtp = async () => {
-    const normalizedEmail = form.email.trim().toLowerCase();
-
-    if (!otp.trim()) {
+    if (!otpCode || otpCode.length !== 6) {
+      setOtpError("Please enter a valid 6-digit code.");
       return;
     }
-
+    
+    setOtpError("");
+    setIsVerifyingEmail(true);
     try {
-      setVerifyLoading(true);
-      const { error } = await supabase.auth.verifyOtp({
-        email: normalizedEmail,
-        token: otp.trim(),
-        type: "email",
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/auth/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          email: form.email.trim().toLowerCase(),
+          otp_code: otpCode 
+        }),
       });
-
-      if (error) {
-        throw error;
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.detail || "Invalid code");
       }
-
-      setEmailVerified(true);
-      setShowOtpInput(false);
-      setOtp("");
-      showToast(t("apply_email_verified", "Email verified successfully!"), "success");
+      
+      setIsEmailVerified(true);
+      setOtpSent(false);
+      showToast("Email verified successfully!", "success");
     } catch (err) {
-      console.error(err);
-      showToast(err.message || "Invalid or expired OTP.");
+      setOtpError(err.message);
     } finally {
-      setVerifyLoading(false);
+      setIsVerifyingEmail(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setAttemptedSubmit(true);
+
+    const requiredFields = ["full_name", "email", "phone", "experience_years", "languages_known", "location", "skills"];
+    const missingFields = requiredFields.filter(f => !form[f] || form[f].toString().trim() === "");
+
+    if (missingFields.length > 0 || !resume) {
+      showToast(t("apply_fill_all_required", "Please fill all required details correctly."), "error");
+      return;
+    }
+
+    if (!isEmailVerified) {
+      showToast(t("apply_please_verify_email", "Please verify your email before submitting."), "error");
+      return;
+    }
 
     const normalizedEmail = form.email.trim().toLowerCase();
     const minimumExperience = getMinExperience(job?.experience);
 
-    if (!emailVerified) {
-      showToast("Verify email first.");
-      return;
-    }
-
-    if (!resume) {
-      showToast("Resume is required.");
-      return;
-    }
-
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError) {
-      showToast("Unable to validate your session. Please try again.");
-      return;
-    }
-
-    const sessionEmail = session?.user?.email?.toLowerCase() || "";
-    if (!session || sessionEmail !== normalizedEmail) {
-      setEmailVerified(false);
-      showToast("Please verify the same email address again.");
-      return;
-    }
-
     try {
       setLoading(true);
-
-      const fileExt = resume.name.split(".").pop();
-      const safeName = form.full_name.trim().replace(/\s+/g, "_") || "candidate";
-      const fileName = `${Date.now()}-${safeName}.${fileExt}`;
-      const filePath = `job-applications/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("resumes")
-        .upload(filePath, resume);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data: resumeUrl } = supabase.storage
-        .from("resumes")
-        .getPublicUrl(filePath);
 
       const additionalDetails = [
         form.current_company && `Current Company: ${form.current_company}`,
@@ -258,21 +196,22 @@ export default function ApplyForm({ close, jobId, job }) {
         .filter(Boolean)
         .join("\n\n");
 
-      const { error: insertError } = await supabase
-        .from("job_applications")
-        .insert([
-          {
-            job_id: jobId,
-            full_name: form.full_name.trim(),
-            email: normalizedEmail,
-            phone: form.phone.trim(),
-            cover_note: finalCoverNote,
-            resume_url: resumeUrl.publicUrl,
-          },
-        ]);
+      const formData = new FormData();
+      formData.append("job_id", jobId);
+      formData.append("full_name", form.full_name.trim());
+      formData.append("email", normalizedEmail);
+      formData.append("phone", form.phone.trim());
+      formData.append("cover_note", finalCoverNote);
+      formData.append("resume", resume);
 
-      if (insertError) {
-        throw insertError;
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const response = await fetch(`${apiUrl}/applications/apply`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit application");
       }
 
       showToast(
@@ -331,71 +270,64 @@ export default function ApplyForm({ close, jobId, job }) {
                 label={t("apply_full_name", "Full Name")}
                 required
                 value={form.full_name}
+                error={attemptedSubmit && !form.full_name.trim()}
                 onChange={(e) => setField("full_name", e.target.value)}
               />
 
               <div>
-                <Label required>{t("apply_email_address", "Email Address")}</Label>
+                <Label required error={attemptedSubmit && !form.email.trim()}>{t("apply_email_address", "Email Address")}</Label>
                 <div className="flex gap-2">
                   <input
                     required
                     type="email"
-                    disabled={emailVerified}
                     value={form.email}
-                    onChange={(e) => setField("email", e.target.value)}
-                    className={`w-full rounded-[18px] border px-5 py-4 text-lg text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20 ${
-                      emailVerified
-                        ? "border-[#d8dee8] bg-[#f4f4f5] text-[#9ca3af]"
-                        : "border-[#d8dee8] bg-white"
-                    }`}
+                    disabled={isEmailVerified}
+                    onChange={(e) => {
+                      setField("email", e.target.value);
+                      setIsEmailVerified(false);
+                      setOtpSent(false);
+                      setOtpCode("");
+                    }}
+                    className={`w-full rounded-[18px] border px-5 py-4 text-lg outline-none transition focus:ring-2 ${
+                      attemptedSubmit && !form.email.trim()
+                        ? "border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500/20"
+                        : "border-[#d8dee8] bg-white text-[#1c2537] focus:border-[#6B412E] focus:ring-[#6B412E]/20"
+                    } ${isEmailVerified ? "opacity-70 bg-gray-50" : ""}`}
                   />
-                  {!emailVerified && (
+                  {!isEmailVerified && (
                     <button
                       type="button"
                       onClick={handleSendOtp}
-                      disabled={emailLoading || otpCooldown > 0}
-                      className="min-w-[124px] rounded-[18px] bg-[#ead8ca] px-4 py-4 text-base font-semibold text-[#6B412E] transition hover:bg-[#dfc7b6] disabled:cursor-not-allowed disabled:opacity-60"
+                      disabled={isVerifyingEmail || !form.email}
+                      className="shrink-0 rounded-[18px] bg-[#D4F2DE] px-6 text-[#0A6C35] font-semibold transition hover:bg-[#BCEAC8] disabled:opacity-50 flex items-center justify-center min-w-[100px]"
                     >
-                      {emailLoading
-                        ? t("apply_sending", "Sending...")
-                        : otpCooldown > 0
-                        ? `Retry in ${otpCooldown}s`
-                        : showOtpInput
-                        ? t("apply_resend", "Resend")
-                        : t("apply_verify", "Verify")}
+                      {isVerifyingEmail ? <Loader2 className="h-5 w-5 animate-spin" /> : (otpSent ? "Resend" : "Verify")}
                     </button>
                   )}
-                  {emailVerified && (
-                    <span className="inline-flex items-center gap-1 rounded-[18px] bg-[#f5ede7] px-4 py-4 text-sm font-semibold text-[#6B412E]">
-                      <CheckCircle2 className="h-4 w-4" />
-                      {t("apply_verified", "Verified")}
-                    </span>
-                  )}
                 </div>
-
-                {showOtpInput && !emailVerified && (
+                
+                {otpSent && !isEmailVerified && (
                   <div className="mt-3 flex gap-2">
                     <input
                       type="text"
-                      inputMode="numeric"
+                      placeholder="Enter 6-digit code"
                       maxLength={6}
-                      placeholder={t("apply_enter_otp", "Enter 6-digit OTP")}
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                      className="w-full rounded-[18px] border border-[#d9c1ad] px-5 py-4 text-center text-lg font-semibold tracking-[0.35em] text-[#1c2537] outline-none transition focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                      className="w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 tracking-[0.3em] font-mono outline-none focus:border-[#6B412E] text-center"
                     />
                     <button
                       type="button"
                       onClick={handleVerifyOtp}
-                      disabled={verifyLoading || otp.length < 6}
-                      className="min-w-[124px] rounded-[18px] bg-[#6B412E] px-4 py-4 text-base font-semibold text-white transition hover:bg-[#5a3626] disabled:cursor-not-allowed disabled:opacity-60"
+                      disabled={isVerifyingEmail || otpCode.length !== 6}
+                      className="shrink-0 rounded-[18px] bg-[#65B792] px-6 text-white font-semibold transition hover:bg-[#52a07c] disabled:opacity-50 min-w-[100px]"
                     >
-                      {verifyLoading
-                        ? t("apply_checking", "Checking...")
-                        : t("apply_confirm", "Confirm")}
+                      Confirm
                     </button>
                   </div>
                 )}
+                {otpError && <p className="mt-2 text-sm font-medium text-red-500">{otpError}</p>}
+                {isEmailVerified && <p className="mt-2 text-sm font-medium text-[#0A6C35] flex items-center gap-1.5"><CheckCircle2 className="h-4 w-4"/> Email Verified</p>}
               </div>
 
               <Input
@@ -403,6 +335,7 @@ export default function ApplyForm({ close, jobId, job }) {
                 required
                 type="tel"
                 value={form.phone}
+                error={attemptedSubmit && !form.phone.trim()}
                 onChange={(e) => setField("phone", e.target.value)}
               />
 
@@ -420,6 +353,7 @@ export default function ApplyForm({ close, jobId, job }) {
                   min="0"
                   placeholder={t("apply_experience_placeholder", "Enter years")}
                   value={form.experience_years}
+                  error={attemptedSubmit && !form.experience_years.trim()}
                   onChange={(e) => setField("experience_years", e.target.value)}
                 />
                 {getMinExperience(job?.experience) > 0 && (
@@ -444,9 +378,13 @@ export default function ApplyForm({ close, jobId, job }) {
               />
 
               <div>
-                <Label required>{t("apply_resume", "Resume / CV")}</Label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-[18px] border border-dashed border-[#d7dfe7] px-5 py-5 text-[18px] text-[#5b6472] transition hover:border-[#8b5a3c] hover:bg-[#faf7f4]">
-                  <Upload className="h-5 w-5 text-[#6B412E]" />
+                <Label required error={attemptedSubmit && !resume}>{t("apply_resume", "Resume / CV")}</Label>
+                <label className={`flex cursor-pointer items-center gap-3 rounded-[18px] border border-dashed px-5 py-5 text-[18px] transition ${
+                  attemptedSubmit && !resume
+                    ? "border-red-500 bg-red-50 text-red-700 hover:border-red-600 hover:bg-red-100"
+                    : "border-[#d7dfe7] text-[#5b6472] hover:border-[#8b5a3c] hover:bg-[#faf7f4]"
+                }`}>
+                  <Upload className={`h-5 w-5 ${attemptedSubmit && !resume ? "text-red-500" : "text-[#6B412E]"}`} />
                   <span className="truncate">
                     {resume ? resume.name : t("apply_upload_resume", "Upload PDF or DOC")}
                   </span>
@@ -497,6 +435,7 @@ export default function ApplyForm({ close, jobId, job }) {
                 required
                 placeholder={t("apply_languages_placeholder", "e.g. English, Telugu, Hindi")}
                 value={form.languages_known}
+                error={attemptedSubmit && !form.languages_known.trim()}
                 onChange={(e) => setField("languages_known", e.target.value)}
               />
 
@@ -505,6 +444,7 @@ export default function ApplyForm({ close, jobId, job }) {
                 required
                 placeholder={t("apply_location_placeholder", "City, State")}
                 value={form.location}
+                error={attemptedSubmit && !form.location.trim()}
                 onChange={(e) => setField("location", e.target.value)}
               />
 
@@ -514,6 +454,7 @@ export default function ApplyForm({ close, jobId, job }) {
                   required
                   placeholder={t("apply_skills_placeholder", "e.g. React, Python, SQL, Project Management")}
                   value={form.skills}
+                  error={attemptedSubmit && !form.skills.trim()}
                   onChange={(e) => setField("skills", e.target.value)}
                 />
               </div>
@@ -550,8 +491,10 @@ export default function ApplyForm({ close, jobId, job }) {
 
               <button
                 type="submit"
-                disabled={loading || !emailVerified}
-                className="inline-flex min-w-[240px] items-center justify-center gap-2 rounded-[18px] bg-[#6B412E] px-8 py-4 text-lg font-semibold text-white transition hover:bg-[#5a3626] disabled:cursor-not-allowed disabled:bg-[#c7b7ab]"
+                disabled={loading}
+                className={`inline-flex min-w-[240px] items-center justify-center gap-2 rounded-[18px] px-8 py-4 text-lg font-semibold text-white transition disabled:cursor-not-allowed ${
+                  !isEmailVerified ? "bg-[#52a07c] hover:bg-[#52a07c]" : "bg-[#6B412E] hover:bg-[#5a3626] disabled:bg-[#c7b7ab]"
+                }`}
               >
                 {loading ? (
                   <>
@@ -562,10 +505,10 @@ export default function ApplyForm({ close, jobId, job }) {
                         : t("apply_submitting", "Submitting...")}
                     </span>
                   </>
-                ) : emailVerified ? (
-                  t("apply_submit_application", "Submit Application")
-                ) : (
+                ) : !isEmailVerified ? (
                   t("apply_verify_email_first", "Verify Email First")
+                ) : (
+                  t("apply_submit_application", "Submit Application")
                 )}
               </button>
             </div>
@@ -595,26 +538,27 @@ export default function ApplyForm({ close, jobId, job }) {
   );
 }
 
-function Label({ children, required = false }) {
+function Label({ children, required = false, error = false }) {
   return (
-    <label className="mb-2 block text-[16px] font-semibold text-[#3f4a5d]">
-      {children} {required ? "*" : ""}
+    <label className={`mb-2 block text-[16px] font-semibold ${error ? "text-red-600" : "text-[#3f4a5d]"}`}>
+      {children} {required ? <span className={error ? "text-red-500" : "text-red-500"}>*</span> : ""}
     </label>
   );
 }
 
-
-  
-function Input({ label, required = false, ...props }) {
+function Input({ label, required = false, error = false, ...props }) {
   return (
     <div>
-      <Label required={required}>{label}</Label>
+      <Label required={required} error={error}>{label}</Label>
       <input
         {...props}
         required={required}
-        className="w-full rounded-[18px] border border-[#d8dee8] px-5 py-4 text-lg text-[#1c2537] outline-none placeholder:text-[#94a3b8] focus:border-[#6B412E] focus:ring-2 focus:ring-[#6B412E]/20"
+        className={`w-full rounded-[18px] border px-5 py-4 text-lg outline-none placeholder:text-[#94a3b8] focus:ring-2 transition ${
+          error 
+            ? "border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500/20" 
+            : "border-[#d8dee8] text-[#1c2537] focus:border-[#6B412E] focus:ring-[#6B412E]/20"
+        }`}
       />
     </div>
   );
 }
-

@@ -1,5 +1,3 @@
-import { supabase } from './supabaseClient';
-
 /**
  * Transform Supabase testimonial → UI-friendly format
  */
@@ -8,10 +6,10 @@ const transformTestimonial = (t) => ({
   title: t.title,
   name: t.name,
   videoUrl: t.video_url,
-  image: t.image_src,
+  image: t.image_src || t.image_url,
   area: t.area,
-  story: t.season,        // Farmer story / description
-  platform: t.platform,
+  story: t.description || t.season,        // Farmer story / description
+  platform: t.platform || 'youtube',
   createdAt: t.created_at,
 });
 

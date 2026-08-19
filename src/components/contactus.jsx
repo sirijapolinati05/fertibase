@@ -2,7 +2,6 @@ import { InlineWidget } from "react-calendly";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Clock, Calendar } from "lucide-react";
-import supabase from "../lib/supabaseClient";
 import { useTranslation } from "../i18n/useTranslation";
 
 const CONTACT_UI_COPY = {
@@ -113,33 +112,23 @@ const handleSubmit = async (e) => {
   setSubmitting(true);
 
   try {
-    // 1. Save message in database
-    const { error } = await supabase.from("contact_messages").insert([
-      {
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+    const response = await fetch(`${apiUrl}/contact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         full_name: formData.full_name,
         email: formData.email,
         phone: formData.phone,
         message: formData.message,
-      },
-    ]);
+      }),
+    });
 
-    if (error) throw error;
-
-    // 2. Trigger auto-reply email
-    // await fetch(
-    //   "https://ekseutpxbtlbcbjxalna.supabase.co/functions/v1/send-contact-reply",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-    //     },
-    //     body: JSON.stringify({
-    //       full_name: formData.full_name,
-    //       email: formData.email,
-    //     }),
-    //   }
-    // );
+    if (!response.ok) {
+      throw new Error("Failed to send message");
+    }
 
     // 3. Reset form
     setFormData({
